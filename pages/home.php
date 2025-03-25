@@ -91,17 +91,19 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         .hero-content h1 {
-            font-size: 4.5rem;
+            font-family:sans,serif;
+            font-size: 3rem;
             margin-bottom: 25px;
-            font-weight: 700;
+            font-weight: 600;
         }
         .hero-content p {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             margin-bottom: 40px;
+            
         }
         .search-bar {
             position: absolute;
-            top: 120px;
+            top: 300px;
             left: 50%;
             transform: translateX(-50%);
             background-color: rgba(255,255,255,0.9);
@@ -281,9 +283,9 @@
         <div class="row g-4">
             <?php
             $rooms = [
-                ["image" => "../assets/images/rooms/room1.jpg", "title" => "Deluxe Suite", "description" => "Spacious room with a king-size bed, private balcony, and city views.", "price" => 250, "amenities" => ["Free Wi-Fi", "Mini Bar", "24/7 Room Service"]],
-                ["image" => "../assets/images/rooms/room2.jpg", "title" => "Executive Suite", "description" => "Luxurious suite with a separate living area, premium mattress, and spa-like bathroom.", "price" => 400, "amenities" => ["Personal Concierge", "Private Terrace", "Jacuzzi Tub"]],
-                ["image" => "../assets/images/rooms/room3.jpg", "title" => "Standard Room", "description" => "Comfortable room with a queen-size bed, modern amenities, and elegant decor.", "price" => 150, "amenities" => ["Flat-screen TV", "Air Conditioning", "Daily Housekeeping"]]
+                ["image" => "../assets/images/rooms/first.jpg", "title" => "Deluxe Suite", "description" => "Spacious room with a king-size bed, private balcony, and city views.", "price" => 250, "amenities" => ["Free Wi-Fi", "Mini Bar", "24/7 Room Service"]],
+                ["image" => "../assets/images/rooms/second.jpg", "title" => "Executive Suite", "description" => "Luxurious suite with a separate living area, premium mattress, and spa-like bathroom.", "price" => 400, "amenities" => ["Personal Concierge", "Private Terrace", "Jacuzzi Tub"]],
+                ["image" => "../assets/images/rooms/third.jpg", "title" => "Standard Room", "description" => "Comfortable room with a queen-size bed, modern amenities, and elegant decor.", "price" => 150, "amenities" => ["Flat-screen TV", "Air Conditioning", "Daily Housekeeping"]]
             ];
             foreach ($rooms as $room):
             ?>
