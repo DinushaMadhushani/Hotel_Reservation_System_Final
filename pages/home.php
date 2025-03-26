@@ -97,7 +97,7 @@
             font-weight: 600;
         }
         .hero-content p {
-            font-size: 1.5rem;
+            font-size: 1.5  rem;
             margin-bottom: 40px;
             
         }
