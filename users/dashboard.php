@@ -4,7 +4,7 @@ require '../config/db.con.php';
 
 // Check if user is logged in
 if (!isset($_SESSION['UserID'])) {
-    header("Location: login.php");
+    header("Location:../auth/login.php");
     exit();
 }
 
@@ -163,7 +163,7 @@ $recentActivity = $activityStmt->get_result()->fetch_all(MYSQLI_ASSOC);
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="logout.php">
+                            <a class="nav-link" href="../auth/login.php">
                                 <i class="fa-solid fa-sign-out-alt me-3"></i> Logout
                             </a>
                         </li>

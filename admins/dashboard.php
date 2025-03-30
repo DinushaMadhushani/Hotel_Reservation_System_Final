@@ -4,7 +4,7 @@ require '../config/db.con.php';
 
 // Authentication check
 if (!isset($_SESSION['UserType']) || $_SESSION['UserType'] !== 'Admin') {
-    header("Location: ../login.php"); // Adjust path as needed
+    header("Location: ../auth/login.php"); // Adjust path as needed
     exit();
 }
 
@@ -229,7 +229,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="#">Profile</a></li>
-                                <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                                <li><a class="dropdown-item" href="../auth/logout.php">Logout</a></li>
                             </ul>
                         </div>
                     </div>
