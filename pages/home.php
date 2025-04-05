@@ -223,7 +223,7 @@
                     <a class="nav-link" href="#hero">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#rooms">Rooms</a>
+                    <a class="nav-link" href="./rooms.php">Rooms</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#features">Why Choose Us</a>
