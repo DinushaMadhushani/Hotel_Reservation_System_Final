@@ -13,41 +13,54 @@
     }
 
     body {
-      font-family:fantacy;
-      background-color:rgb(207, 200, 207);
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9f9f9;
       color: #333;
       line-height: 1.6;
     }
 
+    /* Header Section */
     header {
-
       text-align: center;
-      padding: 20px;
-      background-color:lightblue;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
       color: white;
     }
 
-    main {
-      padding: 20px;
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      letter-spacing: 2px;
     }
-    
+
+    /* Main Section */
+    main {
+      padding: 40px 20px;
+    }
 
     /* Gallery Grid */
     .gallery {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
+      gap: 20px;
     }
 
     .gallery-item {
       position: relative;
       overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
       cursor: pointer;
     }
 
+    .gallery-item:hover {
+      transform: scale(1.05);
+    }
+
     .gallery-item img {
-      width:400px;
-      height: 150px;
+      width: 100%;
+      height: auto;
       display: block;
       transition: transform 0.3s ease;
     }
@@ -59,21 +72,34 @@
     /* Overlay Effect */
     .overlay {
       position: absolute;
-      top: 0;
+      bottom: 0;
       left: 0;
       width: 100%;
-      height: 100%;
-      background: rgba(95, 93, 93, 0.6);
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.6);
       color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      text-align: center;
       opacity: 0;
       transition: opacity 0.3s ease;
     }
 
     .gallery-item:hover .overlay {
       opacity: 1;
+    }
+
+    .overlay span {
+      font-size: 18px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      color: white;
+      margin-top: 40px;
     }
 
     /* Lightbox Modal */
@@ -85,16 +111,18 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.9);
       justify-content: center;
       align-items: center;
     }
 
-    .lightbox-content {
+    .lightbox img {
       max-width: 90%;
       max-height: 90%;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(255, 255, 255, 0.1);
     }
-    
+
     .close {
       position: absolute;
       top: 20px;
@@ -103,169 +131,87 @@
       font-size: 40px;
       font-weight: bold;
       cursor: pointer;
+      transition: color 0.3s ease;
     }
 
     .close:hover {
-      color: #ccc;
+      color: #ff7e5f;
     }
   </style>
 </head>
 <body>
+  <!-- Header -->
   <header>
     <h1>Our Gallery</h1>
   </header>
 
+  <!-- Main Content -->
   <main>
     <div class="gallery">
-      <!-- Gallery Item 1 -->
-      <div class="gallery-item">
-        <img src="../assets/images/gallery/img3.jpg" alt="Image 1">
+      <!-- Gallery Items -->
+      <div class="gallery-item" data-src="../assets/images/gallery/img1.jpg">
+        <img src="../assets/images/gallery/img1.jpg" alt="Image 1">
         <div class="overlay">
-          <span>View Image</span>
+          <span>Image Title 1</span>
         </div>
       </div>
-
-      <!-- Gallery Item 2 -->
-      <div class="gallery-item">
-        <img src="../assets/images/gallery/img4.webp" alt="Image 2">
+      <div class="gallery-item" data-src="../assets/images/gallery/img2.jpg">
+        <img src="../assets/images/gallery/img2.jpg" alt="Image 2">
         <div class="overlay">
-          <span>View Image</span>
+          <span>Image Title 2</span>
         </div>
       </div>
-
-      <!-- Gallery Item 3 -->
-      <div class="gallery-item">
-        <img src="../assets/images/gallery/img5.jpg" alt="Image 3">
+      <div class="gallery-item" data-src="../assets/images/gallery/img3.jpg">
+        <img src="../assets/images/gallery/img3.jpg" alt="Image 3">
         <div class="overlay">
-          <span>View Image</span>
+          <span>Image Title 3</span>
         </div>
       </div>
-
-
-       <!-- Gallery Item 4 -->
-       <div class="gallery-item">
-        <img src="../assets/images/gallery/img6.jpg" alt="Image 3">
+      <div class="gallery-item" data-src="../assets/images/gallery/img4.jpg">
+        <img src="../assets/images/gallery/img4.jpg" alt="Image 4">
         <div class="overlay">
-          <span>View Image</span>
+          <span>Image Title 4</span>
         </div>
       </div>
-
-
-       <!-- Gallery Item 5 -->
-       <div class="gallery-item">
-        <img src="../assets/images/gallery/img7.jpg" alt="Image 3">
+      <div class="gallery-item" data-src="../assets/images/gallery/img5.jpg">
+        <img src="../assets/images/gallery/img5.jpg" alt="Image 5">
         <div class="overlay">
-          <span>View Image</span>
+          <span>Image Title 5</span>
         </div>
       </div>
-
-
-
-       <!-- Gallery Item 6 -->
-       <div class="gallery-item">
-        <img src="../assets/images/gallery/img9.jpg" alt="Image 3">
+      <div class="gallery-item" data-src="../assets/images/gallery/img6.jpg">
+        <img src="../assets/images/gallery/img6.jpg" alt="Image 6">
         <div class="overlay">
-          <span>View Image</span>
+          <span>Image Title 6</span>
         </div>
       </div>
-
-
-
-       <!-- Gallery Item 7 -->
-       <div class="gallery-item">
-        <img src="../assets/images/gallery/img10.jpg" alt="Image 3">
-        <div class="overlay">
-          <span>View Image</span>
-        </div>
-      </div>
-
-
-
-       <!-- Gallery Item 8 -->
-       <div class="gallery-item">
-        <img src="../assets/images/gallery/img11.jpg" alt="Image 3">
-        <div class="overlay">
-          <span>View Image</span>
-        </div>
-      </div>
-
-
-
-       <!-- Gallery Item 9 -->
-       <div class="gallery-item">
-        <img src="../assets/images/gallery/img12.jpg" alt="Image 3">
-        <div class="overlay">
-          <span>View Image</span>
-        </div>
-      </div>
-
-
-       <!-- Gallery Item 10 -->
-       <div class="gallery-item">
-        <img src="../assets/images/gallery/img13.jpg" alt="Image 3">
-        <div class="overlay">
-          <span>View Image</span>
-        </div>
-      </div>
-
-
-
-
-
-       <!-- Gallery Item 11 -->
-       <div class="gallery-item">
-        <img src="../assets/images/gallery/img14.jpg" alt="Image 3">
-        <div class="overlay">
-          <span>View Image</span>
-        </div>
-      </div>
-
-
-       <!-- Gallery Item 12 -->
-       <div class="gallery-item">
-        <img src="../assets/images/gallery/img15.jpg"alt="Image 3">
-        <div class="overlay">
-          <span>View Image</span>
-        </div>
-      </div>
-
-
-
-      <!-- Gallery Item 12 -->
-      <div class="gallery-item">
-        <img src="../assets/images/gallery/img16.jpg"alt="Image 3">
-        <div class="overlay">
-          <span>View Image</span>
-        </div>
-      </div>
-
-
-
       <!-- Add more gallery items as needed -->
     </div>
   </main>
 
+  <!-- Footer -->
   <footer>
-    <p style="text-align: center; padding: 10px;">&copy; 2023 My Gallery</p>
+    <p>&copy; 2023 Your Website Name. All rights reserved.</p>
   </footer>
 
   <!-- Lightbox Modal -->
   <div id="lightbox" class="lightbox">
     <span class="close">&times;</span>
-    <img class="lightbox-content" id="lightbox-img">
+    <img class="lightbox-img" src="" alt="Lightbox Image">
   </div>
 
   <script>
+    // Lightbox functionality
     document.addEventListener("DOMContentLoaded", () => {
       const galleryItems = document.querySelectorAll(".gallery-item");
       const lightbox = document.getElementById("lightbox");
-      const lightboxImg = document.getElementById("lightbox-img");
+      const lightboxImg = document.querySelector(".lightbox-img");
       const closeBtn = document.querySelector(".close");
 
       // Open lightbox when an image is clicked
       galleryItems.forEach((item) => {
         item.addEventListener("click", () => {
-          const imgSrc = item.querySelector("img").src;
+          const imgSrc = item.getAttribute("data-src"); // Get the image source
           lightbox.style.display = "flex";
           lightboxImg.src = imgSrc;
         });
