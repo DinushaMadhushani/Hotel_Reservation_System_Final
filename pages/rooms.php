@@ -237,7 +237,7 @@
                             <p class="card-text">Ideal for solo travelers with a comfortable single bed.</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="room-price">$89<span class="text-muted">/night</span></div>
-                                <a href="#" class="btn card-btn">Book Now</a>
+                                <a href="../pages/booking_form" class="btn card-btn">Book Now</a>
                             </div>
                         </div>
                     </div>
