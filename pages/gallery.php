@@ -13,22 +13,24 @@
     }
 
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+      font-family:fantacy;
+      background-color:rgb(207, 200, 207);
       color: #333;
       line-height: 1.6;
     }
 
     header {
+
       text-align: center;
       padding: 20px;
-      background-color: #333;
-      color: #fff;
+      background-color:lightblue;
+      color: white;
     }
 
     main {
       padding: 20px;
     }
+    
 
     /* Gallery Grid */
     .gallery {
@@ -44,8 +46,8 @@
     }
 
     .gallery-item img {
-      width: 100%;
-      height: auto;
+      width:400px;
+      height: 150px;
       display: block;
       transition: transform 0.3s ease;
     }
@@ -61,7 +63,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(95, 93, 93, 0.6);
       color: #fff;
       display: flex;
       justify-content: center;
@@ -92,7 +94,7 @@
       max-width: 90%;
       max-height: 90%;
     }
-
+    
     .close {
       position: absolute;
       top: 20px;
@@ -110,14 +112,14 @@
 </head>
 <body>
   <header>
-    <h1>My Gallery</h1>
+    <h1>Our Gallery</h1>
   </header>
 
   <main>
     <div class="gallery">
       <!-- Gallery Item 1 -->
       <div class="gallery-item">
-        <img src="../assets/images/gallery/img1.jpg " alt="Image 1">
+        <img src="../assets/images/gallery/img3.jpg" alt="Image 1">
         <div class="overlay">
           <span>View Image</span>
         </div>
@@ -125,7 +127,7 @@
 
       <!-- Gallery Item 2 -->
       <div class="gallery-item">
-        <img src="https://via.placeholder.com/400x300?text=Image+2" alt="Image 2">
+        <img src="../assets/images/gallery/img4.webp" alt="Image 2">
         <div class="overlay">
           <span>View Image</span>
         </div>
@@ -133,7 +135,7 @@
 
       <!-- Gallery Item 3 -->
       <div class="gallery-item">
-        <img src="https://via.placeholder.com/400x300?text=Image+3" alt="Image 3">
+        <img src="../assets/images/gallery/img5.jpg" alt="Image 3">
         <div class="overlay">
           <span>View Image</span>
         </div>
@@ -142,7 +144,7 @@
 
        <!-- Gallery Item 4 -->
        <div class="gallery-item">
-        <img src="https://via.placeholder.com/400x300?text=Image+3" alt="Image 3">
+        <img src="../assets/images/gallery/img6.jpg" alt="Image 3">
         <div class="overlay">
           <span>View Image</span>
         </div>
@@ -151,7 +153,7 @@
 
        <!-- Gallery Item 5 -->
        <div class="gallery-item">
-        <img src="https://via.placeholder.com/400x300?text=Image+3" alt="Image 3">
+        <img src="../assets/images/gallery/img7.jpg" alt="Image 3">
         <div class="overlay">
           <span>View Image</span>
         </div>
@@ -161,7 +163,7 @@
 
        <!-- Gallery Item 6 -->
        <div class="gallery-item">
-        <img src="https://via.placeholder.com/400x300?text=Image+3" alt="Image 3">
+        <img src="../assets/images/gallery/img9.jpg" alt="Image 3">
         <div class="overlay">
           <span>View Image</span>
         </div>
@@ -171,7 +173,7 @@
 
        <!-- Gallery Item 7 -->
        <div class="gallery-item">
-        <img src="https://via.placeholder.com/400x300?text=Image+3" alt="Image 3">
+        <img src="../assets/images/gallery/img10.jpg" alt="Image 3">
         <div class="overlay">
           <span>View Image</span>
         </div>
@@ -181,7 +183,7 @@
 
        <!-- Gallery Item 8 -->
        <div class="gallery-item">
-        <img src="https://via.placeholder.com/400x300?text=Image+3" alt="Image 3">
+        <img src="../assets/images/gallery/img11.jpg" alt="Image 3">
         <div class="overlay">
           <span>View Image</span>
         </div>
@@ -191,7 +193,7 @@
 
        <!-- Gallery Item 9 -->
        <div class="gallery-item">
-        <img src="https://via.placeholder.com/400x300?text=Image+3" alt="Image 3">
+        <img src="../assets/images/gallery/img12.jpg" alt="Image 3">
         <div class="overlay">
           <span>View Image</span>
         </div>
@@ -200,7 +202,7 @@
 
        <!-- Gallery Item 10 -->
        <div class="gallery-item">
-        <img src="https://via.placeholder.com/400x300?text=Image+3" alt="Image 3">
+        <img src="../assets/images/gallery/img13.jpg" alt="Image 3">
         <div class="overlay">
           <span>View Image</span>
         </div>
@@ -212,7 +214,7 @@
 
        <!-- Gallery Item 11 -->
        <div class="gallery-item">
-        <img src="https://via.placeholder.com/400x300?text=Image+3" alt="Image 3">
+        <img src="../assets/images/gallery/img14.jpg" alt="Image 3">
         <div class="overlay">
           <span>View Image</span>
         </div>
@@ -221,11 +223,24 @@
 
        <!-- Gallery Item 12 -->
        <div class="gallery-item">
-        <img src="https://via.placeholder.com/400x300?text=Image+3" alt="Image 3">
+        <img src="../assets/images/gallery/img15.jpg"alt="Image 3">
         <div class="overlay">
           <span>View Image</span>
         </div>
       </div>
+
+
+
+      <!-- Gallery Item 12 -->
+      <div class="gallery-item">
+        <img src="../assets/images/gallery/img16.jpg"alt="Image 3">
+        <div class="overlay">
+          <span>View Image</span>
+        </div>
+      </div>
+
+
+
       <!-- Add more gallery items as needed -->
     </div>
   </main>
