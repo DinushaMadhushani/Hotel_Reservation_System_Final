@@ -22,6 +22,7 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 1000;
             transition: all 0.3s ease;
+            margin-bottom:20px ;
         }
         .navbar-brand {
             font-family: 'Dancing Script', cursive;
@@ -30,7 +31,7 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         .navbar-nav a {
-            color: white !important;
+            color: black!important;
             font-weight: 600;
             position: relative;
             transition: all 0.3s ease;
@@ -54,7 +55,7 @@
             left: 10%;
         }
         .login-btn {
-            background: linear-gradient(45deg, #3498db, #2c3e50);
+            background: linear-gradient(45deg,rgb(6, 50, 80), #2c3e50);
             border: 2px solid white;
             color: white !important;
             margin-left: 20px;
@@ -71,16 +72,18 @@
             background: url('https://via.placeholder.com/1920x1080/2c3e50/FFFFFF?text=Hotel+Rooms') no-repeat center center/cover;
             height: 60vh;
             position: relative;
-            margin-top: -70px;
+            background-color:green; 
+            margin-top:170px;
             display: flex;
             align-items: center;
             color: white;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         .hero-content {
-            background: rgba(44, 62, 80, 0.7);
+            background: rgba(7, 112, 218, 0.7);
             padding: 2rem 3rem;
             border-radius: 15px;
+            margin-top:30px ;
         }
         .hero h1 {
             font-size: 3rem;
@@ -197,6 +200,8 @@
         </div>
     </div>
 </nav>
+
+
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
@@ -388,7 +393,7 @@
         <section class="cta text-center my-5 p-5" data-aos="fade-up">
             <h2 class="mb-4">Ready to Book?</h2>
             <p class="lead">Find your perfect room and enjoy an unforgettable stay</p>
-            <a href="#" class="btn btn-light btn-lg mt-3">Check Availability</a>
+            <a href="./gallery.php" class="btn btn-light btn-lg mt-3">Check Gallery</a>
         </section>
     </div>
 

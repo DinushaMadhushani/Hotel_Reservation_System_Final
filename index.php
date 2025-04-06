@@ -223,7 +223,7 @@
                     <a class="nav-link" href="#hero">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="./rooms.php">Rooms</a>
+                    <a class="nav-link" href="./pages/rooms.php">Rooms</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#features">Why Choose Us</a>
@@ -235,7 +235,7 @@
                     <a class="nav-link" href="contact.php">Contact</a>
                 </li>
                 <li class="nav-item">
-                    <a class="btn login-btn" href="login.php">Login/Sign Up</a>
+                    <a class="btn login-btn" href="./auth/login.php">Login/Sign Up</a>
                 </li>
             </ul>
         </div>
@@ -267,12 +267,12 @@
         <button class="btn">Search</button>
     </div>
     <div class="image-slider">
-        <img src="../assets/images/hero/P (1).jpg" alt="Slide 1" class="active">
-        <img src="../assets/images/hero/P (2).jpg" alt="Slide 2">
-        <img src="../assets/images/hero/P (3).jpg" alt="Slide 3">
-        <img src="../assets/images/hero/P (4).jpg" alt="Slide 4">
-        <img src="../assets/images/hero/P (5).jpg" alt="Slide 5">
-        <img src="../assets/images/hero/P (6).jpg" alt="Slide 6">
+        <img src="./assets/images/hero/P (1).jpg" alt="Slide 1" class="active">
+        <img src="./assets/images/hero/P (2).jpg" alt="Slide 2">
+        <img src="./assets/images/hero/P (3).jpg" alt="Slide 3">
+        <img src="./assets/images/hero/P (4).jpg" alt="Slide 4">
+        <img src="./assets/images/hero/P (5).jpg" alt="Slide 5">
+        <img src="./assets/images/hero/P (6).jpg" alt="Slide 6">
     </div>
 </section>
 
@@ -402,12 +402,12 @@
     const heroSection = document.querySelector('.hero-section');
     let currentSlide = 0;
     const backgroundImages = [
-        '../assets/images/hero/P (1).jpg',
-        '../assets/images/hero/P (2).jpg',
-        '../assets/images/hero/P (3).jpg',
-        '../assets/images/hero/P (4).jpg',
-        '../assets/images/hero/P (5).jpg',
-        '../assets/images/hero/P (6).jpg'
+        './assets/images/hero/p (1).jpg',
+        './assets/images/hero/P (2).jpg',
+        './assets/images/hero/P (3).jpg',
+        './assets/images/hero/P (4).jpg',
+        './assets/images/hero/P (5).jpg',
+        './assets/images/hero/P (6).jpg'
     ];
     
     function showSlide(index) {
