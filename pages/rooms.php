@@ -13,25 +13,31 @@
     <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
+
+:root {
+            --primary: #2DBD6E;
+            --secondary: #0A1A28;
+            --light: #E5F5F9;
+            --accent: #F5C518;
+        }
        /* Enhanced Navigation */
        .navbar {
             position: fixed;
             top: 0;
             width: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
+            background: black;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 1000;
             transition: all 0.3s ease;
-            margin-bottom:20px ;
         }
         .navbar-brand {
             font-family: 'Dancing Script', cursive;
             font-size: 2.5rem;
-            color: var(--secondary) !important;
+            color: white !important;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         .navbar-nav a {
-            color: black!important;
+            color: white !important;
             font-weight: 600;
             position: relative;
             transition: all 0.3s ease;
@@ -55,19 +61,18 @@
             left: 10%;
         }
         .login-btn {
-            background: linear-gradient(45deg,rgb(6, 50, 80), #2c3e50);
-            border: 2px solid white;
-            color: white !important;
-            margin-left: 20px;
-            transition: all 0.3s;
+            background: var(--secondary);
+            border-radius: 12px;
+            padding: 10px 25px;
+            margin-left: 15px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         .login-btn:hover {
-            background: transparent;
-            color: white !important;
-            border-color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
 
-        /* Hero Section */
         .hero {
             background: url('https://via.placeholder.com/1920x1080/2c3e50/FFFFFF?text=Hotel+Rooms') no-repeat center center/cover;
             height: 60vh;
@@ -90,7 +95,6 @@
             font-weight: 700;
         }
 
-        /* Room Cards */
         .room-card {
             transition: transform 0.3s, box-shadow 0.3s;
             border-radius: 15px;
@@ -120,7 +124,6 @@
             background: linear-gradient(45deg, #2c3e50, #3498db);
         }
 
-        /* Features Section */
         .feature-box {
             border: 2px solid #3498db;
             border-radius: 15px;
@@ -136,7 +139,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Testimonials */
         .testimonial-card {
             background: #f8f9fa;
             border-radius: 15px;
@@ -147,7 +149,6 @@
             color: #6c757d;
         }
 
-        /* CTA Section */
         .cta {
             background: linear-gradient(45deg, #3498db, #2c3e50);
             color: white;
@@ -155,7 +156,6 @@
             border-radius: 15px;
         }
 
-        /* Responsive Styles */
         @media (max-width: 768px) {
             .hero {
                 height: 40vh;
@@ -170,6 +170,7 @@
     </style>
 </head>
 <body>
+<!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
         <a class="navbar-brand" href="#">EaSyStaY</a>
@@ -179,22 +180,19 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#hero">Home</a>
+                    <a class="nav-link" href="../index.php">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="./rooms.php">Rooms</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#features">Why Choose Us</a>
+                    <a class="nav-link" href="./gallery.php">Gallery</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#testimonials">Testimonials</a>
+                    <a class="nav-link" href="./about_us.php">About Us</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="contact.php">Contact</a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn login-btn" href="login.php">Login/Sign Up</a>
+                    <a class="btn login-btn" href="../auth/login.php">Login/Sign Up</a>
                 </li>
             </ul>
         </div>
@@ -237,7 +235,7 @@
                             <p class="card-text">Ideal for solo travelers with a comfortable single bed.</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="room-price">$89<span class="text-muted">/night</span></div>
-                                <a href="../pages/booking_form" class="btn card-btn">Book Now</a>
+                                <a href="booking_form.php" class="btn card-btn">Book Now</a>
                             </div>
                         </div>
                     </div>
@@ -255,7 +253,7 @@
                             <p class="card-text">Perfect for couples with a cozy queen-size bed.</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="room-price">$129<span class="text-muted">/night</span></div>
-                                <a href="#" class="btn card-btn">Book Now</a>
+                                <a href="booking_form.php" class="btn card-btn">Book Now</a>
                             </div>
                         </div>
                     </div>
@@ -273,7 +271,7 @@
                             <p class="card-text">Great for friends with two single beds.</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="room-price">$119<span class="text-muted">/night</span></div>
-                                <a href="#" class="btn card-btn">Book Now</a>
+                                <a href="booking_form.php" class="btn card-btn">Book Now</a>
                             </div>
                         </div>
                     </div>

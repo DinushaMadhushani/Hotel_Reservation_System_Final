@@ -8,11 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #1a1a1a;
-            --secondary: #ffffff;
-            --accent: #d4af37;
-            --light: #f5f5f5;
-            --dark: #121212;
+            --primary: #2DBD6E;
+            --secondary: #0A1A28;
+            --light: #E5F5F9;
+            --accent: #F5C518;
         }
         body {
             font-family: 'Poppins', sans-serif;
@@ -62,7 +61,7 @@
         }
         .login-btn {
             background: var(--secondary);
-            border-radius: 25px;
+            border-radius: 12px;
             padding: 10px 25px;
             margin-left: 15px;
             transition: transform 0.3s ease;
@@ -100,6 +99,7 @@
         .hero-content p {
             font-size: 1.5  rem;
             margin-bottom: 40px;
+            
         }
         .search-bar {
             position: absolute;
@@ -232,7 +232,7 @@
                     <a class="nav-link" href="#testimonials">Testimonials</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="contact.php">Contact</a>
+                    <a class="nav-link" href="./pages/about_us.php">About Us</a>
                 </li>
                 <li class="nav-item">
                     <a class="btn login-btn" href="./auth/login.php">Login/Sign Up</a>
@@ -241,6 +241,7 @@
         </div>
     </div>
 </nav>
+
 <!-- Hero Section -->
 <section class="hero-section" style="background-image: url('../assets/images/hero/P (1).jpg');">
     <div class="hero-content">
@@ -274,6 +275,7 @@
         <img src="./assets/images/hero/P (6).jpg" alt="Slide 6">
     </div>
 </section>
+
 <!-- Rooms Section -->
 <section id="rooms" class="py-5">
     <div class="container">
@@ -307,6 +309,7 @@
         </div>
     </div>
 </section>
+
 <!-- Why Choose Us Section -->
 <section id="features" class="why-choose-us">
     <div class="container">
@@ -336,6 +339,7 @@
         </div>
     </div>
 </section>
+
 <!-- Testimonials Section -->
 <section id="testimonials" class="testimonials">
     <div class="container">
@@ -354,6 +358,7 @@
         </div>
     </div>
 </section>
+
 <!-- Footer Section -->
 <footer class="bg-dark text-white py-4">
     <div class="container">
@@ -388,6 +393,7 @@
         </div>
     </div>
 </footer>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://kit.fontawesome.com/your-font-awesome-key.js" crossorigin="anonymous"></script>
 <script>
@@ -403,6 +409,7 @@
         './assets/images/hero/P (5).jpg',
         './assets/images/hero/P (6).jpg'
     ];
+    
     function showSlide(index) {
         slides.forEach((slide, i) => {
             slide.classList.toggle('active', i === index);
@@ -410,11 +417,13 @@
         currentSlide = index;
         heroSection.style.backgroundImage = `url('${backgroundImages[index]}')`;
     }
+
     // Auto-slide functionality with 5-second interval
     setInterval(() => {
         const nextSlide = (currentSlide + 1) % slides.length;
         showSlide(nextSlide);
     }, 5000);
+
     // Manual navigation
     slides.forEach((slide, index) => {
         slide.addEventListener('click', () => {

@@ -194,6 +194,8 @@
                     <option value="package1">Package 1</option>
                     <option value="package2">Package 2</option>
                     <option value="package3">Package 3</option>
+                    <option value="package2">Package 4</option>
+                    <option value="package3">Package 5</option>
                 </select>
 
                 <!-- Buttons -->
