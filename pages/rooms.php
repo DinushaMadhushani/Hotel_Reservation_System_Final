@@ -332,7 +332,7 @@
                             <p class="card-text">Luxurious suite with separate living area.</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="room-price">$349<span class="text-muted">/night</span></div>
-                                <a href="#" class="btn card-btn">Book Now</a>
+                                <a href="package.html" class="btn card-btn">Book Now</a>
                             </div>
                         </div>
                     </div>

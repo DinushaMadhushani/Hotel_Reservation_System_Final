@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Reservation System - Packages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .package-collection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .package-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .package-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .package-card input[type="checkbox"] {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .package-card h3 {
+            margin: 0 0 10px;
+            font-size: 20px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .package-card p {
+            margin: 0 0 15px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .package-card .price {
+            font-size: 22px;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .total-cost {
+            margin-top: 30px;
+            text-align: right;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .total-cost span {
+            color: #28a745;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Your Packages</h1>
+        <div class="package-collection" id="package-collection">
+            <!-- Package cards will be dynamically populated here -->
+        </div>
+        <div class="total-cost">
+            Total Cost: $<span id="total-cost">0.00</span>
+        </div>
+        <button id="confirm-booking">Confirm Booking</button>
+    </div>
+
+    <script>
+        // Simulated API response (replace this with actual API calls if needed)
+        const mockPackages = [
+            { id: 1, name: "Breakfast Package", description: "Complimentary breakfast for two.", price: 20 },
+            { id: 2, name: "Spa Session", description: "One-hour spa session for relaxation.", price: 50 },
+            { id: 3, name: "Airport Transfer", description: "Round-trip airport transfer service.", price: 30 },
+            { id: 4, name: "Dinner Buffet", description: "All-you-can-eat dinner buffet.", price: 40 },
+        ];
+
+        // Function to populate package cards
+        function populatePackageCards() {
+            const packageCollection = document.getElementById("package-collection");
+            mockPackages.forEach(pkg => {
+                const card = document.createElement("div");
+                card.className = "package-card";
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.value = pkg.id;
+
+                const title = document.createElement("h3");
+                title.textContent = pkg.name;
+
+                const description = document.createElement("p");
+                description.textContent = pkg.description;
+
+                const price = document.createElement("div");
+                price.className = "price";
+                price.textContent = `$${pkg.price.toFixed(2)}`;
+
+                card.appendChild(checkbox);
+                card.appendChild(title);
+                card.appendChild(description);
+                card.appendChild(price);
+
+                packageCollection.appendChild(card);
+            });
+        }
+
+        // Function to calculate the total cost
+        function calculateTotalCost() {
+            const checkboxes = document.querySelectorAll("#package-collection input[type='checkbox']:checked");
+            let total = 0;
+            checkboxes.forEach(checkbox => {
+                const selectedPackage = mockPackages.find(pkg => pkg.id == checkbox.value);
+                if (selectedPackage) {
+                    total += selectedPackage.price;
+                }
+            });
+            document.getElementById("total-cost").textContent = total.toFixed(2);
+        }
+
+        // Event listener for checkboxes
+        document.addEventListener("DOMContentLoaded", () => {
+            populatePackageCards();
+
+            const packageCollection = document.getElementById("package-collection");
+            packageCollection.addEventListener("change", calculateTotalCost);
+
+            // Confirm booking button
+            const confirmBookingButton = document.getElementById("confirm-booking");
+            confirmBookingButton.addEventListener("click", () => {
+                const checkboxes = document.querySelectorAll("#package-collection input[type='checkbox']:checked");
+                const selectedPackages = [];
+                checkboxes.forEach(checkbox => {
+                    const selectedPackage = mockPackages.find(pkg => pkg.id == checkbox.value);
+                    if (selectedPackage) {
+                        selectedPackages.push(selectedPackage.name);
+                    }
+                });
+
+                alert(`Booking confirmed!\nSelected Packages: ${selectedPackages.join(", ")}\nTotal Cost: $${document.getElementById("total-cost").textContent}`);
+            });
+        });
+    </script>
+</body>
+</html>

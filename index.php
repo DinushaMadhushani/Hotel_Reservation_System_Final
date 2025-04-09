@@ -8,16 +8,18 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #2DBD6E;
-            --secondary: #0A1A28;
-            --light: #E5F5F9;
-            --accent: #F5C518;
+            --primary: #1a1a1a;
+            --secondary: #ffffff;
+            --accent: #d4af37;
+            --light: #f5f5f5;
+            --dark: #121212;
         }
         body {
             font-family: 'Poppins', sans-serif;
             line-height: 1.7;
             padding-top: 80px;
-            color: var(--secondary);
+            color: var(--primary);
+            background-color: var(--light);
         }
         /* Enhanced Navigation */
         .navbar {
@@ -36,21 +38,21 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         .navbar-nav a {
-            color: white !important;
+            color: var(--secondary) !important;
             font-weight: 600;
             position: relative;
             transition: all 0.3s ease;
             padding: 1rem 1.5rem;
         }
         .navbar-nav a:hover {
-            color: var(--light) !important;
+            color: var(--accent) !important;
         }
         .navbar-nav a::after {
             content: '';
             position: absolute;
             width: 0;
             height: 2px;
-            background: var(--light);
+            background: var(--accent);
             bottom: 0;
             left: 50%;
             transition: all 0.3s ease;
@@ -60,7 +62,7 @@
             left: 10%;
         }
         .login-btn {
-            background: var(--secondary);
+            background: var(--accent);
             border-radius: 12px;
             padding: 10px 25px;
             margin-left: 15px;
@@ -86,7 +88,7 @@
             top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: white;
+            color: var(--secondary);
             text-align: center;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
@@ -97,9 +99,8 @@
             font-weight: 600;
         }
         .hero-content p {
-            font-size: 1.5  rem;
+            font-size: 1.5rem;
             margin-bottom: 40px;
-            
         }
         .search-bar {
             position: absolute;
@@ -116,22 +117,22 @@
         .search-bar input[type="date"],
         .search-bar select {
             padding: 12px;
-            border: 1px solid var(--primary);
+            border: 1px solid var(--accent);
             border-radius: 15px;
-            background-color: white;
-            color: var(--secondary);
+            background-color: var(--secondary);
+            color: var(--primary);
             font-size: 1rem;
         }
         .search-bar button {
             padding: 12px 25px;
-            background-color: var(--primary);
-            color: white;
+            background-color: var(--accent);
+            color: var(--secondary);
             border-radius: 15px;
             font-weight: 600;
             transition: all 0.3s ease;
         }
         .search-bar button:hover {
-            background-color: var(--accent);
+            background-color: var(--dark);
         }
         .image-slider {
             position: absolute;
@@ -185,17 +186,17 @@
             transition: all 0.3s ease;
         }
         .feature-box:hover {
-            background-color: var(--primary);
-            color: white;
+            background-color: var(--accent);
+            color: var(--secondary);
         }
         .feature-icon {
             font-size: 3rem;
-            color: var(--primary);
+            color: var(--accent);
             margin-bottom: 15px;
         }
         .testimonials {
             background: linear-gradient(45deg, var(--primary), var(--accent));
-            color: white;
+            color: var(--secondary);
             padding: 50px 0;
         }
         .testimonial-text {
@@ -203,7 +204,7 @@
             margin-bottom: 20px;
         }
         .social-icons a {
-            color: white;
+            color: var(--secondary);
             margin: 0 10px;
             font-size: 1.5rem;
         }
@@ -241,7 +242,6 @@
         </div>
     </div>
 </nav>
-
 <!-- Hero Section -->
 <section class="hero-section" style="background-image: url('../assets/images/hero/P (1).jpg');">
     <div class="hero-content">
@@ -275,7 +275,6 @@
         <img src="./assets/images/hero/P (6).jpg" alt="Slide 6">
     </div>
 </section>
-
 <!-- Rooms Section -->
 <section id="rooms" class="py-5">
     <div class="container">
@@ -309,7 +308,6 @@
         </div>
     </div>
 </section>
-
 <!-- Why Choose Us Section -->
 <section id="features" class="why-choose-us">
     <div class="container">
@@ -339,7 +337,6 @@
         </div>
     </div>
 </section>
-
 <!-- Testimonials Section -->
 <section id="testimonials" class="testimonials">
     <div class="container">
@@ -358,7 +355,6 @@
         </div>
     </div>
 </section>
-
 <!-- Footer Section -->
 <footer class="bg-dark text-white py-4">
     <div class="container">
@@ -393,7 +389,6 @@
         </div>
     </div>
 </footer>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://kit.fontawesome.com/your-font-awesome-key.js" crossorigin="anonymous"></script>
 <script>
@@ -409,7 +404,6 @@
         './assets/images/hero/P (5).jpg',
         './assets/images/hero/P (6).jpg'
     ];
-    
     function showSlide(index) {
         slides.forEach((slide, i) => {
             slide.classList.toggle('active', i === index);
@@ -417,13 +411,11 @@
         currentSlide = index;
         heroSection.style.backgroundImage = `url('${backgroundImages[index]}')`;
     }
-
     // Auto-slide functionality with 5-second interval
     setInterval(() => {
         const nextSlide = (currentSlide + 1) % slides.length;
         showSlide(nextSlide);
     }, 5000);
-
     // Manual navigation
     slides.forEach((slide, index) => {
         slide.addEventListener('click', () => {
