@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luxury Gallery</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+      <!-- Fonts -->
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
@@ -22,12 +24,11 @@
             color: var(--dark);
         }
 
-        /* Enhanced Navigation */
-       .navbar {
+        .navbar {
             position: fixed;
             top: 0;
             width: 100%;
-            background: black;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 1000;
             transition: all 0.3s ease;
@@ -35,35 +36,20 @@
         .navbar-brand {
             font-family: 'Dancing Script', cursive;
             font-size: 2.5rem;
-            color: white !important;
+            color: var(--secondary) !important;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         .navbar-nav a {
-            color: white !important;
+            color: var(--secondary) !important;
             font-weight: 600;
-            position: relative;
             transition: all 0.3s ease;
             padding: 1rem 1.5rem;
         }
         .navbar-nav a:hover {
-            color: var(--light) !important;
-        }
-        .navbar-nav a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background: var(--light);
-            bottom: 0;
-            left: 50%;
-            transition: all 0.3s ease;
-        }
-        .navbar-nav a:hover::after {
-            width: 80%;
-            left: 10%;
+            color: var(--accent) !important;
         }
         .login-btn {
-            background: rgba(41, 41, 41, 0.2);
+            background: var(--accent);
             border-radius: 12px;
             padding: 10px 25px;
             margin-left: 15px;
@@ -74,7 +60,6 @@
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
-
         .hero {
             background: url("https://images.unsplash.com/photo-1584132967334-10e028bd69f7") no-repeat center center/cover;
             height: 80vh;
@@ -249,7 +234,7 @@
     </style>
 </head>
 <body data-bs-spy="scroll" data-bs-target="#navbarNav">
-    <!-- Navigation -->
+    
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
