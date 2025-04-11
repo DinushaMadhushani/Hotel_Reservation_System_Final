@@ -267,12 +267,12 @@
         <button class="btn">Search</button>
     </div>
     <div class="image-slider">
-        <img src="./assets/images/hero/P (1).jpg" alt="Slide 1" class="active">
-        <img src="./assets/images/hero/P (2).jpg" alt="Slide 2">
-        <img src="./assets/images/hero/P (3).jpg" alt="Slide 3">
-        <img src="./assets/images/hero/P (4).jpg" alt="Slide 4">
-        <img src="./assets/images/hero/P (5).jpg" alt="Slide 5">
-        <img src="./assets/images/hero/P (6).jpg" alt="Slide 6">
+        <img src="./assets/images/hero/img1.jpg" alt="Slide 1" class="active">
+        <img src="./assets/images/hero/img4.jpg" alt="Slide 2">
+        <img src="./assets/images/hero/img5.jpg" alt="Slide 3">
+        <img src="./assets/images/hero/img6.jpg" alt="Slide 4">
+        <img src="./assets/images/hero/image.jpg" alt="Slide 5">
+        <img src="./assets/images/hero/img7.jpg" alt="Slide 6">
     </div>
 </section>
 <!-- Rooms Section -->
@@ -282,9 +282,9 @@
         <div class="row g-4">
             <?php
             $rooms = [
-                ["image" => "../assets/images/rooms/first.jpg", "title" => "Deluxe Suite", "description" => "Spacious room with a king-size bed, private balcony, and city views.", "price" => 250, "amenities" => ["Free Wi-Fi", "Mini Bar", "24/7 Room Service"]],
-                ["image" => "../assets/images/rooms/second.jpg", "title" => "Executive Suite", "description" => "Luxurious suite with a separate living area, premium mattress, and spa-like bathroom.", "price" => 400, "amenities" => ["Personal Concierge", "Private Terrace", "Jacuzzi Tub"]],
-                ["image" => "../assets/images/rooms/third.jpg", "title" => "Standard Room", "description" => "Comfortable room with a queen-size bed, modern amenities, and elegant decor.", "price" => 150, "amenities" => ["Flat-screen TV", "Air Conditioning", "Daily Housekeeping"]]
+                ["image" => "./assets/images/rooms/first.jpeg", "title" => "Deluxe Suite", "description" => "Spacious room with a king-size bed, highly comfatable service, private balcony, and city views.", "price" => 250, "amenities" => ["Free Wi-Fi and internetcode", "Mini Bar", "24/7 Room Service"]],
+                ["image" => "./assets/images/rooms/second.jpg", "title" => "Executive Suite", "description" => "Luxurious suite with a separate living area, premium mattress, and spa-like bathroom.", "price" => 400, "amenities" => ["Personal Concierge", "Private Terrace", "Jacuzzi Tub"]],
+                ["image" => "./assets/images/rooms/third.jpg", "title" => "Standard Room", "description" => "Comfortable room with a queen-size bed, modern amenities, and elegant decor.", "price" => 150, "amenities" => ["Flat-screen TV", "Air Conditioning", "Daily Housekeeping"]]
             ];
             foreach ($rooms as $room):
             ?>
@@ -397,12 +397,12 @@
     const heroSection = document.querySelector('.hero-section');
     let currentSlide = 0;
     const backgroundImages = [
-        './assets/images/hero/p (1).jpg',
-        './assets/images/hero/P (2).jpg',
-        './assets/images/hero/P (3).jpg',
-        './assets/images/hero/P (4).jpg',
-        './assets/images/hero/P (5).jpg',
-        './assets/images/hero/P (6).jpg'
+        './assets/images/hero/img1.jpg',
+        './assets/images/hero/img4.jpg',
+        './assets/images/hero/img5.jpg',
+        './assets/images/hero/img6.jpg',
+        './assets/images/hero/image.jpg',
+        './assets/images/hero/img7.jpg'
     ];
     function showSlide(index) {
         slides.forEach((slide, i) => {

@@ -61,7 +61,7 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
         .hero {
-            background: url("https://images.unsplash.com/photo-1584132967334-10e028bd69f7") no-repeat center center/cover;
+            background: url("../assets/images/hero/img4.jpg") no-repeat center center/cover;
             height: 80vh;
             position: relative;
             display: flex;
@@ -70,6 +70,7 @@
             text-align: center;
             margin-top: 50px;
             padding: 0 2rem;
+            font-family:sans serif;
         }
 
         .hero-content {
@@ -79,6 +80,7 @@
         }
 
         .hero h1 {
+            
             font-size: 4rem;
             margin-bottom: 1rem;
             text-transform: uppercase;

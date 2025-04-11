@@ -70,10 +70,11 @@
             position: relative;
             display: flex;
             align-items: center;
-            color: var(--secondary);
+            color: var(--accent);
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         .hero-content {
+            font-family:sans serif;
             background: rgba(0, 0, 0, 0.7);
             padding: 2rem 3rem;
             border-radius: 15px;
@@ -478,7 +479,7 @@
         </div>
         <div class="col-md-4">
             <div class="card room-card">
-                <img src="../assets/images/rooms/R (2).jpg" class="card-img-top" alt="Twin Room">
+                <img src="../assets/images/rooms/twinroom.jpg" class="card-img-top" alt="Twin Room">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
                         <i class="fas fa-bed me-2 text-accent"></i>
@@ -501,7 +502,7 @@
         </div>
         <div class="col-md-4">
             <div class="card room-card">
-                <img src="https://via.placeholder.com/400x300/3498db/FFFFFF?text=Deluxe+Room" class="card-img-top" alt="Deluxe Room">
+                <img src="../assets/images/rooms/deluxeroom.jpg" class="card-img-top" alt="Deluxe Room">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
                         <i class="fas fa-star me-2 text-accent"></i>
@@ -510,14 +511,14 @@
                     <p class="card-text">Spacious room with modern amenities and city view.</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="room-price">$199<span class="text-muted">/night</span></div>
-                        <a href="#" class="btn btn-outline-accent">Book Now</a>
+                        <a href="booking_form.php" class="btn btn-outline-accent">Book Now</a>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card room-card">
-                <img src="https://via.placeholder.com/400x300/3498db/FFFFFF?text=Family+Room" class="card-img-top" alt="Family Room">
+                <img src="../assets/images/rooms/familyroom.jpg" class="card-img-top" alt="Family Room">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
                         <i class="fas fa-users me-2 text-accent"></i>
@@ -526,7 +527,24 @@
                     <p class="card-text">Perfect for families with two queen beds.</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="room-price">$199<span class="text-muted">/night</span></div>
-                        <a href="#" class="btn btn-outline-accent">Book Now</a>
+                        <a href="booking_form.php" class="btn btn-outline-accent">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+            <div class="card room-card">
+                <img src="../assets/images/rooms/penthousesuits.jpeg" class="card-img-top" alt="Penthouse Suites">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-users me-2 text-accent"></i>
+                        <h4 class="card-title mb-0">Penthouse Suites</h4>
+                    </div>
+                    <p class="card-text"> Located on the highest floor of a hotel, these suites offer unparalleled views and luxury. </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="room-price">$199<span class="text-muted">/night</span></div>
+                        <a href="booking_Form.php" class="btn btn-outline-accent">Book Now</a>
                     </div>
                 </div>
             </div>
