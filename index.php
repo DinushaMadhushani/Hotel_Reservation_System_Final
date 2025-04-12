@@ -421,6 +421,7 @@
         slide.addEventListener('click', () => {
             showSlide(index);
         });
+    
     });
 </script>
 </body>
