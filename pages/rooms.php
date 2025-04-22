@@ -532,7 +532,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    
     <div class="col-md-4">
             <div class="card room-card">
                 <img src="../assets/images/rooms/penthousesuits.jpeg" class="card-img-top" alt="Penthouse Suites">
@@ -549,6 +549,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </section>
 
