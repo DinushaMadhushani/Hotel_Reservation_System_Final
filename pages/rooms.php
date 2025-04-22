@@ -27,42 +27,7 @@
             color: var(--primary);
             background-color: var(--light);
         }
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-        .navbar-brand {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
-            color: var(--secondary) !important;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-        .navbar-nav a {
-            color: var(--secondary) !important;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            padding: 1rem 1.5rem;
-        }
-        .navbar-nav a:hover {
-            color: var(--accent) !important;
-        }
-        .login-btn {
-            background: var(--accent);
-            border-radius: 12px;
-            padding: 10px 25px;
-            margin-left: 15px;
-            transition: transform 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        .login-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        }
+       
         .hero {
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
                         url('https://images.unsplash.com/photo-1582719365379-005b891343d8') no-repeat center center/cover;
@@ -200,34 +165,7 @@
     </style>
 </head>
 <body>
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container">
-        <a class="navbar-brand" href="#">EaSyStaY</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="../index.php">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./rooms.php">Rooms</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./gallery.php">Gallery</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./about_us.php">About Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn login-btn" href="../auth/login.php">Login/Sign Up</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<?php include '../includes/header.php'?>
 <!-- Hero Section -->
 <section class="hero">
     <div class="container">
