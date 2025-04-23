@@ -355,40 +355,8 @@
         </div>
     </div>
 </section>
-<!-- Footer Section -->
-<footer class="bg-dark text-white py-4">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <h5 class="mb-3">Contact Us</h5>
-                <p>123 Luxury Lane, Dream City, 12345</p>
-                <p>Phone: (123) 456-7890</p>
-                <p>Email: info@easystay.com</p>
-            </div>
-            <div class="col-md-4">
-                <h5 class="mb-3">Follow Us</h5>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <h5 class="mb-3">Newsletter</h5>
-                <form>
-                    <div class="input-group">
-                        <input type="email" class="form-control" placeholder="Enter your email">
-                        <button class="btn btn-primary" type="button">Subscribe</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class="text-center mt-4">
-            <p>&copy; <?php echo date('Y'); ?> EaSyStaY. All rights reserved.</p>
-        </div>
-    </div>
-</footer>
+
+<?php include './includes/footer.php';?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://kit.fontawesome.com/your-font-awesome-key.js" crossorigin="anonymous"></script>
 <script>

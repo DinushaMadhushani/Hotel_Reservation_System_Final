@@ -497,6 +497,7 @@
     <p class="lead">Choose your perfect room package and reserve today</p>
     <a href="./gallery.php" class="btn btn-light btn-lg mt-3">View Gallery</a>
 </section>
+<?php include '../includes/footer.php'?>
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
