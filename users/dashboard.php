@@ -71,18 +71,26 @@ $recentActivity = $activityStmt->get_result()->fetch_all(MYSQLI_ASSOC);
     
     <!-- Custom CSS -->
     <style>
-        :root {
+        /* :root {
             --primary: #28a745;
             --secondary: #ffc107;
+        } */
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #ffffff;
+            --accent: #d4af37;
+            --light: #f5f5f5;
+            --dark: #121212;
         }
         
         body {
             font-family: 'Poppins', sans-serif;
             background: #f8f9fa;
         }
-        
+         
         .sidebar {
-            background: linear-gradient(135deg, #28a745, #20c997);
+            /* background: linear-gradient(135deg, #28a745, #20c997); */
+            background: var(--accent);
             color: white;
             transition: all 0.3s ease;
         }
@@ -108,7 +116,7 @@ $recentActivity = $activityStmt->get_result()->fetch_all(MYSQLI_ASSOC);
         }
         
         .user-card {
-            background: linear-gradient(135deg, #28a745, #20c997);
+         /*   background: linear-gradient(135deg, #28a745, #20c997);*/
             color: white;
         }
         
@@ -127,7 +135,7 @@ $recentActivity = $activityStmt->get_result()->fetch_all(MYSQLI_ASSOC);
             border-radius: 10px;
             transition: all 0.3s ease;
         }
-        
+         
         .activity-item:hover {
             transform: translateX(10px);
         }

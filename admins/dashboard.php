@@ -38,17 +38,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     <!-- Custom CSS -->
     <style>
-        :root {
-            --primary: #6a11cb;
-            --secondary: #2575fc;
+         :root {
+            --primary: #1a1a1a;
+            --secondary: #ffffff;
+            --accent: #d4af37;
+            --light: #f5f5f5;
+            --dark: #121212;
         }
+        
         
         body {
             font-family: 'Poppins', sans-serif;
         }
         
         .bg-gradient-purple {
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    background: accent  ;
 }
 
 /* Sidebar Styling */
