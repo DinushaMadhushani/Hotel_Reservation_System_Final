@@ -185,9 +185,7 @@ $recentActivity = $activityStmt->get_result()->fetch_all(MYSQLI_ASSOC);
             <div class="d-flex justify-content-between align-items-center py-3">
                 <h3 class="my-0">Welcome Back, <?= htmlspecialchars($user['FullName']) ?>!</h3>
                 <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="fa-solid fa-coins"></i> Loyalty Points: 150
-                    </div>
+                    
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newBookingModal">
                         <i class="fa-solid fa-plus"></i> New Booking
                     </button>
