@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+require '../config/db.con.php';
 // Simulated logged-in user data (replace this with your actual database logic)
 $loggedInUser = [
     'UserID' => 1,
