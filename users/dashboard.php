@@ -166,7 +166,7 @@ $recentActivity = $activityStmt->get_result()->fetch_all(MYSQLI_ASSOC);
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="profile.php">
+                            <a class="nav-link" href="user_profile.php">
                                 <i class="fa-solid fa-user-edit me-3"></i> Profile
                             </a>
                         </li>
