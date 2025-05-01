@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             --accent: #d4af37;
             --light: #f5f5f5;
             --dark: #121212;
+            --side-bar:rgb(1, 112, 187);
         }
         
         
@@ -57,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 /* Sidebar Styling */
 .sidebar {
+    background: var(--side-bar);
     width: 280px;
     transition: all 0.3s ease-in-out;
 }

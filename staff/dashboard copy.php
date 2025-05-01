@@ -78,15 +78,22 @@ $requests = $requestsStmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <!-- Custom CSS -->
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #2980b9;
+            --primary: #1a1a1a;
+            --secondary: #ffffff;
+            --accent: #d4af37;
+            --light: #f5f5f5;
+            --dark: #121212;
         }
         
         body {
             font-family: 'Poppins', sans-serif;
             background: #f8f9fa;
             margin-top: 80px;
+        }
+
+
+        .navbar-brand{
+            color:white;
         }
         
         .top-nav {
@@ -300,7 +307,7 @@ $requests = $requestsStmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                                     </small>
                                                 </div>
                                                 <div class="text-end">
-                                                    <span class="status-badge status-<?= htmlspecialchars($request['Status']) ?> mb-2">
+                                                    <span class="status-badge badge bg-success status-<?= htmlspecialchars($request['Status']) ?> mb-2">
                                                         <?= htmlspecialchars($request['Status']) ?>
                                                     </span>
                                                     <br>
