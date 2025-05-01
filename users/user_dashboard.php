@@ -150,12 +150,12 @@ $recentActivity = $activityStmt->get_result()->fetch_all(MYSQLI_ASSOC);
                 </ul>
                 
                 <div class="d-flex align-items-center gap-3">
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newBookingModal">
+                    <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#newBookingModal">
                         <i class="fa-solid fa-plus me-2"></i>New Booking
                     </button>
                     
                     <div class="dropdown">
-                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" 
+                        <a class="btn btn-light dropdown-toggle" href="#" role="button" 
                            data-bs-toggle="dropdown">
                             <i class="fa-solid fa-user me-2"></i><?= htmlspecialchars($user['FullName']) ?>
                         </a>
