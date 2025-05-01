@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 header("Location: ../admins/dashboard.php");
                                 exit();
                             case 'Staff':
-                                header("Location: ../staff/dashboard copy.php");
+                                header("Location: ../staff/dashboard.php");
                                 exit();
                             case 'Customer':
                                 header("Location: ../users/user_dashboard.php");

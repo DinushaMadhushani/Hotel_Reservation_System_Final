@@ -2,7 +2,6 @@
 session_start();
 require '../config/db.con.php';
 
-// Verify staff access
 if (!isset($_SESSION['UserID']) || $_SESSION['UserType'] !== 'Staff') {
     header("Location: ../login.php");
     exit();
@@ -79,17 +78,54 @@ $requests = $requestsStmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <!-- Custom CSS -->
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
+            --primary: #1a1a1a;
+            --secondary: #ffffff;
+            --accent: #d4af37;
+            --light: #f5f5f5;
+            --dark: #121212;
         }
         
-        .sidebar {
-            background: linear-gradient(135deg, #2c3e50, #2980b9);
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+            margin-top: 80px;
+        }
+
+
+        .navbar-brand{
+            color:white;
+        }
+        
+        .top-nav {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            padding: 1rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white !important;
+        }
+        
+        .user-dropdown .dropdown-toggle {
+            color: white !important;
+            background: transparent;
+            border: none;
         }
         
         .task-card {
-            border-left: 4px solid #3498db;
+            border-left: 4px solid var(--secondary);
             transition: transform 0.3s ease;
         }
         
@@ -101,149 +137,197 @@ $requests = $requestsStmt->get_result()->fetch_all(MYSQLI_ASSOC);
             font-size: 0.8rem;
             padding: 4px 8px;
             border-radius: 4px;
+            color: white;
         }
         
         .status-Pending { background: #f1c40f; }
-        .status-Assigned { background: #3498db; }
+        .status-Assigned { background: var(--secondary); }
         .status-InProgress { background: #2ecc71; }
         .status-Completed { background: #95a5a6; }
+        
+        .service-request {
+            background: rgba(52, 152, 219, 0.05);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .service-request:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
     </style>
 </head>
 <body>
-    <div class="d-flex">
-        <!-- Sidebar -->
-        <nav class="sidebar col-md-3 col-lg-2 d-md-block">
-            <div class="position-sticky">
-                <div class="user-profile text-center p-4">
-                    <div class="avatar mb-3">
-                        <i class="fa-solid fa-user-tie fa-3x"></i>
+    <!-- Top Navigation -->
+    <nav class="top-nav navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fa-solid fa-hotel me-2"></i>Staff Dashboard
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="fa-solid fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="tasks.php">
+                            <i class="fa-solid fa-tasks me-2"></i>Tasks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="schedule.php">
+                            <i class="fa-solid fa-calendar-alt me-2"></i>Schedule
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex align-items-center gap-3">
+                    <div class="dropdown user-dropdown">
+                        <a class="dropdown-toggle d-flex align-items-center" href="#" role="button" 
+                           data-bs-toggle="dropdown">
+                            <div class="me-2 text-end">
+                                <div class="fw-bold"><?= htmlspecialchars($staff['FullName']) ?></div>
+                                <small>Staff Member</small>
+                            </div>
+                            <i class="fa-solid fa-user-tie fa-lg"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="profile.php">
+                                <i class="fa-solid fa-user-gear me-2"></i>Profile
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="../auth/logout.php">
+                                <i class="fa-solid fa-right-from-bracket me-2"></i>Logout
+                            </a></li>
+                        </ul>
                     </div>
-                    <h5><?= htmlspecialchars($staff['FullName']) ?></h5>
-                    <small class="text-muted">Staff Member</small>
-                </div>
-                <div class="menu p-3">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">
-                                <i class="fa-solid fa-tachometer-alt me-3"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="tasks.php">
-                                <i class="fa-solid fa-tasks me-3"></i> My Tas7ks
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="schedule.php">
-                                <i class="fa-solid fa-calendar-alt me-3"></i> Schedule
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="../auth/logout.php">
-                                <i class="fa-solid fa-sign-out-alt me-3"></i> Logout
-                            </a>
-                        </li>
-                    </ul>
                 </div>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <!-- Main Content -->
-        <div class="content col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div class="d-flex justify-content-between align-items-center py-4">
-                <h3 class="my-0">Good <?= date('a') === 'am' ? 'Morning' : 'Afternoon' ?>, <?= htmlspecialchars($staff['FullName']) ?></h3>
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="fa-solid fa-clock"></i> <?= date('l, F jS') ?>
+    <!-- Main Content -->
+    <div class="container-fluid">
+        <div class="row mt-4">
+            <!-- Welcome Header -->
+            <div class="col-12 mb-4">
+                <h3 class="fw-bold">Good <?= date('a') === 'am' ? 'Morning' : 'Afternoon' ?>, <?= htmlspecialchars($staff['FullName']) ?></h3>
+                <p class="text-muted"><?= date('l, F jS Y') ?></p>
+            </div>
+
+            <!-- Today's Schedule Card -->
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100" data-aos="fade-up">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fa-solid fa-calendar-day me-2"></i>Today's Schedule
+                        </h5>
+                        <?php if ($schedule): ?>
+                            <div class="schedule-item p-3 rounded mt-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="fa-solid fa-clock me-2"></i>
+                                        <?= date('g:i A', strtotime($schedule['StartTime'])) ?> 
+                                        - 
+                                        <?= date('g:i A', strtotime($schedule['EndTime'])) ?>
+                                    </div>
+                                    <span class="badge bg-primary">Active</span>
+                                </div>
+                            </div>
+                        <?php else: ?>
+                            <div class="text-center py-4">
+                                <i class="fa-solid fa-calendar-xmark fa-2x text-muted"></i>
+                                <p class="text-muted mt-2">No schedule today</p>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
 
-            <!-- Today's Schedule -->
-            <div class="card mb-4" data-aos="fade-up">
-                <div class="card-body">
-                    <h5 class="card-title mb-4">
-                        <i class="fa-solid fa-calendar-day me-2"></i>Today's Schedule
-                    </h5>
-                    <?php if ($schedule): ?>
-                        <div class="schedule-item p-3 rounded">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <i class="fa-solid fa-clock me-2"></i>
-                                    <?= date('g:i A', strtotime($schedule['StartTime'])) ?> 
-                                    to 
-                                    <?= date('g:i A', strtotime($schedule['EndTime'])) ?>
-                                </div>
-                                <span class="badge bg-primary">Active Shift</span>
+            <!-- Assigned Tasks Card -->
+            <div class="col-lg-8 mb-4">
+                <div class="card h-100" data-aos="fade-up">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fa-solid fa-clipboard-list me-2"></i>Assigned Tasks
+                        </h5>
+                        <?php if (!empty($tasks)): ?>
+                            <div class="mt-3">
+                                <?php foreach ($tasks as $task): ?>
+                                    <div class="task-card p-3 mb-2 rounded">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6><?= htmlspecialchars($task['RequestType']) ?></h6>
+                                                <small class="text-muted">
+                                                    Room <?= htmlspecialchars($task['RoomNumber']) ?> 
+                                                    | <?= date('M d, Y', strtotime($task['AssignmentDateTime'])) ?>
+                                                </small>
+                                            </div>
+                                            <span class="status-badge status-<?= htmlspecialchars($task['TaskStatus']) ?>">
+                                                <?= htmlspecialchars($task['TaskStatus']) ?>
+                                            </span>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
-                        </div>
-                    <?php else: ?>
-                        <p class="text-muted text-center py-3">No schedule for today</p>
-                    <?php endif; ?>
+                        <?php else: ?>
+                            <div class="text-center py-4">
+                                <i class="fa-solid fa-check-circle fa-2x text-muted"></i>
+                                <p class="text-muted mt-2">No assigned tasks</p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
 
-            <!-- Assigned Tasks -->
-            <div class="card mb-4" data-aos="fade-up">
-                <div class="card-body">
-                    <h5 class="card-title mb-4">
-                        <i class="fa-solid fa-clipboard-list me-2"></i>Assigned Tasks
-                    </h5>
-                    <?php if (!empty($tasks)): ?>
-                        <?php foreach ($tasks as $task): ?>
-                            <div class="task-card p-3 mb-2 rounded">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h6><?= htmlspecialchars($task['RequestType']) ?></h6>
-                                        <small class="text-muted">
-                                            Room <?= htmlspecialchars($task['RoomNumber']) ?> 
-                                            | Assigned <?= date('M d, Y', strtotime($task['AssignmentDateTime'])) ?>
-                                        </small>
+            <!-- Service Requests Card -->
+            <div class="col-12 mb-4">
+                <div class="card" data-aos="fade-up">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fa-solid fa-bell me-2"></i>Pending Requests
+                        </h5>
+                        <?php if (!empty($requests)): ?>
+                            <div class="row mt-3">
+                                <?php foreach ($requests as $request): ?>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="service-request p-3 rounded">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <h6><?= htmlspecialchars($request['RequestType']) ?></h6>
+                                                    <small class="text-muted">
+                                                        Room <?= htmlspecialchars($request['RoomNumber']) ?><br>
+                                                        <?= htmlspecialchars($request['FullName']) ?>
+                                                    </small>
+                                                </div>
+                                                <div class="text-end">
+                                                    <span class="status-badge badge bg-success status-<?= htmlspecialchars($request['Status']) ?> mb-2">
+                                                        <?= htmlspecialchars($request['Status']) ?>
+                                                    </span>
+                                                    <br>
+                                                    <a href="handle_request.php?rid=<?= $request['RequestID'] ?>" 
+                                                       class="btn btn-sm btn-primary">
+                                                        <i class="fa-solid fa-arrow-right"></i> Handle
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <span class="status-badge status-<?= htmlspecialchars($task['TaskStatus']) ?>">
-                                        <?= htmlspecialchars($task['TaskStatus']) ?>
-                                    </span>
-                                </div>
+                                <?php endforeach; ?>
                             </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p class="text-muted text-center py-3">No assigned tasks</p>
-                    <?php endif; ?>
-                </div>
-            </div>
-
-            <!-- Service Requests -->
-            <div class="card mb-4" data-aos="fade-up">
-                <div class="card-body">
-                    <h5 class="card-title mb-4">
-                        <i class="fa-solid fa-bell me-2"></i>Service Requests
-                    </h5>
-                    <?php if (!empty($requests)): ?>
-                        <?php foreach ($requests as $request): ?>
-                            <div class="service-request p-3 mb-2 rounded">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h6><?= htmlspecialchars($request['RequestType']) ?></h6>
-                                        <small class="text-muted">
-                                            Guest: <?= htmlspecialchars($request['FullName']) ?><br>
-                                            Room <?= htmlspecialchars($request['RoomNumber']) ?>
-                                        </small>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <span class="status-badge status-<?= htmlspecialchars($request['Status']) ?> me-3">
-                                            <?= htmlspecialchars($request['Status']) ?>
-                                        </span>
-                                        <a href="handle_request.php?rid=<?= $request['RequestID'] ?>" 
-                                           class="btn btn-sm btn-primary">
-                                            <i class="fa-solid fa-check"></i> Take Action
-                                        </a>
-                                    </div>
-                                </div>
+                        <?php else: ?>
+                            <div class="text-center py-4">
+                                <i class="fa-solid fa-inbox fa-2x text-muted"></i>
+                                <p class="text-muted mt-2">No pending requests</p>
                             </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p class="text-muted text-center py-3">No pending requests</p>
-                    <?php endif; ?>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -262,7 +346,6 @@ $requests = $requestsStmt->get_result()->fetch_all(MYSQLI_ASSOC);
                 const taskId = $(this).data('task');
                 const newStatus = $(this).val();
                 
-                // Send AJAX request to update status
                 $.post('update_task.php', {
                     task_id: taskId,
                     status: newStatus
