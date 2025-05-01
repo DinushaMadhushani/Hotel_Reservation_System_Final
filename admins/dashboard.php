@@ -2,15 +2,13 @@
 session_start();
 require '../config/db.con.php';
 
-// Authentication check
 if (!isset($_SESSION['UserType']) || $_SESSION['UserType'] !== 'Admin') {
-    header("Location: ../auth/login.php"); // Adjust path as needed
+    header("Location: ../auth/login.php");
     exit();
 }
 
 // Handle CRUD operations
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // User management
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
             case 'delete_user':
@@ -38,114 +36,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     <!-- Custom CSS -->
     <style>
-         :root {
+        :root {
             --primary: #1a1a1a;
             --secondary: #ffffff;
             --accent: #d4af37;
-            --light: #f5f5f5;
-            --dark: #121212;
-            --side-bar:rgb(1, 112, 187);
+            --side-bar:rgb(197, 164, 54);
         }
-        
         
         body {
             font-family: 'Poppins', sans-serif;
+            margin-top: 80px;
         }
         
-        .bg-gradient-purple {
-    background: accent  ;
-}
-
-/* Sidebar Styling */
-.sidebar {
-    background: var(--side-bar);
-    width: 280px;
-    transition: all 0.3s ease-in-out;
-}
-
-.sidebar .nav-link {
-    padding: 1rem 1.5rem;
-    border-radius: 0;
-    transition: all 0.3s ease;
-}
-
-.sidebar .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: translateX(10px);
-}
-
-.sidebar .nav-link.active {
-    background-color: rgba(255, 255, 255, 0.15);
-    border-right: 4px solid white;
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .sidebar {
-        width: 100%;
-        position: fixed;
-        z-index: 1000;
-    }
-    
-    .offcanvas-md {
-        max-width: 280px;
-    }
-    
-    .nav-text {
-        display: none;
-    }
-    
-    .sidebar-header {
-        display: none;
-    }
-}
-
-/* Add animation to links */
-.nav-link {
-    animation: fadeInLeft 0.5s ease-out;
-}
-
-@keyframes fadeInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
+        .top-nav {
+            background: var(--side-bar);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
         
-        .content-header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border-radius: 10px 10px 0 0;
+        .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            padding: 1rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white !important;
+        }
+        
+        .brand-logo {
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        .user-dropdown .dropdown-toggle {
+            color: white !important;
+            background: transparent;
+            border: none;
         }
         
         .card {
             border: none;
-            border-radius: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: transform 0.2s ease;
         }
         
         .card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .dataTables_wrapper {
-            padding: 1rem;
-        }
-        
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
+            transform: translateY(-3px);
         }
         
         .status-dot {
@@ -153,312 +96,319 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             height: 10px;
             border-radius: 50%;
             display: inline-block;
-            margin-right: 8px;
         }
         
-        .status-available { background: #198754; }
+        .status-available { background: #28a745; }
         .status-occupied { background: #dc3545; }
         .status-maintenance { background: #ffc107; }
         
-        @media (max-width: 768px) {
-            .sidebar {
-                position: fixed;
-                height: auto;
-                width: 100%;
-            }
-            .content {
-                margin-left: 0 !important;
-            }
+        .dataTables_wrapper {
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="d-flex">
-        <!-- Sidebar -->
-<nav class="sidebar navbar-dark bg-gradient-purple">
-    <!-- Mobile Toggle Button -->
-    <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <!-- Brand Logo -->
-    <div class="sidebar-header text-center py-4">
-        <i class="fa-solid fa-hotel fa-3x mb-2 text-white"></i>
-        <h4 class="fw-bold text-white">Hotel Admin</h4>
-    </div>
-
-    <!-- Navigation Links -->
-    <div class="offcanvas-md offcanvas-start" tabindex="-1" id="sidebarMenu">
-        <div class="offcanvas-body d-flex flex-column p-0">
-            <ul class="nav nav-pills flex-column mb-auto">
-                <li class="nav-item">
-                    <a href="?page=dashboard" class="nav-link link-light" aria-current="page">
-                        <i class="fa-solid fa-tachometer-alt me-3"></i>
-                        <span class="nav-text">Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="?page=users" class="nav-link link-light">
-                        <i class="fa-solid fa-users me-3"></i>
-                        <span class="nav-text">Users</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="?page=rooms" class="nav-link link-light">
-                        <i class="fa-solid fa-door-open me-3"></i>
-                        <span class="nav-text">Rooms</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="?page=bookings" class="nav-link link-light">
-                        <i class="fa-solid fa-calendar-check me-3"></i>
-                        <span class="nav-text">Bookings</span>
-                    </a>
-                </li>
-            </ul>
+    <!-- Top Navigation -->
+    <nav class="top-nav navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand brand-logo" href="#">
+                <i class="fa-solid fa-hotel me-2"></i>Hotel Admin
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($_GET['page'] ?? '') === 'dashboard' ? 'active' : '' ?>" 
+                           href="?page=dashboard">
+                            <i class="fa-solid fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($_GET['page'] ?? '') === 'users' ? 'active' : '' ?>" 
+                           href="?page=users">
+                            <i class="fa-solid fa-users me-2"></i>Users
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($_GET['page'] ?? '') === 'rooms' ? 'active' : '' ?>" 
+                           href="?page=rooms">
+                            <i class="fa-solid fa-door-open me-2"></i>Rooms
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($_GET['page'] ?? '') === 'bookings' ? 'active' : '' ?>" 
+                           href="?page=bookings">
+                            <i class="fa-solid fa-calendar-check me-2"></i>Bookings
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex align-items-center">
+                    <div class="dropdown user-dropdown">
+                        <a class="dropdown-toggle d-flex align-items-center" href="#" 
+                           role="button" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-user-shield me-2"></i>
+                            <span>Admin</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#">
+                                <i class="fa-solid fa-user-cog me-2"></i>Profile
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="../auth/logout.php">
+                                <i class="fa-solid fa-right-from-bracket me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-
-        <!-- Main Content -->
-        <div class="content col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
-                <div class="container-fluid">
-                    <button class="btn btn-primary d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar">
-                        <i class="fa-solid fa-bars"></i>
-                    </button>
-                    <div class="ms-auto">
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                <i class="fa-solid fa-user me-2"></i> Admin
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Profile</a></li>
-                                <li><a class="dropdown-item" href="../auth/logout.php">Logout</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            <?php
-            $page = $_GET['page'] ?? 'dashboard';
-            switch($page):
-                case 'dashboard':
-            ?>
-                <div class="content-header p-4 rounded">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h3 class="mb-0">Dashboard</h3>
-                        <div class="d-flex">
-                            <div class="me-4">
-                                <p class="mb-1">Total Rooms</p>
-                                <h4 class="fw-bold"><?php echo $conn->query("SELECT COUNT(*) FROM Rooms")->fetch_row()[0]; ?></h4>
-                            </div>
-                            <div class="me-4">
-                                <p class="mb-1">Bookings This Month</p>
-                                <h4 class="fw-bold"><?php echo $conn->query("SELECT COUNT(*) FROM Bookings WHERE MONTH(CreatedAt) = MONTH(NOW())")->fetch_row()[0]; ?></h4>
-                            </div>
-                            <div>
-                                <p class="mb-1">Active Users</p>
-                                <h4 class="fw-bold"><?php echo $conn->query("SELECT COUNT(*) FROM Users WHERE UserType = 'Customer'")->fetch_row()[0]; ?></h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row mt-4">
-                    <div class="col-md-6">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title mb-4">Room Status</h5>
-                                <div class="d-flex justify-content-around">
-                                    <?php
-                                    $status_counts = $conn->query("
-                                        SELECT AvailabilityStatus, COUNT(*) as count 
-                                        FROM Rooms 
-                                        GROUP BY AvailabilityStatus
-                                    ")->fetch_all(MYSQLI_ASSOC);
-                                    foreach($status_counts as $status):
-                                    ?>
-                                    <div class="text-center">
-                                        <span class="status-dot status-<?php echo strtolower($status['AvailabilityStatus']); ?>"></span>
-                                        <span><?php echo $status['AvailabilityStatus']; ?></span>
-                                        <h4><?php echo $status['count']; ?></h4>
-                                    </div>
-                                    <?php endforeach; ?>
+    <!-- Main Content -->
+    <div class="container-fluid p-4">
+        <?php
+        $page = $_GET['page'] ?? 'dashboard';
+        switch($page):
+            case 'dashboard':
+        ?>
+            <div class="row g-4">
+                <!-- Stats Cards -->
+                <div class="col-12">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Rooms</h5>
+                                    <h2 class="fw-bold">
+                                        <?= $conn->query("SELECT COUNT(*) FROM Rooms")->fetch_row()[0] ?>
+                                    </h2>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title mb-4">Recent Bookings</h5>
-                                <div class="table-responsive">
-                                    <table class="table table-borderless">
-                                        <tbody>
-                                            <?php
-                                            $bookings = $conn->query("
-                                                SELECT b.BookingID, u.FullName, r.RoomNumber, b.CheckInDate 
-                                                FROM Bookings b
-                                                JOIN Users u ON b.UserID = u.UserID
-                                                JOIN Rooms r ON b.RoomID = r.RoomID
-                                                ORDER BY b.CreatedAt DESC 
-                                                LIMIT 5
-                                            ")->fetch_all(MYSQLI_ASSOC);
-                                            foreach($bookings as $booking):
-                                            ?>
-                                            <tr>
-                                                <td><div class="user-avatar"><?php echo substr($booking['FullName'], 0, 1); ?></div></td>
-                                                <td>
-                                                    <p class="mb-0"><?php echo $booking['FullName']; ?></p>
-                                                    <small class="text-muted"><?php echo $booking['RoomNumber']; ?></small>
-                                                </td>
-                                                <td><?php echo date('M d', strtotime($booking['CheckInDate'])); ?></td>
-                                            </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Monthly Bookings</h5>
+                                    <h2 class="fw-bold">
+                                        <?= $conn->query("SELECT COUNT(*) FROM Bookings WHERE MONTH(CreatedAt) = MONTH(NOW())")->fetch_row()[0] ?>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Active Users</h5>
+                                    <h2 class="fw-bold">
+                                        <?= $conn->query("SELECT COUNT(*) FROM Users WHERE UserType = 'Customer'")->fetch_row()[0] ?>
+                                    </h2>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-            <?php break; case 'users': ?>
-                <div class="content-header p-4 rounded">
-                    <h3 class="mb-0">User Management</h3>
-                </div>
-                <div class="card mt-4">
-                    <div class="card-body">
-                        <table id="usersTable" class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Type</th>
-                                    <th>Phone</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                <!-- Room Status -->
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">Room Status</h5>
+                            <div class="row g-4">
                                 <?php
-                                $users = $conn->query("SELECT * FROM Users")->fetch_all(MYSQLI_ASSOC);
-                                foreach($users as $user):
-                                ?>
-                                <tr>
-                                    <td><?php echo $user['UserID']; ?></td>
-                                    <td><?php echo $user['FullName']; ?></td>
-                                    <td><?php echo $user['Email']; ?></td>
-                                    <td><?php echo $user['UserType']; ?></td>
-                                    <td><?php echo $user['PhoneNumber'] ?: '-'; ?></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-danger" onclick="deleteUser(<?php echo $user['UserID']; ?>)">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            <?php break; case 'rooms': ?>
-                <div class="content-header p-4 rounded">
-                    <h3 class="mb-0">Room Management</h3>
-                </div>
-                <div class="card mt-4">
-                    <div class="card-body">
-                        <table id="roomsTable" class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Room Number</th>
-                                    <th>Type</th>
-                                    <th>Price</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $rooms = $conn->query("SELECT * FROM Rooms")->fetch_all(MYSQLI_ASSOC);
-                                foreach($rooms as $room):
-                                ?>
-                                <tr>
-                                    <td><?php echo $room['RoomNumber']; ?></td>
-                                    <td><?php echo $room['RoomType']; ?></td>
-                                    <td>$<?php echo number_format($room['BasePrice'], 2); ?></td>
-                                    <td>
-                                        <span class="status-dot status-<?php echo strtolower($room['AvailabilityStatus']); ?>"></span>
-                                        <?php echo $room['AvailabilityStatus']; ?>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-warning">
-                                            <i class="fa-solid fa-edit"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            <?php break; case 'bookings': ?>
-                <div class="content-header p-4 rounded">
-                    <h3 class="mb-0">Booking Management</h3>
-                </div>
-                <div class="card mt-4">
-                    <div class="card-body">
-                        <table id="bookingsTable" class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Booking ID</th>
-                                    <th>User</th>
-                                    <th>Room</th>
-                                    <th>Dates</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $bookings = $conn->query("
-                                    SELECT b.BookingID, u.FullName, r.RoomNumber, 
-                                           b.CheckInDate, b.CheckOutDate, b.BookingStatus
-                                    FROM Bookings b
-                                    JOIN Users u ON b.UserID = u.UserID
-                                    JOIN Rooms r ON b.RoomID = r.RoomID
+                                $status_counts = $conn->query("
+                                    SELECT AvailabilityStatus, COUNT(*) as count 
+                                    FROM Rooms 
+                                    GROUP BY AvailabilityStatus
                                 ")->fetch_all(MYSQLI_ASSOC);
-                                foreach($bookings as $booking):
+                                foreach($status_counts as $status):
                                 ?>
-                                <tr>
-                                    <td><?php echo $booking['BookingID']; ?></td>
-                                    <td><?php echo $booking['FullName']; ?></td>
-                                    <td><?php echo $booking['RoomNumber']; ?></td>
-                                    <td>
-                                        <?php echo date('M d, Y', strtotime($booking['CheckInDate'])); ?> 
-                                        - 
-                                        <?php echo date('M d, Y', strtotime($booking['CheckOutDate'])); ?>
-                                    </td>
-                                    <td><?php echo $booking['BookingStatus']; ?></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-success">
-                                            <i class="fa-solid fa-check"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                <div class="col-4 text-center">
+                                    <div class="status-dot status-<?= strtolower($status['AvailabilityStatus']) ?> mx-auto mb-2"></div>
+                                    <div class="fw-bold"><?= $status['count'] ?></div>
+                                    <small><?= $status['AvailabilityStatus'] ?></small>
+                                </div>
                                 <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-            <?php endswitch; ?>
-        </div>
+                <!-- Recent Bookings -->
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">Recent Bookings</h5>
+                            <div class="table-responsive">
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        <?php
+                                        $bookings = $conn->query("
+                                            SELECT b.BookingID, u.FullName, r.RoomNumber, b.CheckInDate 
+                                            FROM Bookings b
+                                            JOIN Users u ON b.UserID = u.UserID
+                                            JOIN Rooms r ON b.RoomID = r.RoomID
+                                            ORDER BY b.CreatedAt DESC 
+                                            LIMIT 5
+                                        ")->fetch_all(MYSQLI_ASSOC);
+                                        foreach($bookings as $booking):
+                                        ?>
+                                        <tr>
+                                            <td class="align-middle">
+                                                <div class="bg-primary text-white rounded-circle p-2 text-center" 
+                                                     style="width: 40px; height: 40px">
+                                                    <?= substr($booking['FullName'], 0, 1) ?>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="fw-bold"><?= $booking['FullName'] ?></div>
+                                                <small class="text-muted"><?= $booking['RoomNumber'] ?></small>
+                                            </td>
+                                            <td class="text-end">
+                                                <?= date('M d', strtotime($booking['CheckInDate'])) ?>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <?php break; case 'users': ?>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">User Management</h5>
+                    <table id="usersTable" class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Type</th>
+                                <th>Phone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $users = $conn->query("SELECT * FROM Users")->fetch_all(MYSQLI_ASSOC);
+                            foreach($users as $user):
+                            ?>
+                            <tr>
+                                <td><?= $user['UserID'] ?></td>
+                                <td><?= $user['FullName'] ?></td>
+                                <td><?= $user['Email'] ?></td>
+                                <td><?= $user['UserType'] ?></td>
+                                <td><?= $user['PhoneNumber'] ?: '-' ?></td>
+                                <td>
+                                    <button class="btn btn-sm btn-danger" 
+                                            onclick="deleteUser(<?= $user['UserID'] ?>)">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        <?php break; case 'rooms': ?>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Room Management</h5>
+                    <table id="roomsTable" class="table">
+                        <thead>
+                            <tr>
+                                <th>Room Number</th>
+                                <th>Type</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $rooms = $conn->query("SELECT * FROM Rooms")->fetch_all(MYSQLI_ASSOC);
+                            foreach($rooms as $room):
+                            ?>
+                            <tr>
+                                <td><?= $room['RoomNumber'] ?></td>
+                                <td><?= $room['RoomType'] ?></td>
+                                <td>$<?= number_format($room['BasePrice'], 2) ?></td>
+                                <td>
+                                    <span class="status-dot status-<?= strtolower($room['AvailabilityStatus']) ?>"></span>
+                                    <?= $room['AvailabilityStatus'] ?>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning">
+                                        <i class="fa-solid fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        <?php break; case 'bookings': ?>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Booking Management</h5>
+                    <table id="bookingsTable" class="table">
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>User</th>
+                                <th>Room</th>
+                                <th>Dates</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $bookings = $conn->query("
+                                SELECT b.BookingID, u.FullName, r.RoomNumber, 
+                                       b.CheckInDate, b.CheckOutDate, b.BookingStatus
+                                FROM Bookings b
+                                JOIN Users u ON b.UserID = u.UserID
+                                JOIN Rooms r ON b.RoomID = r.RoomID
+                            ")->fetch_all(MYSQLI_ASSOC);
+                            foreach($bookings as $booking):
+                            ?>
+                            <tr>
+                                <td><?= $booking['BookingID'] ?></td>
+                                <td><?= $booking['FullName'] ?></td>
+                                <td><?= $booking['RoomNumber'] ?></td>
+                                <td>
+                                    <?= date('M d, Y', strtotime($booking['CheckInDate'])) ?> - 
+                                    <?= date('M d, Y', strtotime($booking['CheckOutDate'])) ?>
+                                </td>
+                                <td><?= $booking['BookingStatus'] ?></td>
+                                <td>
+                                    <button class="btn btn-sm btn-success">
+                                        <i class="fa-solid fa-check"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        <?php endswitch; ?>
     </div>
 
     <!-- JS Libraries -->
@@ -481,7 +431,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Delete user confirmation
             window.deleteUser = function(userId) {
                 if(confirm('Are you sure you want to delete this user?')) {
-                    $.post('', { action: 'delete_user', user_id: userId }, function() {
+                    $.post('', { 
+                        action: 'delete_user', 
+                        user_id: userId 
+                    }, function() {
                         location.reload();
                     });
                 }
