@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 header("Location: ../staff/dashboard.php");
                                 exit();
                             case 'Customer':
-                                header("Location: ../users/dashboard.php");
+                                header("Location: ../users/user_dashboard.php");
                                 exit();
                             default:
                                 $login_err = "Invalid user role.";
