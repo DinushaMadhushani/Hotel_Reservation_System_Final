@@ -84,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <style>
-        body { background-color: rgb(44, 109, 173); }
+        body { background-color: #d4af37; }
         .login-container { max-width: 400px; margin: 100px auto; }
         .form-control { border-radius: 25px; }
         .btn-login { border-radius: 25px; }
@@ -125,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
 
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block btn-login">Login</button>
+                        <button type="submit" class="btn btn-dark btn-block btn-login">Login</button>
                     </div>
                     <div class="text-center">
                         <a href="./register.php">Don't Have Account? Register Here. </a>

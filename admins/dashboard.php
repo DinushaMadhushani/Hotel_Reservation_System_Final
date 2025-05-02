@@ -107,6 +107,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background: white;
             border-radius: 10px;
         }
+        
+        .btn-primary {
+            background-color: var(--accent);
+            border: none;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #b8932c;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -122,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </button>
             
             <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link <?= ($_GET['page'] ?? '') === 'dashboard' ? 'active' : '' ?>" 
                            href="?page=dashboard">
@@ -286,7 +298,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php break; case 'users': ?>
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title mb-4">User Management</h5>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="card-title mb-0">User Management</h5>
+                        <a href="add_user.php" class="btn btn-primary">
+                            <i class="fa-solid fa-plus me-2"></i>Add User
+                        </a>
+                    </div>
                     <table id="usersTable" class="table">
                         <thead>
                             <tr>
@@ -325,7 +342,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php break; case 'rooms': ?>
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title mb-4">Room Management</h5>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="card-title mb-0">Room Management</h5>
+                        <a href="add_room.php" class="btn btn-primary">
+                            <i class="fa-solid fa-plus me-2"></i>Add Room
+                        </a>
+                    </div>
                     <table id="roomsTable" class="table">
                         <thead>
                             <tr>
@@ -364,7 +386,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php break; case 'bookings': ?>
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title mb-4">Booking Management</h5>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="card-title mb-0">Booking Management</h5>
+                        <a href="add_booking.php" class="btn btn-primary">
+                            <i class="fa-solid fa-plus me-2"></i>Add Booking
+                        </a>
+                    </div>
                     <table id="bookingsTable" class="table">
                         <thead>
                             <tr>
