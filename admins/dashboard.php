@@ -16,6 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->bind_param("i", $_POST['user_id']);
                 $stmt->execute();
                 break;
+            case 'delete_room':
+                $stmt = $conn->prepare("DELETE FROM Rooms WHERE RoomID = ?");
+                $stmt->bind_param("i", $_POST['room_id']);
+                $stmt->execute();
+                break;
         }
     }
 }
@@ -191,8 +196,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             case 'dashboard':
         ?>
             <div class="row g-4">
-                <!-- Stats Cards -->
-                <div class="col-12">
+                  <!-- Stats Cards -->
+                  <div class="col-12">
                     <div class="row g-4">
                         <div class="col-md-4">
                             <div class="card">
@@ -327,6 +332,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <td><?= $user['UserType'] ?></td>
                                 <td><?= $user['PhoneNumber'] ?: '-' ?></td>
                                 <td>
+                                    <a href="edit_user.php?user_id=<?= $user['UserID'] ?>" 
+                                       class="btn btn-sm btn-primary me-2">
+                                        <i class="fa-solid fa-edit"></i>
+                                    </a>
                                     <button class="btn btn-sm btn-danger" 
                                             onclick="deleteUser(<?= $user['UserID'] ?>)">
                                         <i class="fa-solid fa-trash"></i>
@@ -372,8 +381,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <?= $room['AvailabilityStatus'] ?>
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning">
+                                    <a href="edit_room.php?room_id=<?= $room['RoomID'] ?>" 
+                                       class="btn btn-sm btn-warning me-2">
                                         <i class="fa-solid fa-edit"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-danger" 
+                                            onclick="deleteRoom(<?= $room['RoomID'] ?>)">
+                                        <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -427,6 +441,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <button class="btn btn-sm btn-success">
                                         <i class="fa-solid fa-check"></i>
                                     </button>
+                                    <button class="btn btn-sm btn-danger ms-2">
+                                        <i class="fa-solid fa-times"></i>
+                                    </button>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -461,6 +478,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $.post('', { 
                         action: 'delete_user', 
                         user_id: userId 
+                    }, function() {
+                        location.reload();
+                    });
+                }
+            }
+
+            // Delete room confirmation
+            window.deleteRoom = function(roomId) {
+                if(confirm('Are you sure you want to delete this room?')) {
+                    $.post('', { 
+                        action: 'delete_room', 
+                        room_id: roomId 
                     }, function() {
                         location.reload();
                     });
