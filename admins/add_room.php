@@ -40,8 +40,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Same :root and base styles as add_user.php */
-        
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #ffffff;
+            --accent: #d4af37;
+            --side-bar: rgb(197, 164, 54);
+        }
+
+        body {
+            background: var(--primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .form-container {
+            background: var(--secondary);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
         .form-header {
             background: var(--side-bar);
             padding: 2rem;
@@ -49,16 +70,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             text-align: center;
         }
 
-        .price-input {
-            position: relative;
+        .form-title {
+            color: var(--secondary);
+            margin: 0;
+            font-size: 1.8rem;
         }
 
-        .price-input span {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
+        .form-body {
+            padding: 2rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
             color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px;
+            width: 100%;
+            transition: all 0.3s ease;
+            background: var(--secondary);
+            color: var(--primary);
+        }
+
+        .input-group input:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+            outline: none;
+        }
+
+        .input-group-text {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .alert {
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
         }
     </style>
 </head>
@@ -98,11 +174,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         <textarea name="description" class="form-control" rows="3"></textarea>
                     </div>
 
-                    <div class="input-group price-input">
+                    <div class="input-group">
                         <label>Base Price</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span>
-                            <input type="number" name="base_price" class="form-control" step="0.01" min="0" required>
+                            <input type="number" name="base_price" class="form-control" 
+                                   step="0.01" min="0" required>
                         </div>
                     </div>
 
