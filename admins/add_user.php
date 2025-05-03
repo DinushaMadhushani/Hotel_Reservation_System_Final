@@ -13,16 +13,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $userType = filter_input(INPUT_POST, 'user_type', FILTER_SANITIZE_STRING);
     $phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
     $address = filter_input(INPUT_POST, 'address', FILTER_SANITIZE_STRING);
-    $passwordHash = password_hash($_POST['password_hash'], PASSWORD_DEFAULT);
 
-    if (!empty($fullName) && !empty($email) && !empty($passwordHash)) {
-        $stmt = $conn->prepare("INSERT INTO Users (FullName, Email, PasswordHash, UserType, PhoneNumber, Address) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssss", $fullName, $email, $passwordHash, $userType, $phone, $address);
+    if (!empty($fullName) && !empty($email)) {
+        $stmt = $conn->prepare("INSERT INTO Users 
+                            (FullName, Email, UserType, PhoneNumber, Address) 
+                            VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $fullName, $email, $userType, $phone, $address);
         
         if ($stmt->execute()) {
             $_SESSION['success'] = "User added successfully!";
         } else {
-            $_SESSION['error'] = "Error: " . $stmt->error;
+            $_SESSION['error'] = "Error adding user: " . $stmt->error;
         }
         $stmt->close();
     } else {
@@ -62,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             max-width: 600px;
             margin: 2rem auto;
+            position: relative;
         }
 
         .form-header {
@@ -75,6 +77,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             color: var(--secondary);
             margin: 0;
             font-size: 1.8rem;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            color: var(--secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .close-btn:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
         }
 
         .form-body {
@@ -131,6 +149,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <div class="form-container">
             <div class="form-header">
                 <h1 class="form-title"><i class="fas fa-user-plus me-2"></i>Add New User</h1>
+                <div class="close-btn" onclick="closeForm()">
+                    <i class="fas fa-times"></i>
+                </div>
             </div>
             <div class="form-body">
                 <?php if(isset($_SESSION['error'])): ?>
@@ -163,18 +184,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     </div>
 
                     <div class="input-group">
-                        <label>Password</label>
-                        <input type="password" name="password_hash" class="form-control" minlength="8" required>
-                    </div>
-
-                    <div class="input-group">
                         <label>Phone Number</label>
                         <input type="tel" name="phone" class="form-control" pattern="[0-9]{10}">
                     </div>
 
                     <div class="input-group">
                         <label>Address</label>
-                        <textarea name="address" class="form-control" rows="3"></textarea>
+                        <textarea name="address" class="form-control" rows="2"></textarea>
                     </div>
 
                     <div class="d-grid mt-4">
@@ -186,6 +202,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             </div>
         </div>
     </div>
+
+    <script>
+        function closeForm() {
+            // Close the form window
+            window.history.back();
+        }
+
+        // Add keyboard shortcut (ESC) to close form
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeForm();
+        });
+    </script>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

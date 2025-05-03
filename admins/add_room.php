@@ -61,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             max-width: 600px;
             margin: 2rem auto;
+            position: relative;
         }
 
         .form-header {
@@ -74,6 +75,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             color: var(--secondary);
             margin: 0;
             font-size: 1.8rem;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            color: var(--secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .close-btn:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
         }
 
         .form-body {
@@ -143,6 +160,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <div class="form-container">
             <div class="form-header">
                 <h1 class="form-title"><i class="fas fa-door-open me-2"></i>Add New Room</h1>
+                <div class="close-btn" onclick="closeForm()">
+                    <i class="fas fa-times"></i>
+                </div>
             </div>
             <div class="form-body">
                 <?php if(isset($_SESSION['error'])): ?>
@@ -201,6 +221,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             </div>
         </div>
     </div>
+
+    <script>
+        function closeForm() {
+            // Return to previous page
+            window.history.back();
+        }
+
+        // Close form with ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeForm();
+        });
+    </script>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
