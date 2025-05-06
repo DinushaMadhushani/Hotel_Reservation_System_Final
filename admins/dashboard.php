@@ -153,6 +153,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link <?= ($_GET['page'] ?? '') === 'users' ? 'active' : '' ?>" 
+                           href="?page=users">
+                            <i class="fa-solid fa-users me-2"></i>Staff
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link <?= ($_GET['page'] ?? '') === 'rooms' ? 'active' : '' ?>" 
                            href="?page=rooms">
                             <i class="fa-solid fa-door-open me-2"></i>Rooms
