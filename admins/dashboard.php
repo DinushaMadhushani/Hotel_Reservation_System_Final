@@ -153,9 +153,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?= ($_GET['page'] ?? '') === 'users' ? 'active' : '' ?>" 
-                           href="?page=users">
-                            <i class="fa-solid fa-users me-2"></i>Staff
+                        <a class="nav-link <?= ($_GET['page'] ?? '') === 'staff' ? 'active' : '' ?>" 
+                           href="?page=staff">
+                            <i class="fa-solid fa-users-gear me-2"></i>Staff
                         </a>
                     </li>
                     <li class="nav-item">
@@ -199,9 +199,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php
         $page = $_GET['page'] ?? 'dashboard';
         switch($page):
-            case 'dashboard':
-        ?>
-            <div class="row g-4">
+            case 'dashboard': ?>
+                <!-- Dashboard Content-->
+                <div class="row g-4">
                   <!-- Stats Cards -->
                   <div class="col-12">
                     <div class="row g-4">
@@ -305,9 +305,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
             </div>
-
-        <?php break; case 'users': ?>
-            <div class="card">
+                <?php break;
+            
+            case 'users': ?>
+                <!-- Users Management Content (Same as before) -->
+                <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h5 class="card-title mb-0">User Management</h5>
@@ -353,9 +355,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </table>
                 </div>
             </div>
-
-        <?php break; case 'rooms': ?>
-            <div class="card">
+                <?php break;
+            
+            case 'staff': ?>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="card-title mb-0">Staff Management</h5>
+                            <a href="admin_staff_management.php" class="btn btn-primary">
+                                <i class="fa-solid fa-plus me-2"></i>Add Staff
+                            </a>
+                        </div>
+                        <table id="staffTable" class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Type</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $staffMembers = $conn->query("
+                                    SELECT * FROM Users 
+                                    WHERE UserType = 'Staff'
+                                ")->fetch_all(MYSQLI_ASSOC);
+                                foreach($staffMembers as $staff): ?>
+                                <tr>
+                                    <td><?= $staff['UserID'] ?></td>
+                                    <td><?= $staff['FullName'] ?></td>
+                                    <td><?= $staff['Email'] ?></td>
+                                    <td><?= $staff['PhoneNumber'] ?: '-' ?></td>
+                                    <td><?= $staff['UserType'] ?></td>
+                                    <td>
+                                        <a href="edit_staff.php?user_id=<?= $staff['UserID'] ?>" 
+                                           class="btn btn-sm btn-primary me-2">
+                                            <i class="fa-solid fa-edit"></i>
+                                        </a>
+                                        <button class="btn btn-sm btn-danger" 
+                                                onclick="deleteUser(<?= $staff['UserID'] ?>, 'staff')">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <?php break;
+            
+            case 'rooms': ?>
+                <!-- Rooms Management Content (Same as before) -->
+                <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h5 class="card-title mb-0">Room Management</h5>
@@ -402,9 +457,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </table>
                 </div>
             </div>
-
-        <?php break; case 'bookings': ?>
-            <div class="card">
+                <?php break;
+            
+            case 'bookings': ?>
+                <!-- Bookings Management Content (Same as before) -->
+                <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h5 class="card-title mb-0">Booking Management</h5>
@@ -423,7 +480,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody> 
                             <?php
                             $bookings = $conn->query("
                                 SELECT b.BookingID, u.FullName, r.RoomNumber, 
@@ -457,8 +514,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </table>
                 </div>
             </div>
-
-        <?php endswitch; ?>
+                <?php break;
+            
+        endswitch; ?>
     </div>
 
     <!-- JS Libraries -->
@@ -473,19 +531,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             AOS.init();
             
             // Initialize DataTables
-            $('#usersTable, #roomsTable, #bookingsTable').DataTable({
+            $('#usersTable, #roomsTable, #bookingsTable, #staffTable').DataTable({
                 responsive: true,
                 "order": []
             });
 
-            // Delete user confirmation
-            window.deleteUser = function(userId) {
-                if(confirm('Are you sure you want to delete this user?')) {
+            // Enhanced delete function
+            window.deleteUser = function(userId, type = 'user') {
+                const entity = type === 'staff' ? 'staff member' : 'user';
+                if(confirm(`Are you sure you want to delete this ${entity}? This action cannot be undone.`)) {
                     $.post('', { 
                         action: 'delete_user', 
                         user_id: userId 
-                    }, function() {
+                    }, function(response) {
                         location.reload();
+                    }).fail(function() {
+                        alert('Error deleting record. Please try again.');
                     });
                 }
             }
