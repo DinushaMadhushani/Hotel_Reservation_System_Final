@@ -57,7 +57,7 @@
         .package-card {
             transition: all 0.3s ease;
             border-radius: 15px;
-            background: var(--secondary);
+            background: var(--light);
             overflow: hidden;
             position: relative;
         }
@@ -82,6 +82,9 @@
         }
         .package-card:hover .package-includes li {
             color: var(--accent);
+        }
+        .a {
+            background: var(--accent);
         }
         .feature-box {
             border: 2px solid var(--accent);
