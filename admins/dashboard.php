@@ -21,6 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->bind_param("i", $_POST['room_id']);
                 $stmt->execute();
                 break;
+            case 'delete_staff':
+                $stmt = $conn->prepare("DELETE FROM Users WHERE UserID = ? AND UserType = 'Staff'");
+                $stmt->bind_param("i", $_POST['user_id']);
+                $stmt->execute();
+                break;
         }
     }
 }
@@ -45,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             --primary: #1a1a1a;
             --secondary: #ffffff;
             --accent: #d4af37;
-            --side-bar:rgb(197, 164, 54);
+            --side-bar: rgb(197, 164, 54);
         }
         
         body {
@@ -179,6 +184,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: white;
             text-decoration: none;
         }
+
+        /* Staff Management Specific Styles */
+        .staff-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -201,7 +219,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <i class="fa-solid fa-tachometer-alt me-2"></i>Dashboard
                         </a>
                     </li>
-                  
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($_GET['page'] ?? '') === 'users' ? 'active' : '' ?>" 
+                           href="?page=users">
+                            <i class="fa-solid fa-users me-2"></i>Users
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($_GET['page'] ?? '') === 'rooms' ? 'active' : '' ?>" 
+                           href="?page=rooms">
+                            <i class="fa-solid fa-door-closed me-2"></i>Rooms
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($_GET['page'] ?? '') === 'bookings' ? 'active' : '' ?>" 
+                           href="?page=bookings">
+                            <i class="fa-solid fa-calendar-days me-2"></i>Bookings
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($_GET['page'] ?? '') === 'staff' ? 'active' : '' ?>" 
+                           href="?page=staff">
+                            <i class="fa-solid fa-user-tie me-2"></i>Staff
+                        </a>
+                    </li>
+                </ul>
                 
                 <div class="d-flex align-items-center">
                     <div class="dropdown user-dropdown">
@@ -574,6 +616,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <?php break;
             
+            case 'staff': ?>
+                <!-- Staff Management Content -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="card-title mb-0">Staff Management</h5>
+                            <a href="add_staff.php" class="btn btn-primary">
+                                <i class="fa-solid fa-plus me-2"></i>Add Staff
+                            </a>
+                        </div>
+                        <table id="staffTable" class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Staff Member</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Last Login</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $staffMembers = $conn->query("
+                                    SELECT * FROM Users 
+                                    WHERE UserType = 'Staff'
+                                ")->fetch_all(MYSQLI_ASSOC);
+                                foreach($staffMembers as $staff): 
+                                    $initials = substr($staff['FullName'], 0, 2);
+                                ?>
+                                <tr>
+                                    <td><?= $staff['UserID'] ?></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="staff-avatar me-3">
+                                                <?= strtoupper($initials) ?>
+                                            </div>
+                                            <div class="fw-bold"><?= $staff['FullName'] ?></div>
+                                        </div>
+                                    </td>
+                                    <td><?= $staff['Email'] ?></td>
+                                    <td><?= $staff['PhoneNumber'] ?: '-' ?></td>
+                                    <td><?= $staff['LastLogin'] ? date('M d, Y h:i A', strtotime($staff['LastLogin'])) : 'Never' ?></td>
+                                    <td>
+                                        <a href="edit_staff.php?user_id=<?= $staff['UserID'] ?>" 
+                                           class="btn btn-sm btn-primary me-2">
+                                            <i class="fa-solid fa-edit"></i>
+                                        </a>
+                                        <button class="btn btn-sm btn-danger" 
+                                                onclick="deleteStaff(<?= $staff['UserID'] ?>)">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <?php break;
+            
         endswitch; ?>
     </div>
 
@@ -592,7 +695,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
             
             // Initialize DataTables
-            $('#usersTable, #roomsTable, #bookingsTable').DataTable({
+            $('#usersTable, #roomsTable, #bookingsTable, #staffTable').DataTable({
                 responsive: true,
                 "order": []
             });
@@ -614,6 +717,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $.post('', { 
                         action: 'delete_room', 
                         room_id: roomId 
+                    }, function() {
+                        location.reload();
+                    });
+                }
+            }
+
+            window.deleteStaff = function(userId) {
+                if(confirm('Are you sure you want to delete this staff member?')) {
+                    $.post('', { 
+                        action: 'delete_staff', 
+                        user_id: userId 
                     }, function() {
                         location.reload();
                     });
