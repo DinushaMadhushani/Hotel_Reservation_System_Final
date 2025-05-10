@@ -215,8 +215,8 @@ $conn->close();
         </div>
 
         <!-- Management Section -->
-        <h3 class="mb-4" data-aos="fade-right"><i class="fas fa-cogs text-accent"></i> Management</h3>
-        <div class="row g-4">
+        <h3 class="mb-4" data-aos="fade-right"><i class="fas fa-cogs text-accent "></i> Management</h3>
+        <div class="row g-4 justify-content-center">
             <div class="col-md-3" data-aos="flip-up">
                 <div class="card management-card">
                     <div class="card-body text-center py-4">
@@ -287,6 +287,22 @@ $conn->close();
                     </div>
                 </div>
             </div>
+            <div class="col-md-3" data-aos="flip-up" data-aos-delay="600">
+                <div class="card management-card">
+                    <div class="card-body text-center py-4">
+                        <i class="fas fa-user-shield fa-3x mb-3"></i>
+                        <h4>Assign Tasks</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3" data-aos="flip-up" data-aos-delay="600">
+                <div class="card management-card">
+                    <div class="card-body text-center py-4">
+                        <i class="fas fa-user-shield fa-3x mb-3"></i>
+                        <h4>User Management</h4>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -329,6 +345,13 @@ $conn->close();
                     case 'Manage Admins':
                         window.location.href = 'manage_admins.php';
                         break;
+                    case 'Assign Tasks':
+                        window.location.href = 'assign_task.php';
+                        break;
+                    case 'User Management':
+                        window.location.href = 'manage_users.php';
+                        break;
+                      
                 }
             });
         });

@@ -9,158 +9,100 @@ if (!isset($_SESSION['UserID']) || $_SESSION['UserType'] !== 'Admin') {
 }
 
 // Initialize variables
-$action = isset($_GET['action']) ? $_GET['action'] : 'add';
-$editTaskId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $error = $success = '';
-$taskData = [
-    'RequestID' => '',
-    'StaffID' => '',
-    'TaskStatus' => 'Pending'
-];
 
-// Fetch service requests and staff
-$requests = $conn->query("
-    SELECT sr.RequestID, r.RoomNumber, sr.RequestType 
-    FROM ServiceRequests sr
-    JOIN Bookings b ON sr.BookingID = b.BookingID
-    JOIN Rooms r ON b.RoomID = r.RoomID
-    WHERE sr.Status = 'Pending'
-")->fetch_all(MYSQLI_ASSOC);
-
-$staff = $conn->query("
-    SELECT UserID, FullName 
-    FROM Users 
-    WHERE UserType IN ('Staff', 'Admin')
-    ORDER BY FullName
-")->fetch_all(MYSQLI_ASSOC);
-
-// Handle form submissions
+// Handle new task creation
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $requestId = intval($_POST['request_id']);
-    $staffId = intval($_POST['staff_id']);
-    $status = $_POST['status'];
-
     try {
-        if (empty($requestId) || empty($staffId)) {
-            throw new Exception("All fields marked with * are required");
+        $conn->autocommit(FALSE);
+
+        // Validate required fields
+        $required = ['BookingID', 'RequestType', 'StaffID'];
+        foreach ($required as $field) {
+            if (empty($_POST[$field])) {
+                throw new Exception("All required fields must be filled");
+            }
         }
 
-        if ($action === 'add') {
-            // Assign new task
-            $stmt = $conn->prepare("INSERT INTO AssignedTasks (RequestID, StaffID, TaskStatus) 
-                                   VALUES (?, ?, ?)");
-            $stmt->bind_param("iis", $requestId, $staffId, $status);
-            
-            // Update service request status
-            $updateReq = $conn->prepare("UPDATE ServiceRequests SET Status = 'Assigned' WHERE RequestID = ?");
-            $updateReq->bind_param("i", $requestId);
-            $updateReq->execute();
-        } else {
-            // Update existing task
-            $stmt = $conn->prepare("UPDATE AssignedTasks SET 
-                                  RequestID = ?,
-                                  StaffID = ?,
-                                  TaskStatus = ?
-                                  WHERE TaskID = ?");
-            $stmt->bind_param("iisi", $requestId, $staffId, $status, $editTaskId);
-        }
+        // Create new task
+        $stmt = $conn->prepare("INSERT INTO ServiceRequests 
+                               (BookingID, RequestType, Description, Status)
+                               VALUES (?, ?, ?, 'Pending')");
+        $stmt->bind_param("iss", 
+            $_POST['BookingID'], 
+            $_POST['RequestType'], 
+            $_POST['Description']
+        );
+        $stmt->execute();
+        $requestId = $conn->insert_id;
 
-        if ($stmt->execute()) {
-            $success = "Task " . ($action === 'add' ? 'assigned' : 'updated') . " successfully!";
-            $action = 'add';
-            $editTaskId = 0;
-            $taskData = ['RequestID' => '', 'StaffID' => '', 'TaskStatus' => 'Pending'];
-        } else {
-            throw new Exception("Database error: " . $stmt->error);
-        }
+        $stmt = $conn->prepare("INSERT INTO AssignedTasks 
+                               (RequestID, StaffID, TaskStatus)
+                               VALUES (?, ?, ?)");
+        $taskStatus = $_POST['Status'] ?? 'Pending';
+        $stmt->bind_param("iis", 
+            $requestId, 
+            $_POST['StaffID'], 
+            $taskStatus
+        );
+        $stmt->execute();
+
+        $conn->commit();
+        $success = "Task created and assigned successfully!";
     } catch (Exception $e) {
+        $conn->rollback();
         $error = $e->getMessage();
-        $taskData = $_POST;
     }
 }
 
 // Handle delete action
 if (isset($_GET['action']) && $_GET['action'] === 'delete') {
-    $taskId = intval($_GET['id']);
     try {
-        $stmt = $conn->prepare("DELETE FROM AssignedTasks WHERE TaskID = ?");
-        $stmt->bind_param("i", $taskId);
-        if ($stmt->execute()) {
-            $success = "Task deleted successfully!";
-        } else {
-            throw new Exception("Error deleting task: " . $stmt->error);
-        }
+        $conn->autocommit(FALSE);
+        
+        $taskId = intval($_GET['id']);
+        $requestId = $conn->query("SELECT RequestID FROM AssignedTasks WHERE TaskID = $taskId")->fetch_row()[0];
+        
+        $conn->query("DELETE FROM AssignedTasks WHERE TaskID = $taskId");
+        $conn->query("DELETE FROM ServiceRequests WHERE RequestID = $requestId");
+        
+        $conn->commit();
+        $success = "Task deleted successfully!";
     } catch (Exception $e) {
+        $conn->rollback();
         $error = $e->getMessage();
     }
 }
 
-// Fetch task for editing
-if ($action === 'edit' && $editTaskId > 0) {
-    $stmt = $conn->prepare("SELECT * FROM AssignedTasks WHERE TaskID = ?");
-    $stmt->bind_param("i", $editTaskId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($result->num_rows > 0) {
-        $taskData = $result->fetch_assoc();
-    } else {
-        $error = "Task not found!";
-        $action = 'add';
-        $editTaskId = 0;
-    }
-}
+// Fetch required data
+$bookings = $conn->query("
+    SELECT b.BookingID, r.RoomNumber, u.FullName 
+    FROM Bookings b
+    JOIN Rooms r ON b.RoomID = r.RoomID
+    JOIN Users u ON b.UserID = u.UserID
+    ORDER BY b.CheckInDate DESC
+")->fetch_all(MYSQLI_ASSOC);
 
-// Pagination and filtering
-$results_per_page = isset($_GET['per_page']) ? intval($_GET['per_page']) : 10;
-$current_page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
-$offset = ($current_page - 1) * $results_per_page;
+$staff = $conn->query("
+    SELECT UserID, FullName 
+    FROM Users 
+    WHERE UserType = 'Staff'
+    ORDER BY FullName
+")->fetch_all(MYSQLI_ASSOC);
 
-$search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
-$filter_status = isset($_GET['status']) ? $conn->real_escape_string($_GET['status']) : '';
-
-// Build query
-$base_query = "FROM AssignedTasks at
-              JOIN ServiceRequests sr ON at.RequestID = sr.RequestID
-              JOIN Users u ON at.StaffID = u.UserID
-              JOIN Bookings b ON sr.BookingID = b.BookingID
-              JOIN Rooms r ON b.RoomID = r.RoomID
-              WHERE 1=1";
-$params = [];
-
-if (!empty($search)) {
-    $base_query .= " AND (u.FullName LIKE ? OR r.RoomNumber LIKE ? OR sr.RequestType LIKE ?)";
-    $params[] = "%$search%";
-    $params[] = "%$search%";
-    $params[] = "%$search%";
-}
-
-if (!empty($filter_status)) {
-    $base_query .= " AND at.TaskStatus = ?";
-    $params[] = $filter_status;
-}
-
-// Get total count
-$count_stmt = $conn->prepare("SELECT COUNT(*) AS total $base_query");
-if (!empty($params)) {
-    $types = str_repeat('s', count($params));
-    $count_stmt->bind_param($types, ...$params);
-}
-$count_stmt->execute();
-$total_rows = $count_stmt->get_result()->fetch_assoc()['total'];
-$total_pages = ceil($total_rows / $results_per_page);
-
-// Fetch filtered data
-$query = "SELECT at.*, sr.RequestType, r.RoomNumber, u.FullName AS StaffName $base_query 
-          ORDER BY at.AssignmentDateTime DESC 
-          LIMIT ? OFFSET ?";
-$params[] = $results_per_page;
-$params[] = $offset;
-
-$stmt = $conn->prepare($query);
-$types = (!empty($params) ? str_repeat('s', count($params)-2) : '') . 'ii';
-$stmt->bind_param($types, ...$params);
-$stmt->execute();
-$tasks = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+// Fetch tasks with related data
+$tasks = $conn->query("
+    SELECT at.TaskID, sr.RequestType, r.RoomNumber, u.FullName AS StaffName,
+           at.TaskStatus, sr.Description, at.AssignmentDateTime,
+           cust.FullName AS CustomerName
+    FROM AssignedTasks at
+    JOIN ServiceRequests sr ON at.RequestID = sr.RequestID
+    JOIN Bookings b ON sr.BookingID = b.BookingID
+    JOIN Rooms r ON b.RoomID = r.RoomID
+    JOIN Users u ON at.StaffID = u.UserID
+    JOIN Users cust ON b.UserID = cust.UserID
+    ORDER BY at.AssignmentDateTime DESC
+")->fetch_all(MYSQLI_ASSOC);
 
 $conn->close();
 ?>
@@ -169,12 +111,11 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Tasks - Admin Dashboard</title>
+    <title>Task Management - Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://cdn.rawgit.com/michalsnik/aos/2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin_manage.css">
-    
+        <link rel="stylesheet" href="../assets/css/admin_manage.css">
     <style>
         :root {
             --primary: #1a1a1a;
@@ -207,7 +148,7 @@ $conn->close();
         .status-completed { background-color: #198754; color: white; }
     </style>
 </head>
-<body>
+<body class="bg-light">
     <!-- Top Navigation -->
     <nav class="top-nav navbar navbar-expand-lg">
         <div class="container-fluid">
@@ -232,209 +173,141 @@ $conn->close();
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container">
-        <!-- Alerts -->
+    <div class="container py-4">
         <?php if ($error): ?>
-            <div class="alert alert-danger mt-4" role="alert">
-                <i class="fas fa-exclamation-circle"></i> <?= $error ?>
-            </div>
+            <div class="alert alert-danger"><?= $error ?></div>
         <?php endif; ?>
         
         <?php if ($success): ?>
-            <div class="alert alert-success mt-4" role="alert">
-                <i class="fas fa-check-circle"></i> <?= $success ?>
-            </div>
+            <div class="alert alert-success"><?= $success ?></div>
         <?php endif; ?>
 
-        <!-- Task Form -->
-        <div class="management-card mt-4" data-aos="fade-up">
-            <h3 class="mb-4">
-                <i class="fas fa-tasks"></i> 
-                <?= $action === 'add' ? 'Assign New Task' : 'Edit Task' ?>
+        <div class="management-card">
+            <h3 class="mb-4 border-bottom pb-2">
+                <i class="fas fa-tasks"></i> Create New Task
             </h3>
-            
+
             <form method="POST">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label">Service Request *</label>
-                        <select class="form-select" name="request_id" required>
-                            <option value="">Select Request</option>
-                            <?php foreach ($requests as $request): ?>
-                                <option value="<?= $request['RequestID'] ?>" 
-                                    <?= $taskData['RequestID'] == $request['RequestID'] ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($request['RequestType']) ?> (Room <?= $request['RoomNumber'] ?>)
+                        <label class="form-label">Booking *</label>
+                        <select class="form-select" name="BookingID" required>
+                            <option value="">Select Booking</option>
+                            <?php foreach ($bookings as $booking): ?>
+                                <option value="<?= $booking['BookingID'] ?>">
+                                    Room <?= htmlspecialchars($booking['RoomNumber']) ?> - <?= htmlspecialchars($booking['FullName']) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    
+
                     <div class="col-md-6">
-                        <label class="form-label">Assign To *</label>
-                        <select class="form-select" name="staff_id" required>
-                            <option value="">Select Staff</option>
+                        <label class="form-label">Request Type *</label>
+                        <input type="text" class="form-control" name="RequestType" required>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" name="Description" rows="3"></textarea>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Assign to Staff *</label>
+                        <select class="form-select" name="StaffID" required>
+                            <option value="">Select Staff Member</option>
                             <?php foreach ($staff as $member): ?>
-                                <option value="<?= $member['UserID'] ?>" 
-                                    <?= $taskData['StaffID'] == $member['UserID'] ? 'selected' : '' ?>>
+                                <option value="<?= $member['UserID'] ?>">
                                     <?= htmlspecialchars($member['FullName']) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    
+
                     <div class="col-md-6">
                         <label class="form-label">Status *</label>
-                        <select class="form-select" name="status" required>
-                            <option value="Pending" <?= $taskData['TaskStatus'] === 'Pending' ? 'selected' : '' ?>>Pending</option>
-                            <option value="InProgress" <?= $taskData['TaskStatus'] === 'InProgress' ? 'selected' : '' ?>>In Progress</option>
-                            <option value="Completed" <?= $taskData['TaskStatus'] === 'Completed' ? 'selected' : '' ?>>Completed</option>
+                        <select class="form-select" name="Status" required>
+                            <option value="Pending">Pending</option>
+                            <option value="InProgress">In Progress</option>
+                            <option value="Completed">Completed</option>
                         </select>
                     </div>
-                    
+
                     <div class="col-12 mt-4">
-                        <button type="submit" class="btn btn-accent btn-lg">
-                            <i class="fas fa-save"></i> 
-                            <?= $action === 'add' ? 'Assign Task' : 'Update Task' ?>
+                        <button type="submit" class="btn btn-warning btn-lg">
+                            <i class="fas fa-save"></i> Create Task
                         </button>
-                        
-                        <?php if ($action === 'edit'): ?>
-                            <a href="manage_tasks.php" class="btn btn-secondary btn-lg">
-                                <i class="fas fa-times"></i> Cancel
-                            </a>
-                        <?php endif; ?>
                     </div>
                 </div>
             </form>
         </div>
 
-        <!-- Tasks Table -->
-        <div class="management-card mt-4" data-aos="fade-up">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="mb-0"><i class="fas fa-clipboard-list"></i> All Tasks</h3>
-                <div>
-                    <a href="manage_tasks.php" class="btn btn-sm btn-secondary">
-                        <i class="fas fa-sync"></i> Reset Filters
-                    </a>
-                </div>
-            </div>
+        <div class="management-card">
+            <h3 class="mb-4 border-bottom pb-2">
+                <i class="fas fa-clipboard-list"></i> Active Tasks
+            </h3>
 
-            <!-- Search and Filter -->
-            <div class="row g-3 mb-4">
-                <div class="col-md-8">
-                    <form method="GET" class="input-group">
-                        <input type="text" class="form-control" name="search" 
-                               placeholder="Search staff, room, or request type" 
-                               value="<?= htmlspecialchars($search) ?>">
-                        <button type="submit" class="btn btn-accent">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </form>
-                </div>
-                <div class="col-md-4">
-                    <form method="GET" class="input-group">
-                        <select class="form-select" name="status" onchange="this.form.submit()">
-                            <option value="">All Statuses</option>
-                            <option value="Pending" <?= $filter_status === 'Pending' ? 'selected' : '' ?>>Pending</option>
-                            <option value="InProgress" <?= $filter_status === 'InProgress' ? 'selected' : '' ?>>In Progress</option>
-                            <option value="Completed" <?= $filter_status === 'Completed' ? 'selected' : '' ?>>Completed</option>
-                        </select>
-                        <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
-                    </form>
-                </div>
-            </div>
-
-            <!-- Results Info -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <span class="text-muted">
-                    Showing <?= count($tasks) ?> of <?= $total_rows ?> results
-                </span>
-                <form method="GET" class="ms-3">
-                    <select class="form-select form-select-sm" name="per_page" onchange="this.form.submit()">
-                        <option value="10" <?= $results_per_page == 10 ? 'selected' : '' ?>>10 per page</option>
-                        <option value="25" <?= $results_per_page == 25 ? 'selected' : '' ?>>25 per page</option>
-                        <option value="50" <?= $results_per_page == 50 ? 'selected' : '' ?>>50 per page</option>
-                    </select>
-                    <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
-                    <input type="hidden" name="status" value="<?= htmlspecialchars($filter_status) ?>">
-                </form>
-            </div>
-
-            <!-- Tasks Table -->
             <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
                         <tr>
                             <th>Request Type</th>
                             <th>Room</th>
+                            <th>Customer</th>
                             <th>Assigned To</th>
-                            <th>Assigned On</th>
                             <th>Status</th>
+                            <th>Assigned On</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (count($tasks) > 0): ?>
-                            <?php foreach ($tasks as $task): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($task['RequestType']) ?></td>
-                                    <td><?= htmlspecialchars($task['RoomNumber']) ?></td>
-                                    <td><?= htmlspecialchars($task['StaffName']) ?></td>
-                                    <td><?= date('M d, Y', strtotime($task['AssignmentDateTime'])) ?></td>
-                                    <td>
-                                        <span class="status-badge status-<?= strtolower($task['TaskStatus']) ?>">
-                                            <?= $task['TaskStatus'] ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <a href="manage_tasks.php?action=edit&id=<?= $task['TaskID'] ?>" 
-                                           class="btn btn-sm btn-accent">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="manage_tasks.php?action=delete&id=<?= $task['TaskID'] ?>" 
-                                           class="btn btn-sm btn-danger" 
-                                           onclick="return confirm('Are you sure you want to delete this task?')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
+                        <?php foreach ($tasks as $task): ?>
                             <tr>
-                                <td colspan="6" class="text-center py-4">
-                                    <i class="fas fa-clipboard-check fa-2x text-muted mb-3"></i>
-                                    <h5>No tasks found</h5>
+                                <td><?= htmlspecialchars($task['RequestType']) ?></td>
+                                <td><?= htmlspecialchars($task['RoomNumber']) ?></td>
+                                <td><?= htmlspecialchars($task['CustomerName']) ?></td>
+                                <td><?= htmlspecialchars($task['StaffName']) ?></td>
+                                <td>
+                                    <span class="status-badge status-<?= strtolower($task['TaskStatus']) ?>">
+                                        <?= $task['TaskStatus'] ?>
+                                    </span>
+                                </td>
+                                <td><?= date('M j, Y', strtotime($task['AssignmentDateTime'])) ?></td>
+                                <td>
+                                    <a href="edit_task.php?id=<?= $task['TaskID'] ?>" 
+                                       class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="manage_task.php?action=delete&id=<?= $task['TaskID'] ?>" 
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Delete this task?')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
                                 </td>
                             </tr>
-                        <?php endif; ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
-
-            <!-- Pagination -->
-            <?php if ($total_pages > 1): ?>
-                <nav class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                            <li class="page-item <?= $i == $current_page ? 'active' : '' ?>">
-                                <a class="page-link" 
-                                   href="?page=<?= $i ?>&search=<?= urlencode($search) ?>&status=<?= urlencode($filter_status) ?>&per_page=<?= $results_per_page ?>">
-                                    <?= $i ?>
-                                </a>
-                            </li>
-                        <?php endfor; ?>
-                    </ul>
-                </nav>
-            <?php endif; ?>
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.rawgit.com/michalsnik/aos/2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({
-            duration: 1000,
-            once: true
+        document.querySelectorAll('.form-select, .form-control').forEach(el => {
+            el.addEventListener('focus', () => {
+                el.classList.add('shadow');
+            });
+            el.addEventListener('blur', () => {
+                el.classList.remove('shadow');
+            });
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if (!confirm('Are you sure you want to delete this task?')) {
+                    e.preventDefault();
+                }
+            });
         });
     </script>
 </body>
