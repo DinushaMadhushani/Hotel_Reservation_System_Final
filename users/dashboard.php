@@ -205,7 +205,7 @@ if ($imageFound) {
                         <div class="management-card">
                             <i class="fas fa-bed fa-3x accent-text mb-3"></i>
                             <h5>New Booking</h5>
-                            <p class="text-muted">Book a new stay with us</p>
+                            <p class="text-white">Book a new stay with us</p>
                             <a href="new_booking.php" class="btn btn-primary">Book Now</a>
                         </div>
                     </div>
@@ -213,24 +213,24 @@ if ($imageFound) {
                         <div class="management-card">
                             <i class="fas fa-clipboard-list fa-3x accent-text mb-3"></i>
                             <h5>Current Reservations</h5>
-                            <p class="text-muted">Manage your bookings</p>
-                            <a href="./booking.php" class="btn btn-primary">View</a>
+                            <p class="text-white">Manage your bookings</p>
+                            <a href="manage_bookings.php" class="btn btn-primary">View</a>
                         </div>
                     </div>
                     <div class="col-md-3 mb-3">
                         <div class="management-card">
                             <i class="fas fa-concierge-bell fa-3x accent-text mb-3"></i>
                             <h5>Service Requests</h5>
-                            <p class="text-muted">Manage your services</p>
-                            <a href="services.php" class="btn btn-primary">Manage</a>
+                            <p class="text-white">Manage your services</p>
+                            <a href="manage_services.php" class="btn btn-primary">Manage</a>
                         </div>
                     </div>
                     <div class="col-md-3 mb-3">
                         <div class="management-card">
                             <i class="fas fa-user-cog fa-3x accent-text mb-3"></i>
                             <h5>Profile Settings</h5>
-                            <p class="text-muted">Update your information</p>
-                            <a href="profile.php" class="btn btn-primary">Update</a>
+                            <p class="text-white">Update your information</p>  
+                            <a href="profile_management.php" class="btn btn-primary">Update</a>
                         </div>
                     </div>
                 </div>
