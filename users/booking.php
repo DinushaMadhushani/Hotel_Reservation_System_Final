@@ -15,13 +15,13 @@ $packages = [];
 $totalPrice = 0;
 
 // Get booking parameters from URL
-$roomId = isset($_GET['room']) ? intval($_GET['room']) : 0;
+$roomId = isset($_GET['room_id']) ? intval($_GET['room_id']) : 0;
 $checkIn = $_GET['check_in'] ?? '';
 $checkOut = $_GET['check_out'] ?? '';
 
 // Validate initial parameters
 if (!$roomId || !$checkIn || !$checkOut) {
-    header("Location: new_booking.php");
+    header("Location: checkout.php");
     exit();
 }
 
@@ -29,7 +29,7 @@ try {
     // Get room details and verify availability
     $stmt = $conn->prepare("SELECT r.* FROM Rooms r
                           WHERE r.RoomID = ?
-                          AND r.AvailabilityStatus = 'Available'
+                          AND r.AvailabilityStatus = 'Available' OR r.AvailabilityStatus = 'occupied'
                           AND r.RoomID NOT IN (
                               SELECT b.RoomID FROM Bookings b
                               WHERE b.CheckInDate < ? 
@@ -54,7 +54,6 @@ try {
     $nights = $checkInDate->diff($checkOutDate)->days;
     $basePrice = $roomDetails['BasePrice'] * $nights;
     $totalPrice = $basePrice;
-
 } catch (Exception $e) {
     $error = $e->getMessage();
 }
@@ -76,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                               AND AvailabilityStatus = 'Available'");
         $stmt->bind_param("i", $roomId);
         $stmt->execute();
-        
+
         if (!$stmt->get_result()->num_rows) {
             throw new Exception("Room is no longer available");
         }
@@ -86,14 +85,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($selectedPackages)) {
             $packageIds = array_map('intval', $selectedPackages);
             $placeholders = implode(',', array_fill(0, count($packageIds), '?'));
-            
+
             $stmt = $conn->prepare("SELECT SUM(Price) AS total FROM Packages 
                                    WHERE PackageID IN ($placeholders)");
             $stmt->bind_param(str_repeat('i', count($packageIds)), ...$packageIds);
             $stmt->execute();
             $packageTotal = $stmt->get_result()->fetch_assoc()['total'] ?? 0;
         }
-        
+
         $totalPrice = $basePrice + $packageTotal;
 
         // Create booking
@@ -124,7 +123,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $conn->commit();
         $success = "Booking confirmed! Booking ID: $bookingId, Total Price: $" . number_format($totalPrice, 2);
-
     } catch (Exception $e) {
         $conn->rollback();
         $error = $e->getMessage();
@@ -136,6 +134,7 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -154,7 +153,7 @@ $conn->close();
             background: var(--secondary);
             border-radius: 10px;
             padding: 2rem;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
 
         .package-card {
@@ -167,7 +166,7 @@ $conn->close();
 
         .package-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         }
 
         .price-highlight {
@@ -177,17 +176,18 @@ $conn->close();
         }
     </style>
 </head>
+
 <body class="bg-light">
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="booking-summary">
                     <h2 class="mb-4"><i class="fas fa-receipt"></i> Complete Your Booking</h2>
-                    
+
                     <?php if ($error): ?>
                         <div class="alert alert-danger"><?= $error ?></div>
                     <?php endif; ?>
-                    
+
                     <?php if ($success): ?>
                         <div class="alert alert-success"><?= $success ?></div>
                     <?php else: ?>
@@ -226,34 +226,34 @@ $conn->close();
                             </div>
 
                             <?php if (!empty($packages)): ?>
-                            <div class="mb-4">
-                                <h4>Additional Packages</h4>
-                                <div class="row g-3">
-                                    <?php foreach ($packages as $package): ?>
-                                        <div class="col-md-6">
-                                            <div class="package-card">
-                                                <div class="form-check">
-                                                    <input class="form-check-input package-checkbox" 
-                                                           type="checkbox" 
-                                                           name="packages[]" 
-                                                           value="<?= $package['PackageID'] ?>" 
-                                                           id="package<?= $package['PackageID'] ?>"
-                                                           data-price="<?= $package['Price'] ?>">
-                                                    <label class="form-check-label w-100" for="package<?= $package['PackageID'] ?>">
-                                                        <div class="d-flex justify-content-between">
-                                                            <div>
-                                                                <strong><?= $package['PackageName'] ?></strong>
-                                                                <p class="mb-0 text-muted"><?= $package['Description'] ?></p>
+                                <div class="mb-4">
+                                    <h4>Additional Packages</h4>
+                                    <div class="row g-3">
+                                        <?php foreach ($packages as $package): ?>
+                                            <div class="col-md-6">
+                                                <div class="package-card">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input package-checkbox"
+                                                            type="checkbox"
+                                                            name="packages[]"
+                                                            value="<?= $package['PackageID'] ?>"
+                                                            id="package<?= $package['PackageID'] ?>"
+                                                            data-price="<?= $package['Price'] ?>">
+                                                        <label class="form-check-label w-100" for="package<?= $package['PackageID'] ?>">
+                                                            <div class="d-flex justify-content-between">
+                                                                <div>
+                                                                    <strong><?= $package['PackageName'] ?></strong>
+                                                                    <p class="mb-0 text-muted"><?= $package['Description'] ?></p>
+                                                                </div>
+                                                                <span class="text-success">+$<?= number_format($package['Price'], 2) ?></span>
                                                             </div>
-                                                            <span class="text-success">+$<?= number_format($package['Price'], 2) ?></span>
-                                                        </div>
-                                                    </label>
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    <?php endforeach; ?>
+                                        <?php endforeach; ?>
+                                    </div>
                                 </div>
-                            </div>
                             <?php endif; ?>
 
                             <div class="mb-4">
@@ -307,4 +307,5 @@ $conn->close();
         }
     </script>
 </body>
+
 </html>
