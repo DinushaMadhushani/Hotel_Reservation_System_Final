@@ -8,14 +8,14 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require __DIR__ . '/../config/db.con.php';
+require '../config/db.con.php';
 
 // Validate session and permissions
 if (!isset($_SESSION['UserID'], $_SESSION['FullName'], $_SESSION['UserType']) || 
     $_SESSION['UserType'] !== 'Staff') {
     header("Location: ../auth/login.php");
     exit();
-}
+} 
 
 // Check database connection
 if (!isset($conn) || $conn->connect_error) {
@@ -45,7 +45,7 @@ $stats = $taskStats->fetch_assoc();
 $completedTasks = $stats['completed'] ?? 0;
 $pendingTasks = $stats['pending'] ?? 0;
 
-// Get assigned rooms count (CORRECTED)
+// Get assigned rooms count
 $assignedRooms = $conn->query("
     SELECT COUNT(DISTINCT b.RoomID) as rooms 
     FROM ServiceRequests sr
@@ -64,7 +64,7 @@ $scheduleQuery->bind_param("i", $_SESSION['UserID']);
 $scheduleQuery->execute();
 $scheduleResult = $scheduleQuery->get_result();
 
-// Get assigned tasks (CORRECTED)
+// Get assigned tasks
 $taskQuery = $conn->prepare("
     SELECT t.TaskID, sr.RequestType, sr.Description, t.TaskStatus, b.RoomID
     FROM AssignedTasks t
@@ -93,6 +93,7 @@ $taskResult = $taskQuery->get_result();
             --secondary: #ffffff;
             --accent: #d4af37;
             --light: #f5f5f5;
+            --dark: #121212;
         }
 
         body {
@@ -101,33 +102,20 @@ $taskResult = $taskQuery->get_result();
             min-height: 100vh;
             padding-top: 70px;
         }
-
-        .navbar {
-            background: var(--primary);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            height: 70px;
-        }
-
+        
         .card {
             border: none;
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
             background: var(--light);
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
         }
 
         .card-header {
             background: linear-gradient(135deg, var(--primary), var(--accent));
             color: var(--light);
-            font-weight: 600;
             border-radius: 16px 16px 0 0 !important;
-            padding: 1.5rem;
+            padding: 1rem 1.5rem;
         }
 
         .status-badge {
@@ -135,254 +123,163 @@ $taskResult = $taskQuery->get_result();
             border-radius: 12px;
             font-size: 0.9rem;
             transition: all 0.3s ease;
-            display: inline-block;
-        }
-
-        .status-badge:hover {
-            transform: translateY(-2px);
         }
 
         .status-pending { background: #fee2e2; color: #b91c1c; }
         .status-inprogress { background: #ffedd5; color: #c2410c; }
         .status-completed { background: #dcfce7; color: #15803d; }
 
-        .profile-card {
-            position: relative;
-            overflow: hidden;
+        .btn-accent {
+            background-color: var(--accent) !important;
+            color: var(--primary) !important;
+            border: none;
+            transition: all 0.3s ease;
         }
 
-        .profile-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            opacity: 0.1;
-            transform: rotate(45deg);
+        .btn-accent:hover {
+            background-color: #c5a22c !important;
+            transform: translateY(-2px);
         }
 
         .profile-img {
             width: 120px;
             height: 120px;
-            object-fit: cover;
             border: 3px solid var(--light);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .profile-img:hover {
-            transform: scale(1.05);
-        }
-
-        .table-hover tbody tr {
-            transition: all 0.3s ease;
         }
 
         .table-hover tbody tr:hover {
-            transform: translateX(8px);
-            background: var(--secondary);
-        }
-
-        .nav-link {
-            transition: all 0.3s ease;
-            border-radius: 12px;
-            padding: 12px 20px;
-        }
-
-        .nav-link:hover {
-            background: rgba(99, 102, 241, 0.1);
-            transform: translateX(5px);
-        }
-
-        .dropdown-menu {
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            border: none;
+            background-color: rgba(0, 0, 0, 0.03);
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand text-white fw-bold" href="#" data-aos="fade-right">
-                <i class="fas fa-hotel me-2"></i>Staff Portal
-            </a>
-            <div class="d-flex align-items-center">
-                <div class="dropdown">
-                    <button class="btn btn-light dropdown-toggle d-flex align-items-center" 
-                            type="button" id="profileDropdown" data-bs-toggle="dropdown">
-                        <i class="fas fa-user-circle me-2"></i>
-                        <span><?= htmlspecialchars($_SESSION['FullName']) ?></span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#profile">
-                            <i class="fas fa-user me-2"></i>Profile
-                        </a></li>
-                        <li><a class="dropdown-item" href="#">
-                            <i class="fas fa-cog me-2"></i>Settings
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="../logout.php">
-                            <i class="fas fa-sign-out-alt me-2"></i>Logout
-                        </a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
+
+<?php include('../includes/staff_header.php'); ?>
 
     <!-- Main Content -->
     <div class="container-fluid mt-5">
-        <div class="row g-4">
-            <!-- Main Section -->
-            <div class="col-12 p-4">
-                <!-- Analytics Cards -->
-                <div class="row g-4 mb-4">
-                    <div class="col-12 col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="50">
-                        <div class="card h-100 border-start border-primary border-4">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-primary p-3 rounded-3 me-3">
-                                        <i class="fas fa-tasks fa-2x text-white"></i>
-                                    </div>
-                                    <div>
-                                        <h5 class="card-title mb-1 text-muted">Total Tasks</h5>
-                                        <h2 class="mb-0"><?= $completedTasks + $pendingTasks ?></h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <div class="row g-4 px-3">
+            <!-- Analytics Cards -->
+            <div class="col-12 col-md-6 col-xl-3">
+                <div class="card h-100">
+                    <div class="card-header text-white">
+                        <i class="fas fa-tasks me-2 "></i>Total Tasks
                     </div>
-                    
-                    <div class="col-12 col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="100">
-                        <div class="card h-100 border-start border-success border-4">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-success p-3 rounded-3 me-3">
-                                        <i class="fas fa-check-circle fa-2x text-white"></i>
-                                    </div>
-                                    <div>
-                                        <h5 class="card-title mb-1 text-muted">Completed</h5>
-                                        <h2 class="mb-0"><?= $completedTasks ?></h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="card-body">
+                        <h2 class="mb-0"><?= $completedTasks + $pendingTasks ?></h2>
                     </div>
+                </div>
+            </div>
+            
+            <div class="col-12 col-md-6 col-xl-3">
+                <div class="card h-100">
+                    <div class="card-header text-white">
+                        <i class="fas fa-check-circle me-2"></i>Completed
+                    </div>
+                    <div class="card-body">
+                        <h2 class="mb-0"><?= $completedTasks ?></h2>
+                    </div>
+                </div>
+            </div>
 
-                    <div class="col-12 col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="150">
-                        <div class="card h-100 border-start border-warning border-4">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-warning p-3 rounded-3 me-3">
-                                        <i class="fas fa-exclamation-circle fa-2x text-white"></i>
-                                    </div>
-                                    <div>
-                                        <h5 class="card-title mb-1 text-muted">Pending</h5>
-                                        <h2 class="mb-0"><?= $pendingTasks ?></h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <div class="col-12 col-md-6 col-xl-3">
+                <div class="card h-100">
+                    <div class="card-header text-white">
+                        <i class="fas fa-exclamation-circle me-2"></i>Pending
                     </div>
+                    <div class="card-body">
+                        <h2 class="mb-0"><?= $pendingTasks ?></h2>
+                    </div>
+                </div>
+            </div>
 
-                    <div class="col-12 col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="200">
-                        <div class="card h-100 border-start border-info border-4">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-info p-3 rounded-3 me-3">
-                                        <i class="fas fa-door-open fa-2x text-white"></i>
-                                    </div>
-                                    <div>
-                                        <h5 class="card-title mb-1 text-muted">Assigned Rooms</h5>
-                                        <h2 class="mb-0"><?= $assignedRooms ?></h2>
-                                    </div>
-                                </div>
+            <div class="col-12 col-md-6 col-xl-3">
+                <div class="card h-100">
+                    <div class="card-header text-white">
+                        <i class="fas fa-door-open me-2"></i>Assigned Rooms
+                    </div>
+                    <div class="card-body">
+                        <h2 class="mb-0"><?= $assignedRooms ?></h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Card -->
+            <div class="col-12 col-lg-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <img src="https://via.placeholder.com/120" alt="Profile" 
+                             class="profile-img rounded-circle mb-3">
+                        <h4 class="card-title mb-1"><?= htmlspecialchars($_SESSION['FullName']) ?></h4>
+                        <p class="text-muted mb-3">Staff Member</p>
+                        <div class="d-flex justify-content-around">
+                            <div class="px-3">
+                                <h5 class="mb-0"><?= $completedTasks ?></h5>
+                                <small class="text-muted">Completed Tasks</small>
+                            </div>
+                            <div class="px-3">
+                                <h5 class="mb-0"><?= $scheduleResult->num_rows ?></h5>
+                                <small class="text-muted">Upcoming Shifts</small>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Profile & Schedule Section -->
-                <div class="row g-4 mb-4">
-                    <!-- Profile Card -->
-                    <div class="col-12 col-lg-4" data-aos="zoom-in">
-                        <div class="card profile-card">
-                            <div class="card-body text-center position-relative">
-                                <img src="https://via.placeholder.com/120" alt="Profile" 
-                                     class="profile-img rounded-circle mb-3">
-                                <h4 class="card-title mb-1"><?= htmlspecialchars($_SESSION['FullName']) ?></h4>
-                                <p class="text-muted mb-3">Staff Member</p>
-                                <div class="d-flex justify-content-around">
-                                    <div class="px-3">
-                                        <h5 class="mb-0"><?= $completedTasks ?></h5>
-                                        <small class="text-muted">Completed Tasks</small>
-                                    </div>
-                                    <div class="px-3">
-                                        <h5 class="mb-0"><?= $scheduleResult->num_rows ?></h5>
-                                        <small class="text-muted">Upcoming Shifts</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <!-- Schedule Card -->
+            <div class="col-12 col-lg-8">
+                <div class="card">
+                    <div class="card-header text-white">
+                        <i class="fas fa-calendar-alt me-2"></i>Upcoming Schedule
                     </div>
-
-                    <!-- Schedule Card -->
-                    <div class="col-12 col-lg-8" data-aos="fade-left">
-                        <div class="card">
-                            <div class="card-header">
-                                <i class="fas fa-calendar-alt me-2"></i>Upcoming Schedule
+                    <div class="card-body">
+                        <?php if ($scheduleResult->num_rows > 0): ?>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Start Time</th>
+                                            <th>End Time</th>
+                                            <th>Duration</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php while ($schedule = $scheduleResult->fetch_assoc()): ?>
+                                        <tr>
+                                            <td><?= date('M j, Y', strtotime($schedule['ScheduleDate'])) ?></td>
+                                            <td><?= date('h:i A', strtotime($schedule['StartTime'])) ?></td>
+                                            <td><?= date('h:i A', strtotime($schedule['EndTime'])) ?></td>
+                                            <td>
+                                                <?php
+                                                $start = new DateTime($schedule['StartTime']);
+                                                $end = new DateTime($schedule['EndTime']);
+                                                echo $start->diff($end)->format('%h h %i m');
+                                                ?>
+                                            </td>
+                                        </tr>
+                                        <?php endwhile; ?>
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="card-body">
-                                <?php if ($scheduleResult->num_rows > 0): ?>
-                                    <div class="table-responsive">
-                                        <table class="table table-hover align-middle">
-                                            <thead>
-                                                <tr>
-                                                    <th>Date</th>
-                                                    <th>Start Time</th>
-                                                    <th>End Time</th>
-                                                    <th>Duration</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php while ($schedule = $scheduleResult->fetch_assoc()): ?>
-                                                <tr data-aos="fade-right">
-                                                    <td><?= date('M j, Y', strtotime($schedule['ScheduleDate'])) ?></td>
-                                                    <td><?= date('h:i A', strtotime($schedule['StartTime'])) ?></td>
-                                                    <td><?= date('h:i A', strtotime($schedule['EndTime'])) ?></td>
-                                                    <td>
-                                                        <?php
-                                                        $start = new DateTime($schedule['StartTime']);
-                                                        $end = new DateTime($schedule['EndTime']);
-                                                        echo $start->diff($end)->format('%h h %i m');
-                                                        ?>
-                                                    </td>
-                                                </tr>
-                                                <?php endwhile; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                <?php else: ?>
-                                    <div class="alert alert-info mb-0">No upcoming schedule found</div>
-                                <?php endif; ?>
-                            </div>
-                        </div>
+                        <?php else: ?>
+                            <div class="alert alert-info mb-0">No upcoming schedule found</div>
+                        <?php endif; ?>
                     </div>
                 </div>
+            </div>
 
-                <!-- Task Management -->
-                <div class="card mb-4" data-aos="zoom-in">
-                    <div class="card-header">
+            <!-- Task Management -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header text-white">
                         <i class="fas fa-clipboard-list me-2"></i>Task Management
                     </div>
                     <div class="card-body">
                         <?php if ($taskResult->num_rows > 0): ?>
                             <div class="table-responsive">
-                                <table class="table table-hover align-middle task-table">
+                                <table class="table table-hover">
                                     <thead>
                                         <tr>
                                             <th>Task ID</th>
@@ -395,7 +292,7 @@ $taskResult = $taskQuery->get_result();
                                     </thead>
                                     <tbody>
                                         <?php while ($task = $taskResult->fetch_assoc()): ?>
-                                        <tr data-aos="fade-up">
+                                        <tr>
                                             <td>#<?= $task['TaskID'] ?></td>
                                             <td><?= htmlspecialchars($task['RequestType']) ?></td>
                                             <td><?= htmlspecialchars($task['Description']) ?></td>
@@ -409,7 +306,7 @@ $taskResult = $taskQuery->get_result();
                                                 <form method="POST" class="d-inline">
                                                     <input type="hidden" name="task_id" value="<?= $task['TaskID'] ?>">
                                                     <select name="new_status" 
-                                                            class="form-select form-select-sm border-0 shadow-sm" 
+                                                            class="form-select form-select-sm"
                                                             onchange="this.form.submit()">
                                                         <option value="Pending" <?= $task['TaskStatus'] === 'Pending' ? 'selected' : '' ?>>Pending</option>
                                                         <option value="InProgress" <?= $task['TaskStatus'] === 'InProgress' ? 'selected' : '' ?>>In Progress</option>
@@ -437,12 +334,11 @@ $taskResult = $taskQuery->get_result();
         AOS.init({
             duration: 800,
             once: true,
-            easing: 'ease-in-out-quad',
-            offset: 100
+            easing: 'ease-in-out-quad'
         });
-    </script>   
+    </script>
 </body>
 </html>
 <?php
 $conn->close();
-?>            
+?>
