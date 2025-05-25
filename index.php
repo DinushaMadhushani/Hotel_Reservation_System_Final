@@ -155,6 +155,24 @@
             transform: scale(1.2);
             box-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
+
+        .exbtn a{
+            text-decoration: none;
+            color: var(--secondary);
+        }
+
+        .exbtn{
+            padding: 12px 25px;
+            background-color: var(--accent);
+            color: var(--secondary);
+            border-radius: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .exbtn:hover{
+            background-color: var(--dark);
+        }
         /* Rooms Section */
         .room-card {
             transition: transform 0.3s ease;
@@ -165,6 +183,19 @@
         }
         .room-card img {
             border-radius: 15px 15px 0 0;
+        }
+        .roomex{
+            padding: 12px 25px;
+            background-color: var(--accent);
+            color: var(--secondary);
+            border-radius: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .roomex a{
+            text-decoration: none;
+            color: var(--secondary);
         }
         .amenities {
             list-style: none;
@@ -249,25 +280,9 @@
     <div class="hero-content">
         <h1>Unforgettable Stays, Unmatched Experiences</h1>
         <p>Where luxury meets comfort in every corner</p>
-        <button class="btn btn-light">Explore Now</button>
+        <button class="btn btn-light exbtn"><a href="./pages/rooms.php">Explore Now</a></button>
     </div>
-    <div class="search-bar">
-        <input type="date" placeholder="Arrival Date" required>
-        <input type="date" placeholder="Departure Date" required>
-        <select required>
-            <option value="1">1 Room</option>
-            <option value="2">2 Rooms</option>
-        </select>
-        <select required>
-            <option value="1">1 Adult</option>
-            <option value="2">2 Adults</option>
-        </select>
-        <select required>
-            <option value="0">0 Children</option>
-            <option value="1">1 Child</option>
-        </select>
-        <button class="btn">Search</button>
-    </div>
+
     <div class="image-slider">
         <img src="./assets/images/hero/img1.jpg" alt="Slide 1" class="active">
         <img src="./assets/images/hero/img4.jpg" alt="Slide 2">
@@ -302,7 +317,7 @@
                             <?php endforeach; ?>
                         </ul>
                         <p class="card-text fw-bold">$<?php echo $room['price']; ?>/night</p>
-                        <button class="btn btn-primary">Book Now</button>
+                        <button class="btn btn-primary roomex"> <a href="./pages/rooms.php">Explore More ➡️ </a></button>
                     </div>
                 </div>
             </div>

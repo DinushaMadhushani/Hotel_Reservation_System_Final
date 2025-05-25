@@ -49,24 +49,24 @@
 <!-- Navigation -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand text-white fw-bold" href="#">
+            <a class="navbar-brand text-white fw-bold" href="./dashboard.php">
                 <i class="fas fa-hotel me-2"></i>Staff Portal
             </a>
             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard.php">
-                            <i class="fas fa-home me-2"></i>Dashboard
+                        <a class="nav-link" href="../index.php">
+                            <i class="fas fa-home me-2"></i>Home
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="task.php">
+                        <a class="nav-link" href="./task.php">
                             <i class="fas fa-tasks me-2"></i>Tasks
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="shedule.php">
+                        <a class="nav-link" href="./shedule.php">
                             <i class="fas fa-calendar-alt me-2"></i>Schedule
                         </a>
                     </li>
