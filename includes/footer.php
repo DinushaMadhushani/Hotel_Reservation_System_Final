@@ -143,12 +143,12 @@
                 </div>
                 <div class="col-md-6 text-center text-md-end">
                     <div class="d-flex gap-3 justify-content-center justify-content-md-end">
-                        <img src="visa.svg" alt="Visa" style="height: 24px; filter: grayscale(1) brightness(2);">
-                        <img src="mastercard.svg" alt="Mastercard" style="height: 24px; filter: grayscale(1) brightness(2);">
-                        <img src="paypal.svg" alt="PayPal" style="height: 24px; filter: grayscale(1) brightness(2);">
+                        <img src="../assets/images/SVG/Visa.svg" alt="Visa" style="height: 24px; filter: grayscale(1) brightness(2);">
+                        <img src="../assets/images/SVG/Mastercard.svg" alt="Mastercard" style="height: 24px; filter: grayscale(1) brightness(2);">
+                        <img src="../assets/images/SVG/Paypal.svg"     alt="PayPal" style="height: 24px; filter: grayscale(1) brightness(2);">
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</footer>
+</footer>   

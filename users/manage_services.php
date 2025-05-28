@@ -178,6 +178,7 @@ $conn->close();
     </style>
 </head>
 <body class="bg-light">
+    <?php include '../includes/user_header.php'; ?>
     <div class="container py-4">
         <h2 class="mb-4"><i class="fas fa-concierge-bell"></i> Manage Services</h2>
 

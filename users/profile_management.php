@@ -297,8 +297,9 @@ $conn->close();
     </style>
 </head>
 <body>
+    <?php include '../includes/user_header.php'; ?>
     <!-- Top Navigation -->
-    <nav class="top-nav navbar navbar-expand-lg">
+    <!-- <nav class="top-nav navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand nav-brand" href="dashboard.php"><i class="fas fa-hotel"></i> Hotel System</a>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -319,7 +320,7 @@ $conn->close();
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav> -->
 
     <!-- Main Content -->
     <div class="container">

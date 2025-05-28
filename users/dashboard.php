@@ -81,8 +81,10 @@ if ($imageFound) {
 
 </head>
 <body>
+
+<?php include '../includes/user_header.php'; ?>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg fixed-top">
+    <!-- <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand accent-text" href="#">
                 <i class="fas fa-hotel me-2"></i>Hotel Dashboard
@@ -107,15 +109,15 @@ if ($imageFound) {
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav> -->
 
     <!-- Main Content -->
     <div class="main-content">
         <!-- Welcome Section -->
         <div class="row mb-4 justify-content-center flex" data-aos="fade-up">
             <div class="col-12 text-center">
-                <h3 class="accent-text">Welcome Back, <?= htmlspecialchars($customer['FullName']) ?>!</h3>
-                <p class="text-muted">Your travel experience matters to us</p>
+                <h3 class="text-dark accent">Welcome Back, <?= htmlspecialchars($customer['FullName']) ?>!</h3>
+                <p class="text-dark">Your travel experience matters to us</p>
             </div>
         </div>
 
@@ -242,16 +244,15 @@ if ($imageFound) {
             <div class="col-12">
                 <div class="card" style="background: var(--primary); border: 1px solid rgba(255,255,255,0.1);">
                     <div class="card-body">
-                        <h5 class="card-title accent-text">Recent Bookings</h5>
+                        <h5 class="card-title text-white text-center my-3">Recent Bookings</h5>
                         <div class="table-responsive">
-                            <table class="table table-dark table-hover">
+                            <table class="table table-dark table-hover text-center">
                                 <thead>
                                     <tr>
                                         <th>Room</th>
                                         <th>Check-in</th>
                                         <th>Check-out</th>
                                         <th>Status</th>
-                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -277,11 +278,6 @@ if ($imageFound) {
                                             ?>">
                                                 <?= $booking['BookingStatus'] ?>
                                             </span>
-                                        </td>
-                                        <td>
-                                            <a href="booking_details.php?id=<?= $booking['BookingID'] ?>" class="btn btn-sm btn-primary">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
                                         </td>
                                     </tr>
                                     <?php endwhile; ?>
