@@ -295,7 +295,7 @@
 <!-- Rooms Section -->
 <section id="rooms" class="py-5">
     <div class="container">
-        <h2 class="text-center mb-5">Available Rooms</h2>
+        <h2 class="text-center mb-5"> Rooms</h2>
         <div class="row g-4">
             <?php
             $rooms = [
