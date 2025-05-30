@@ -40,7 +40,13 @@ $basePath = rtrim($basePath, '/') . '/';
 // 1. First check for email-based image
 foreach ($imageExtensions as $ext) {
     $safeEmail = basename($email); // Prevent directory traversal
+    $safeEmail = str_replace(['.', '@'], ['.', '_at_'], $safeEmail);
+
     $testPath = $basePath . $safeEmail . '.' . $ext;
+
+    // die($testPath);
+
+
     if (file_exists($testPath)) {
         $imagePath = $testPath;
         $imageFound = true;
@@ -70,6 +76,7 @@ if ($imageFound) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -80,6 +87,7 @@ if ($imageFound) {
     <link rel="stylesheet" href="../assets/css/user_dashboard.css">
 
 </head>
+
 <body>
 
 <?php include '../includes/user_header.php'; ?>
@@ -89,11 +97,11 @@ if ($imageFound) {
             <a class="navbar-brand accent-text" href="#">
                 <i class="fas fa-hotel me-2"></i>Hotel Dashboard
             </a>
-            
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
@@ -102,7 +110,9 @@ if ($imageFound) {
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="./profile_management.php"><i class="fas fa-user me-2"></i>Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li><a class="dropdown-item" href="../auth/logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                         </ul>
                     </li>
@@ -122,17 +132,17 @@ if ($imageFound) {
         </div>
 
         <!-- Statistics Section -->
-       <!-- Profile Card Section -->
+        <!-- Profile Card Section -->
         <div class="row mb-4" data-aos="fade-up">
             <div class="col-md-4">
                 <div class="profile-card">
                     <div class="p-4 text-center">
-                       <div class="avatar mb-3">
-    <img src="<?= $imagePath ?>" 
-         alt="<?= htmlspecialchars($customer['FullName']) ?> Profile"
-         class="rounded-circle shadow-sm"
-         style="width: 200px; height: 200px; object-fit: cover;">
-</div>
+                        <div class="avatar mb-3">
+                            <img src="<?= $imagePath ?>"
+                                alt="<?= htmlspecialchars($customer['FullName']) ?> Profile"
+                                class="rounded-circle shadow-sm"
+                                style="width: 200px; height: 200px; object-fit: cover;">
+                        </div>
                         <h4 class="mb-2 fw-bold"><?= htmlspecialchars($customer['FullName']) ?></h4>
                         <p class="text-muted mb-3">Premium Member</p>
                     </div>
@@ -170,18 +180,18 @@ if ($imageFound) {
                     <div class="col-md-6 mb-3" data-aos="fade-up" data-aos-delay="100">
                         <div class="stat-card d-flex align-items-center justify-content-center">
                             <div class="text-center">
-                            <i class="fas fa-calendar-check fa-2x text-warning mb-3"></i>
-                            <h5 class="fw-medium text-white">Upcoming Stays</h5>
-                            <h2 class="fw-bold text-white"><?= $stats['upcoming_stays'] ?? 0 ?></h2>
+                                <i class="fas fa-calendar-check fa-2x text-warning mb-3"></i>
+                                <h5 class="fw-medium text-white">Upcoming Stays</h5>
+                                <h2 class="fw-bold text-white"><?= $stats['upcoming_stays'] ?? 0 ?></h2>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3" data-aos="fade-up" data-aos-delay="150">
                         <div class="stat-card d-flex align-items-center justify-content-center">
                             <div class="text-center">
-                            <i class="fas fa-history fa-2x text-warning mb-3"></i>
-                            <h5 class="fw-medium text-white">Completed Stays</h5>
-                            <h2 class="fw-bold text-white"><?= ($stats['total_bookings'] - $stats['upcoming_stays']) ?? 0 ?></h2>
+                                <i class="fas fa-history fa-2x text-warning mb-3"></i>
+                                <h5 class="fw-medium text-white">Completed Stays</h5>
+                                <h2 class="fw-bold text-white"><?= ($stats['total_bookings'] - $stats['upcoming_stays']) ?? 0 ?></h2>
                             </div>
                         </div>
                     </div>
@@ -208,7 +218,7 @@ if ($imageFound) {
                             <i class="fas fa-bed fa-3x accent-text mb-3"></i>
                             <h5>New Booking</h5>
                             <p class="text-white">Book a new stay with us</p>
-                            <a href="new_booking.php" class="btn btn-primary">Book Now</a>
+                            <a href="checkout.php" class="btn btn-primary">Book Now</a>
                         </div>
                     </div>
                     <div class="col-md-3 mb-3">
@@ -231,7 +241,7 @@ if ($imageFound) {
                         <div class="management-card">
                             <i class="fas fa-user-cog fa-3x accent-text mb-3"></i>
                             <h5>Profile Settings</h5>
-                            <p class="text-white">Update your information</p>  
+                            <p class="text-white">Update your information</p>
                             <a href="profile_management.php" class="btn btn-primary">Update</a>
                         </div>
                     </div>
@@ -264,8 +274,8 @@ if ($imageFound) {
                                     $stmt->bind_param("i", $userId);
                                     $stmt->execute();
                                     $bookings = $stmt->get_result();
-                                    
-                                    while($booking = $bookings->fetch_assoc()):
+
+                                    while ($booking = $bookings->fetch_assoc()):
                                     ?>
                                     <tr>
                                         <td>Room <?= htmlspecialchars($booking['RoomNumber']) ?></td>
@@ -280,6 +290,23 @@ if ($imageFound) {
                                             </span>
                                         </td>
                                     </tr>
+                                        <tr>
+                                            <td>Room <?= htmlspecialchars($booking['RoomNumber']) ?></td>
+                                            <td><?= date('M d, Y', strtotime($booking['CheckInDate'])) ?></td>
+                                            <td><?= date('M d, Y', strtotime($booking['CheckOutDate'])) ?></td>
+                                            <td>
+                                                <span class="badge bg-<?=
+                                                                        $booking['BookingStatus'] === 'Confirmed' ? 'success' : ($booking['BookingStatus'] === 'Pending' ? 'warning' : 'danger')
+                                                                        ?>">
+                                                    <?= $booking['BookingStatus'] ?>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="booking_details.php?id=<?= $booking['BookingID'] ?>" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
                                     <?php endwhile; ?>
                                 </tbody>
                             </table>
@@ -300,4 +327,5 @@ if ($imageFound) {
         });
     </script>
 </body>
+
 </html>
