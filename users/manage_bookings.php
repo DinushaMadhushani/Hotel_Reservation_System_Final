@@ -161,6 +161,7 @@ $conn->close();
     </style>
 </head>
 <body class="bg-light">
+    <?php include '../includes/user_header.php'; ?>
     <div class="container py-5">
         <h2 class="mb-4"><i class="fas fa-calendar-alt me-2"></i>Current Reservations</h2>
         

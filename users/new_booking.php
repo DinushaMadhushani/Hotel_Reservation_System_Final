@@ -109,7 +109,8 @@ $conn->close();
     </style>
 </head>
 <body class="bg-light">
-    <div class="container py-4">
+    <?php include '../includes/user_header.php'; ?>
+    <div class="container py-4 mt-5">
         <div class="availability-card">
             <h3 class="mb-4"><i class="fas fa-search"></i> Check Room Availability</h3>
             

@@ -498,7 +498,7 @@
 <section class="cta text-center my-5 p-5" data-aos="fade-up" data-aos-delay="1100">
     <h2 class="mb-4">Ready to Book Your Stay?</h2>
     <p class="lead">Choose your perfect room package and reserve today</p>
-    <a href="./gallery.php" class="btn btn-light btn-lg mt-3">View Gallery</a>
+    <a href="../users/booking.php" class="btn btn-light btn-lg mt-3">Make a Reservation</a>
 </section>
 <?php include '../includes/footer.php'?>
 
