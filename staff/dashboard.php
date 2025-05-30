@@ -287,7 +287,6 @@ $taskResult = $taskQuery->get_result();
                                             <th>Description</th>
                                             <th>Room</th>
                                             <th>Status</th>
-                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -301,19 +300,7 @@ $taskResult = $taskQuery->get_result();
                                                 <span class="status-badge status-<?= strtolower($task['TaskStatus']) ?>">
                                                     <?= $task['TaskStatus'] ?>
                                                 </span>
-                                            </td>
-                                            <td>
-                                                <form method="POST" class="d-inline">
-                                                    <input type="hidden" name="task_id" value="<?= $task['TaskID'] ?>">
-                                                    <select name="new_status" 
-                                                            class="form-select form-select-sm"
-                                                            onchange="this.form.submit()">
-                                                        <option value="Pending" <?= $task['TaskStatus'] === 'Pending' ? 'selected' : '' ?>>Pending</option>
-                                                        <option value="InProgress" <?= $task['TaskStatus'] === 'InProgress' ? 'selected' : '' ?>>In Progress</option>
-                                                        <option value="Completed" <?= $task['TaskStatus'] === 'Completed' ? 'selected' : '' ?>>Completed</option>
-                                                    </select>
-                                                </form>
-                                            </td>
+                                        </td>
                                         </tr>
                                         <?php endwhile; ?>
                                     </tbody>
