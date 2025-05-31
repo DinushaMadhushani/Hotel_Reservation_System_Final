@@ -397,7 +397,7 @@
                     <p class="card-text">Ideal for solo travelers with a comfortable single bed.</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="room-price">$89<span class="text-muted">/night</span></div>
-                        <a href="booking_form.php" class="btn btn-outline-accent">Book Now</a>
+                        <a href="../users/new_booking.php" class="btn btn-outline-accent">Book Now</a>
                     </div>
                 </div>
             </div>
@@ -413,7 +413,7 @@
                     <p class="card-text">Perfect for couples with a cozy queen-size bed.</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="room-price">$129<span class="text-muted">/night</span></div>
-                        <a href="booking_form.php" class="btn btn-outline-accent">Book Now</a>
+                        <a href="../users/new_booking.php" class="btn btn-outline-accent">Book Now</a>
                     </div>
                 </div>
             </div>
@@ -429,7 +429,7 @@
                     <p class="card-text">Great for friends with two single beds.</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="room-price">$119<span class="text-muted">/night</span></div>
-                        <a href="booking_form.php" class="btn btn-outline-accent">Book Now</a>
+                        <a href="../users/new_booking.php" class="btn btn-outline-accent">Book Now</a>
                     </div>
                 </div>
             </div>
@@ -452,7 +452,7 @@
                     <p class="card-text">Spacious room with modern amenities and city view.</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="room-price">$199<span class="text-muted">/night</span></div>
-                        <a href="booking_form.php" class="btn btn-outline-accent">Book Now</a>
+                        <a href="../users/new_booking.php" class="btn btn-outline-accent">Book Now</a>
                     </div>
                 </div>
             </div>
@@ -468,7 +468,7 @@
                     <p class="card-text">Perfect for families with two queen beds.</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="room-price">$199<span class="text-muted">/night</span></div>
-                        <a href="booking_form.php" class="btn btn-outline-accent">Book Now</a>
+                        <a href="../users/new_booking.php" class="btn btn-outline-accent">Book Now</a>
                     </div>
                 </div>
             </div>
@@ -485,7 +485,7 @@
                     <p class="card-text"> Located on the highest floor of a hotel, these suites offer unparalleled views and luxury. </p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="room-price">$199<span class="text-muted">/night</span></div>
-                        <a href="booking_Form.php" class="btn btn-outline-accent">Book Now</a>
+                        <a href="../users/new_booking.php" class="btn btn-outline-accent">Book Now</a>
                     </div>
                 </div>
             </div>
