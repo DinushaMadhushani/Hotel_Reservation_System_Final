@@ -83,15 +83,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (isset($_GET['action']) && $_GET['action'] === 'delete') {
     $taskId = intval($_GET['id']);
     try {
-        $stmt = $conn->prepare("DELETE FROM AssignedTasks WHERE TaskID = ?");
-        $stmt->bind_param("i", $taskId);
-        if ($stmt->execute()) {
-            $success = "Task deleted successfully!";
-        } else {
-            throw new Exception("Error deleting task: " . $stmt->error);
+        $conn->autocommit(FALSE); // Start transaction
+        
+        // First, get the RequestID for the task
+        $getRequestStmt = $conn->prepare("SELECT RequestID FROM AssignedTasks WHERE TaskID = ?");
+        $getRequestStmt->bind_param("i", $taskId);
+        $getRequestStmt->execute();
+        $result = $getRequestStmt->get_result();
+        
+        if ($result->num_rows === 0) {
+            throw new Exception("Task not found or already deleted.");
         }
+        
+        $requestId = $result->fetch_row()[0];
+        
+        // Temporarily disable foreign key checks
+        $conn->query("SET FOREIGN_KEY_CHECKS=0");
+        
+        // Delete the task
+        $deleteStmt = $conn->prepare("DELETE FROM AssignedTasks WHERE TaskID = ?");
+        $deleteStmt->bind_param("i", $taskId);
+        if (!$deleteStmt->execute()) {
+            throw new Exception("Error deleting task: " . $deleteStmt->error);
+        }
+        
+        // Update the service request status back to 'Pending' instead of deleting it
+        $updateReqStmt = $conn->prepare("UPDATE ServiceRequests SET Status = 'Pending' WHERE RequestID = ?");
+        $updateReqStmt->bind_param("i", $requestId);
+        if (!$updateReqStmt->execute()) {
+            throw new Exception("Error updating service request: " . $updateReqStmt->error);
+        }
+        
+        // Re-enable foreign key checks
+        $conn->query("SET FOREIGN_KEY_CHECKS=1");
+        
+        $conn->commit();
+        $success = "Task deleted successfully and service request is now available for reassignment!";
     } catch (Exception $e) {
+        $conn->rollback();
+        // Re-enable foreign key checks in case of error
+        $conn->query("SET FOREIGN_KEY_CHECKS=1");
         $error = $e->getMessage();
+    } finally {
+        $conn->autocommit(TRUE); // Reset autocommit mode
     }
 }
 
@@ -386,11 +420,11 @@ $conn->close();
                                         </span>
                                     </td>
                                     <td>
-                                        <a href="manage_tasks.php?action=edit&id=<?= $task['TaskID'] ?>" 
+                                        <a href="assign_task.php?action=edit&id=<?= $task['TaskID'] ?>" 
                                            class="btn btn-sm btn-accent">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="manage_tasks.php?action=delete&id=<?= $task['TaskID'] ?>" 
+                                        <a href="assign_task.php?action=delete&id=<?= $task['TaskID'] ?>" 
                                            class="btn btn-sm btn-danger" 
                                            onclick="return confirm('Are you sure you want to delete this task?')">
                                             <i class="fas fa-trash-alt"></i>
