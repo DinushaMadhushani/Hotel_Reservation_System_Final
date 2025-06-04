@@ -2,79 +2,107 @@
 session_start();
 require '../config/db.con.php';
 
+// Define base URL for consistent linking
+$base_url = '/Hotel_Reservation_System_Final';
+
 // Initialize variables
 $fullname = $email = $password = $confirm_password = $phone = $address = "";
-$fullname_err = $email_err = $password_err = $confirm_password_err = "";
+$fullname_err = $email_err = $password_err = $confirm_password_err = $phone_err = $address_err = "";
 
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validate Full Name
+    // Validate fullname
     if (empty(trim($_POST["fullname"]))) {
         $fullname_err = "Please enter your full name.";
     } else {
         $fullname = trim($_POST["fullname"]);
     }
 
-    // Validate Email
+    // Validate email
     if (empty(trim($_POST["email"]))) {
-        $email_err = "Please enter email.";
+        $email_err = "Please enter an email.";
     } else {
-        $email = trim($_POST["email"]);
-        // Check if email exists
+        // Check if email already exists
         $sql = "SELECT UserID FROM Users WHERE Email = ?";
+        
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("s", $email);
+            $stmt->bind_param("s", $param_email);
+            $param_email = trim($_POST["email"]);
+            
             if ($stmt->execute()) {
                 $stmt->store_result();
+                
                 if ($stmt->num_rows > 0) {
-                    $email_err = "Email already registered.";
+                    $email_err = "This email is already taken.";
+                } else {
+                    $email = trim($_POST["email"]);
                 }
+            } else {
+                echo "Oops! Something went wrong. Please try again later.";
             }
             $stmt->close();
         }
     }
 
-    // Validate Password
+    // Validate password
     if (empty(trim($_POST["password"]))) {
-        $password_err = "Please enter password.";     
+        $password_err = "Please enter a password.";
+    } elseif (strlen(trim($_POST["password"])) < 6) {
+        $password_err = "Password must have at least 6 characters.";
     } else {
         $password = trim($_POST["password"]);
     }
 
-    // Validate Confirm Password
+    // Validate confirm password
     if (empty(trim($_POST["confirm_password"]))) {
-        $confirm_password_err = "Please confirm password.";     
+        $confirm_password_err = "Please confirm password.";
     } else {
         $confirm_password = trim($_POST["confirm_password"]);
-        if ($password != $confirm_password) {
-            $confirm_password_err = "Passwords did not match.";
+        if (empty($password_err) && ($password != $confirm_password)) {
+            $confirm_password_err = "Password did not match.";
         }
     }
 
-    // Check for errors before inserting
-    if (empty($fullname_err) && empty($email_err) && empty($password_err) 
-        && empty($confirm_password_err)) {
-        
+    // Validate phone
+    if (empty(trim($_POST["phone"]))) {
+        $phone_err = "Please enter your phone number.";
+    } else {
         $phone = trim($_POST["phone"]);
+    }
+
+    // Validate address
+    if (empty(trim($_POST["address"]))) {
+        $address_err = "Please enter your address.";
+    } else {
         $address = trim($_POST["address"]);
-        
-        // Set default user role to Customer
-        $user_type = "Customer";
-        
-        // Insert user into database (PLAIN TEXT PASSWORD STORAGE)
-        $sql = "INSERT INTO Users (FullName, Email, PasswordHash, PhoneNumber, Address, UserType) 
-                VALUES (?, ?, ?, ?, ?, ?)";
+    }
+
+    // Check input errors before inserting in database
+    if (empty($fullname_err) && empty($email_err) && empty($password_err) && empty($confirm_password_err) && empty($phone_err) && empty($address_err)) {
+        // Prepare an insert statement
+        $sql = "INSERT INTO Users (FullName, Email, PasswordHash, PhoneNumber, Address, UserType) VALUES (?, ?, ?, ?, ?, ?)";
         
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("ssssss", $fullname, $email, $password, $phone, $address, $user_type);
+            // Bind variables to the prepared statement as parameters
+            $stmt->bind_param("ssssss", $param_fullname, $param_email, $param_password, $param_phone, $param_address, $param_usertype);
             
+            // Set parameters
+            $param_fullname = $fullname;
+            $param_email = $email;
+            $param_password = $password; // Plain text password (not secure)
+            $param_phone = $phone;
+            $param_address = $address;
+            $param_usertype = "Customer"; // Default user type
+            
+            // Attempt to execute the prepared statement
             if ($stmt->execute()) {
-                // Registration success - redirect to login
-                $_SESSION['register_success'] = "Registration successful! Please login.";
-                header("Location: login.php");
+                // Set success message in session
+                $_SESSION['register_success'] = "Registration successful! Please login with your credentials.";
+                // Redirect to login page
+                header("location: login.php");
                 exit();
             } else {
-                echo "Oops! Something went wrong. Please try again later.";
+                echo "Something went wrong. Please try again later.";
             }
             $stmt->close();
         }
@@ -87,106 +115,348 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-    <style>
-        body { background-color:#d4af37; }
-        .register-container { max-width: 500px; margin: 50px auto; }
-        .form-control { border-radius: 25px; }
-        .btn-register { border-radius: 25px; }
-    </style>
-</head>
-<body>
-    <div class="register-container">
-        <div class="card shadow">
-            <div class="card-body">
-                <h3 class="card-title text-center mb-4">Register</h3>
-                <?php 
-                if (!empty($email_err)) {
-                    echo '<div class="alert alert-danger">' . $email_err . '</div>';
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - EaSyStaY</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AOS CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="<?php echo $base_url; ?>/assets/css/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a1a1a',
+                        secondary: '#ffffff',
+                        accent: '#d4af37',
+                        light: '#f5f5f5',
+                        dark: '#121212',
+                        goldLight: '#f5e8c9',
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        script: ['Dancing Script', 'cursive'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1s ease-in-out',
+                        'slide-up': 'slideUp 0.8s ease-out',
+                        'pulse-slow': 'pulse 3s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'tilt': 'tilt 10s infinite linear',
+                        'border-pulse': 'borderPulse 2s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        tilt: {
+                            '0%, 100%': { transform: 'rotate(0deg)' },
+                            '25%': { transform: 'rotate(1deg)' },
+                            '75%': { transform: 'rotate(-1deg)' },
+                        },
+                        borderPulse: {
+                            '0%': { 'border-color': 'rgba(212, 175, 55, 0.5)' },
+                            '50%': { 'border-color': 'rgba(212, 175, 55, 1)' },
+                            '100%': { 'border-color': 'rgba(212, 175, 55, 0.5)' },
+                        }
+                    }
                 }
-                ?>
+            }
+        }
+    </script>
+</head>
+<body class="font-sans bg-light text-primary">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-gradient-to-r from-primary to-primary shadow-lg z-50 transition-all duration-300 border-b border-accent/20">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-20">
+                <a href="<?php echo $base_url; ?>/index.php" class="text-4xl font-script text-secondary drop-shadow-md flex items-center">
+                    <i class="fas fa-hotel text-accent mr-2"></i>
+                    EaSyStaY
+                </a>
                 
-                <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method="post">
-                    <div class="form-group">
-                        <label>Full Name</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                <!-- Mobile menu button -->
+                <div class="lg:hidden">
+                    <button id="mobile-menu-button" class="text-secondary focus:outline-none">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Desktop menu -->
+                <div class="hidden lg:flex items-center space-x-8">
+                    <a href="<?php echo $base_url; ?>/index.php" class="nav-link relative text-secondary font-medium px-4 py-2 hover:text-accent transition-colors duration-300">Home</a>
+                    <a href="<?php echo $base_url; ?>/pages/rooms.php" class="nav-link relative text-secondary font-medium px-4 py-2 hover:text-accent transition-colors duration-300">Rooms & Suites</a>
+                    <a href="<?php echo $base_url; ?>/pages/gallery.php" class="nav-link relative text-secondary font-medium px-4 py-2 hover:text-accent transition-colors duration-300">Gallery</a>
+                    <a href="<?php echo $base_url; ?>/pages/about_us.php" class="nav-link relative text-secondary font-medium px-4 py-2 hover:text-accent transition-colors duration-300">About Us</a>
+                    <a href="<?php echo $base_url; ?>/auth/login.php" class="cta-button bg-accent text-primary font-semibold px-6 py-2 rounded-xl shadow-lg hover:bg-dark hover:text-secondary transition-all duration-300 transform hover:-translate-y-1 ml-4">Login</a>
+                </div>
+            </div>
+            
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="hidden lg:hidden bg-primary pb-4">
+                <a href="<?php echo $base_url; ?>/index.php" class="block px-4 py-3 text-secondary hover:text-accent hover:bg-primary/80 transition-all"><i class="fas fa-home mr-3"></i>Home</a>
+                <a href="<?php echo $base_url; ?>/pages/rooms.php" class="block px-4 py-3 text-secondary hover:text-accent hover:bg-primary/80 transition-all"><i class="fas fa-bed mr-3"></i>Rooms & Suites</a>
+                <a href="<?php echo $base_url; ?>/pages/gallery.php" class="block px-4 py-3 text-secondary hover:text-accent hover:bg-primary/80 transition-all"><i class="fas fa-images mr-3"></i>Gallery</a>
+                <a href="<?php echo $base_url; ?>/pages/about_us.php" class="block px-4 py-3 text-secondary hover:text-accent hover:bg-primary/80 transition-all"><i class="fas fa-info-circle mr-3"></i>About Us</a>
+                <a href="<?php echo $base_url; ?>/auth/login.php" class="block bg-accent text-primary font-semibold px-4 py-3 rounded-lg mx-4 mt-3 text-center">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Login
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content with Background -->
+    <div class="min-h-screen pt-20 flex items-center justify-center bg-cover bg-center" style="background-image: url('../assets/images/other_hero/about-hero.jpg');">
+        <div class="absolute inset-0 bg-gradient-to-b from-primary/70 to-primary/90"></div>
+        
+        <div class="container mx-auto px-4 py-16 relative z-10">
+            <div class="max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+                <!-- Logo and Title -->
+                <div class="text-center mb-8">
+                    <div class="text-5xl font-script text-accent mb-4 drop-shadow-lg animate-float">
+                        <i class="fas fa-hotel text-accent mr-2"></i> EaSyStaY
+                    </div>
+                    <h1 class="text-3xl font-serif font-bold text-secondary mb-2">Create Your Account</h1>
+                    <p class="text-secondary/80">Join us for an exceptional stay experience</p>
+                </div>
+                
+                <!-- Registration Form Card -->
+                <div class="bg-white rounded-xl shadow-xl overflow-hidden transform transition-all duration-500 hover:shadow-accent/30 border border-accent/10">
+                    <!-- Form Header -->
+                    <div class="bg-gradient-to-r from-primary to-dark p-4 text-center">
+                        <h2 class="text-xl font-bold text-accent">Register</h2>
+                    </div>
+                    
+                    <!-- Form Body -->
+                    <div class="p-6">
+                        <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method="post">
+                            <!-- Full Name Field -->
+                            <div class="mb-6">
+                                <label for="fullname" class="block text-gray-700 font-medium mb-2">Full Name</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <i class="fas fa-user text-gray-400"></i>
+                                    </div>
+                                    <input type="text" name="fullname" id="fullname" 
+                                           class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all <?= (!empty($fullname_err)) ? 'border-red-500' : '' ?>" 
+                                           placeholder="John Doe" value="<?= $fullname ?>">
+                                </div>
+                                <?php if (!empty($fullname_err)): ?>
+                                    <p class="text-red-500 text-sm mt-1"><?= $fullname_err ?></p>
+                                <?php endif; ?>
                             </div>
-                            <input type="text" name="fullname" class="form-control <?= (!empty($fullname_err)) ? 'is-invalid' : '' ?>" 
-                                   value="<?= $fullname ?>">
-                            <span class="invalid-feedback"><?= $fullname_err ?></span>
+                            
+                            <!-- Email Field -->
+                            <div class="mb-6">
+                                <label for="email" class="block text-gray-700 font-medium mb-2">Email Address</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <i class="fas fa-envelope text-gray-400"></i>
+                                    </div>
+                                    <input type="email" name="email" id="email" 
+                                           class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all <?= (!empty($email_err)) ? 'border-red-500' : '' ?>" 
+                                           placeholder="your@email.com" value="<?= $email ?>" autocomplete="email">
+                                </div>
+                                <?php if (!empty($email_err)): ?>
+                                    <p class="text-red-500 text-sm mt-1"><?= $email_err ?></p>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <!-- Password Field -->
+                            <div class="mb-6">
+                                <label for="password" class="block text-gray-700 font-medium mb-2">Password</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <i class="fas fa-lock text-gray-400"></i>
+                                    </div>
+                                    <input type="password" name="password" id="password" 
+                                           class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all <?= (!empty($password_err)) ? 'border-red-500' : '' ?>" 
+                                           placeholder="••••••••">
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                                        <button type="button" id="toggle-password" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <?php if (!empty($password_err)): ?>
+                                    <p class="text-red-500 text-sm mt-1"><?= $password_err ?></p>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <!-- Confirm Password Field -->
+                            <div class="mb-6">
+                                <label for="confirm_password" class="block text-gray-700 font-medium mb-2">Confirm Password</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <i class="fas fa-lock text-gray-400"></i>
+                                    </div>
+                                    <input type="password" name="confirm_password" id="confirm_password" 
+                                           class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all <?= (!empty($confirm_password_err)) ? 'border-red-500' : '' ?>" 
+                                           placeholder="••••••••">
+                                </div>
+                                <?php if (!empty($confirm_password_err)): ?>
+                                    <p class="text-red-500 text-sm mt-1"><?= $confirm_password_err ?></p>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <!-- Phone Field -->
+                            <div class="mb-6">
+                                <label for="phone" class="block text-gray-700 font-medium mb-2">Phone Number</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <i class="fas fa-phone text-gray-400"></i>
+                                    </div>
+                                    <input type="tel" name="phone" id="phone" 
+                                           class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all <?= (!empty($phone_err)) ? 'border-red-500' : '' ?>" 
+                                           placeholder="+1 (123) 456-7890" value="<?= $phone ?>">
+                                </div>
+                                <?php if (!empty($phone_err)): ?>
+                                    <p class="text-red-500 text-sm mt-1"><?= $phone_err ?></p>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <!-- Address Field -->
+                            <div class="mb-6">
+                                <label for="address" class="block text-gray-700 font-medium mb-2">Address</label>
+                                <div class="relative">
+                                    <div class="absolute top-3 left-0 flex items-start pl-3 pointer-events-none">
+                                        <i class="fas fa-map-marker-alt text-gray-400"></i>
+                                    </div>
+                                    <textarea name="address" id="address" rows="3" 
+                                              class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all <?= (!empty($address_err)) ? 'border-red-500' : '' ?>" 
+                                              placeholder="Your full address"><?= $address ?></textarea>
+                                </div>
+                                <?php if (!empty($address_err)): ?>
+                                    <p class="text-red-500 text-sm mt-1"><?= $address_err ?></p>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <!-- Terms and Conditions -->
+                            <div class="mb-6">
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-5">
+                                        <input id="terms" name="terms" type="checkbox" required class="h-4 w-4 text-accent focus:ring-accent border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3 text-sm">
+                                        <label for="terms" class="text-gray-700">I agree to the <a href="#" class="text-accent hover:underline">Terms and Conditions</a> and <a href="#" class="text-accent hover:underline">Privacy Policy</a></label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Submit Button -->
+                            <button type="submit" class="w-full bg-accent text-primary font-bold py-3 px-4 rounded-lg hover:bg-accent-dark transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                                <i class="fas fa-user-plus mr-2"></i> Create Account
+                            </button>
+                        </form>
+                        
+                        <!-- Divider -->
+                        <div class="relative flex items-center mt-8 mb-6">
+                            <div class="flex-grow border-t border-gray-300"></div>
+                            <span class="flex-shrink mx-4 text-gray-600">or</span>
+                            <div class="flex-grow border-t border-gray-300"></div>
+                        </div>
+                        
+                        <!-- Login Link -->
+                        <div class="text-center">
+                            <p class="text-gray-700">Already have an account?</p>
+                            <a href="./login.php" class="inline-block mt-2 text-accent font-semibold hover:underline relative overflow-hidden group">
+                                <span>Sign In</span>
+                                <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full"></span>
+                            </a>
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <label>Email</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                            </div>
-                            <input type="email" name="email" class="form-control <?= (!empty($email_err)) ? 'is-invalid' : '' ?>" 
-                                   value="<?= $email ?>">
-                            <span class="invalid-feedback"><?= $email_err ?></span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Password</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                            </div>
-                            <input type="password" name="password" class="form-control <?= (!empty($password_err)) ? 'is-invalid' : '' ?>">
-                            <span class="invalid-feedback"><?= $password_err ?></span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Confirm Password</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                            </div>
-                            <input type="password" name="confirm_password" class="form-control <?= (!empty($confirm_password_err)) ? 'is-invalid' : '' ?>">
-                            <span class="invalid-feedback"><?= $confirm_password_err ?></span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Phone Number</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                            </div>
-                            <input type="text" name="phone" class="form-control" value="<?= $phone ?>">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Address</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                            </div>
-                            <input type="text" name="address" class="form-control" value="<?= $address ?>">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-dark btn-block btn-register">Register</button>
-                    </div>
-                    <div class="text-center">
-                        Already have an account? <a href="login.php">Login here</a>
-                    </div>
-                </form>
+                </div>
+                
+                <!-- Back to Home -->
+                <div class="text-center mt-8">
+                    <a href="<?php echo $base_url; ?>/index.php" class="text-secondary hover:text-accent transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i> Back to Home
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Footer Section -->
+    <footer class="bg-primary text-secondary border-t-2 border-accent py-8">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <a href="<?php echo $base_url; ?>/index.php" class="text-3xl font-script text-secondary drop-shadow-md inline-flex items-center">
+                    <i class="fas fa-hotel text-accent mr-2"></i>
+                    EaSyStaY
+                </a>
+                <p class="mt-2 text-sm text-secondary/70">© 2023 EaSyStaY. All rights reserved</p>
+                <div class="flex justify-center space-x-4 mt-4">
+                    <a href="#" class="w-8 h-8 border border-accent/50 rounded-full flex items-center justify-center transition-all hover:bg-accent hover:text-primary">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="w-8 h-8 border border-accent/50 rounded-full flex items-center justify-center transition-all hover:bg-accent hover:text-primary">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="w-8 h-8 border border-accent/50 rounded-full flex items-center justify-center transition-all hover:bg-accent hover:text-primary">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                    mobileMenu.classList.toggle('animate-slide-up');
+                });
+            }
+            
+            // Password visibility toggle
+            const togglePassword = document.getElementById('toggle-password');
+            const passwordInput = document.getElementById('password');
+            
+            if (togglePassword && passwordInput) {
+                togglePassword.addEventListener('click', function() {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    
+                    // Toggle icon
+                    const icon = this.querySelector('i');
+                    icon.classList.toggle('fa-eye');
+                    icon.classList.toggle('fa-eye-slash');
+                });
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,310 +1,293 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - EaSyStaY</title>
-     <!-- Fonts -->
-     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #1a1a1a;
-            --secondary: #ffffff;
-            --accent: #d4af37;
-            --light: #f5f5f5;
-            --dark: #121212;
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            line-height: 1.7;
-            padding-top: 80px;
-            color: var(--primary);
-            background-color: var(--light);
-        }
-       
-        .login-btn {
-            background: var(--accent);
-            border-radius: 12px;
-            padding: 10px 25px;
-            margin-left: 15px;
-            transition: transform 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        .login-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        }
-        .vm-section {
-            background: var(--light);
-            padding: 60px 0;
-        }
-        .vm-icon {
-            font-size: 3rem;
-            color: var(--accent);
-            margin-bottom: 20px;
-        }
-        .contact-section {
-            background: var(--secondary);
-            padding: 60px 0;
-        }
-        .contact-info {
-            font-size: 1.2rem;
-            color: var(--primary);
-        }
-        .contact-form {
-            background-color: var(--secondary);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-        }
-        .form-control {
-            border-radius: 20px;
-            padding: 15px;
-            border: 1px solid var(--accent);
-        }
-        .btn-submit {
-            background: var(--accent);
-            border-radius: 20px;
-            padding: 10px 40px;
-        }
-        .map-container {
-            height: 400px;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .team-member {
-            transition: transform 0.3s ease;
-        }
-        .team-member:hover {
-            transform: translateY(-5px);
-        }
-       
-        @media (max-width: 992px) {
-            .navbar-collapse {
-                background: var(--primary);
-                margin-top: 10px;
-            }
-            .navbar-toggler {
-                color: var(--secondary) !important;
-            }
-        }
-    </style>
-</head>
-<?php include '../includes/header.php'?>
+<?php
+// Include the header file
+include_once '../includes/header.php';
+?>
+
+<!-- Hero Section -->
+<section id="hero" class="hero-bg h-screen flex items-center justify-center relative overflow-hidden" style="background-image: url('../assets/images/other_hero/about-hero.jpg');">
+    <div class="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80"></div>
+    <div class="container mx-auto px-4 z-10 text-center" data-aos="fade-up" data-aos-delay="100">
+        <div class="mb-8">
+            <h1 class="text-4xl md:text-6xl font-serif font-bold text-secondary mt-4 mb-6 leading-tight">Our <span class="text-accent">Story</span></h1>
+            <p class="text-xl md:text-2xl text-secondary/90 max-w-3xl mx-auto">Discover the legacy and vision behind EaSyStaY's commitment to excellence</p>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row justify-center gap-4" data-aos="fade-up" data-aos-delay="300">
+            <a href="#vision" class="cta-button bg-accent text-primary font-semibold px-8 py-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105">
+                Explore Our Journey <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
 <!-- Vision & Mission Section -->
-<section class="vm-section">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6" data-aos="fade-right">
-                <div class="text-center mb-4">
-                    <i class="fas fa-eye vm-icon"></i>
-                    <h3 class="h4">Our Vision</h3>
-                    <p>To revolutionize the hospitality industry through innovative technology and exceptional service standards.</p>
+<section id="vision" class="py-16 bg-light">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="order-2 lg:order-1" data-aos="fade-right">
+                <span class="text-accent font-semibold tracking-wider uppercase">Our Vision</span>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-primary mt-4 mb-6">Setting New Standards in Luxury Hospitality</h2>
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    At EaSyStaY, our vision is to redefine luxury hospitality by creating extraordinary experiences that combine timeless elegance with modern innovation. We strive to be the benchmark against which all luxury hotels are measured, known for our impeccable service, stunning environments, and commitment to exceeding guest expectations.
+                </p>
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    We believe that true luxury lies in the details—the warmth of a genuine smile, the comfort of a perfectly appointed room, the surprise of anticipating a need before it's expressed. Our vision guides every decision we make, from the selection of our locations to the training of our staff.
+                </p>
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center text-accent">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg">Excellence in Every Detail</h4>
+                        <p class="text-gray-600">Committed to perfection in every aspect of your stay</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-6" data-aos="fade-left">
-                <div class="text-center mb-4">
-                    <i class="fas fa-bullseye vm-icon"></i>
-                    <h3 class="h4">Our Mission</h3>
-                    <p>Deliver seamless booking experiences while maintaining the highest standards of customer satisfaction and operational excellence.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- Features Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4" data-aos="fade-up">
-                <div class="feature-box p-4 text-center">
-                    <i class="fas fa-concierge-bell fa-3x mb-3 text-accent"></i>
-                    <h4>24/7 Support</h4>
-                    <p>Our virtual concierge is always available to assist with your needs</p>
-                </div>
-            </div>
-            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-                <div class="feature-box p-4 text-center">
-                    <i class="fas fa-hand-holding-usd fa-3x mb-3 text-accent"></i>
-                    <h4>Best Price Guarantee</h4>
-                    <p>We offer the most competitive rates for all our properties</p>
-                </div>
-            </div>
-            <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
-                <div class="feature-box p-4 text-center">
-                    <i class="fas fa-globe fa-3x mb-3 text-accent"></i>
-                    <h4>Global Network</h4>
-                    <p>Access to 500,000+ properties worldwide</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- Contact Section -->
-<section class="contact-section">
-    <div class="container">
-        <h2 class="text-center mb-5 text-secondary" data-aos="fade-up">Contact Us</h2>
-        <div class="row">
-            <div class="col-md-6" data-aos="fade-right">
-                <div class="contact-info p-4">
-                    <h5 class="text-secondary">Headquarters</h5>
-                    <p class="text-secondary"><i class="fas fa-map-marker-alt"></i> 123 Hospitality Blvd, Suite 456<br>New York, NY 10001</p>
-                    <p class="text-secondary"><i class="fas fa-phone"></i> +1 (800) 123-4567</p>
-                    <p class="text-secondary"><i class="fas fa-envelope"></i> info@easystay.com</p>
-                    <div class="social-icons mt-4">
-                        <a href="#" class="text-secondary mr-3"><i class="fab fa-facebook-f fa-lg"></i></a>
-                        <a href="#" class="text-secondary mr-3"><i class="fab fa-twitter fa-lg"></i></a>
-                        <a href="#" class="text-secondary mr-3"><i class="fab fa-instagram fa-lg"></i></a>
-                        <a href="#" class="text-secondary mr-3"><i class="fab fa-linkedin-in fa-lg"></i></a>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center text-accent">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg">Personalized Experience</h4>
+                        <p class="text-gray-600">Tailoring every moment to your unique preferences</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6" data-aos="fade-left">
-                <div class="contact-form">
-                    <h5 class="mb-4 text-secondary">Send Us a Message</h5>
-                    <form>
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Your Name" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" class="form-control" placeholder="Your Email" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Subject">
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" rows="5" placeholder="Your Message" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-submit">Send Message</button>
-                    </form>
+            <div class="order-1 lg:order-2" data-aos="fade-left">
+                <div class="relative">
+                    <img src="../assets/images/about/vision.jpg" alt="Luxury Hotel Vision" class="w-full h-auto rounded-xl shadow-xl">
+                    <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-accent rounded-xl flex items-center justify-center text-primary text-5xl transform rotate-6 shadow-lg">
+                        <i class="fas fa-gem"></i>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Mission Section -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div data-aos="fade-right">
+                <div class="relative">
+                    <img src="../assets/images/about/mission.jpg" alt="Our Mission" class="w-full h-auto rounded-xl shadow-xl">
+                    <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-primary rounded-xl flex items-center justify-center text-secondary text-5xl transform -rotate-6 shadow-lg">
+                        <i class="fas fa-compass"></i>
+                    </div>
+                </div>
+            </div>
+            <div data-aos="fade-left">
+                <span class="text-accent font-semibold tracking-wider uppercase">Our Mission</span>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-primary mt-4 mb-6">Creating Unforgettable Moments</h2>
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    Our mission is to create a sanctuary where guests can escape the ordinary and experience the extraordinary. We are dedicated to providing personalized service that anticipates needs, respects privacy, and creates memorable moments that last a lifetime.
+                </p>
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    We are committed to sustainable luxury that honors our environment and communities. By integrating local culture, supporting local artisans, and implementing eco-friendly practices, we create authentic experiences while preserving the beauty of our destinations for future generations.
+                </p>
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center text-accent">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg">Sustainable Luxury</h4>
+                        <p class="text-gray-600">Eco-friendly practices without compromising on luxury</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center text-accent">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg">Community Engagement</h4>
+                        <p class="text-gray-600">Supporting local culture and artisans in all our locations</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Values Section -->
+<section class="py-16 bg-gradient-to-r from-primary to-dark text-secondary">
+    <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+            <span class="text-accent font-semibold tracking-wider uppercase">Our Core Values</span>
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-secondary mt-4 mb-6">The Principles That Guide Us</h2>
+            <p class="text-xl text-secondary/90">These fundamental beliefs shape our culture and define how we interact with our guests, our team members, and our world.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Value 1 -->
+            <div class="bg-white/10 p-8 rounded-xl backdrop-blur-sm text-center" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-accent text-primary text-3xl rounded-full">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Excellence</h3>
+                <p>We pursue excellence in everything we do, constantly raising the bar and never settling for anything less than extraordinary.</p>
+            </div>
+            
+            <!-- Value 2 -->
+            <div class="bg-white/10 p-8 rounded-xl backdrop-blur-sm text-center" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-accent text-primary text-3xl rounded-full">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Integrity</h3>
+                <p>We act with honesty, transparency, and ethical responsibility in all our interactions and business practices.</p>
+            </div>
+            
+            <!-- Value 3 -->
+            <div class="bg-white/10 p-8 rounded-xl backdrop-blur-sm text-center" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-accent text-primary text-3xl rounded-full">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Innovation</h3>
+                <p>We embrace creativity and forward-thinking to continuously evolve and enhance the guest experience.</p>
+            </div>
+            
+            <!-- Value 4 -->
+            <div class="bg-white/10 p-8 rounded-xl backdrop-blur-sm text-center" data-aos="fade-up" data-aos-delay="400">
+                <div class="w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-accent text-primary text-3xl rounded-full">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Sustainability</h3>
+                <p>We are committed to responsible practices that respect our environment and contribute positively to our communities.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Team Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <h2 class="text-center mb-5" data-aos="fade-up">Our Team</h2>
-        <div class="row">
-            <div class="col-md-3" data-aos="zoom-in">
-                <div class="team-member card border-0">
-                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="card-img-top" alt="Team Member">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Sarah Johnson</h5>
-                        <p class="card-text text-muted">Customer Experience Lead</p>
-                        <div class="social-icons">
-                            <a href="#" class="text-secondary"><i class="fab fa-linkedin"></i></a>
-                            <a href="#" class="text-secondary"><i class="fab fa-twitter"></i></a>
+<section class="py-16 bg-light">
+    <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+            <span class="text-accent font-semibold tracking-wider uppercase">Our Leadership</span>
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-primary mt-4 mb-6">Meet the Team Behind EaSyStaY</h2>
+            <p class="text-xl text-gray-600">Our diverse team of hospitality experts is dedicated to creating exceptional experiences for every guest.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Team Member 1 -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden group" data-aos="fade-up" data-aos-delay="100">
+                <div class="relative overflow-hidden">
+                    <img src="../assets/images/about/team1.jpg" alt="Sarah Johnson" class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-6">
+                        <div class="flex gap-4">
+                            <a href="#" class="w-10 h-10 rounded-full bg-accent text-primary flex items-center justify-center hover:bg-primary hover:text-accent transition-colors">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-accent text-primary flex items-center justify-center hover:bg-primary hover:text-accent transition-colors">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-accent text-primary flex items-center justify-center hover:bg-primary hover:text-accent transition-colors">
+                                <i class="fas fa-envelope"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-1">Sarah Johnson</h3>
+                    <p class="text-accent mb-4">Chief Executive Officer</p>
+                    <p class="text-gray-600">With over 20 years in luxury hospitality, Sarah leads our vision with passion and innovation.</p>
+                </div>
             </div>
-            <div class="col-md-3" data-aos="zoom-in" data-aos-delay="200">
-                <div class="team-member card border-0">
-                    <img src="https://randomuser.me/api/portraits/men/44.jpg" class="card-img-top" alt="Team Member">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Michael Chen</h5>
-                        <p class="card-text text-muted">Tech Innovation Manager</p>
-                        <div class="social-icons">
-                            <a href="#" class="text-secondary"><i class="fab fa-github"></i></a>
-                            <a href="#" class="text-secondary"><i class="fab fa-instagram"></i></a>
+            
+            <!-- Team Member 2 -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden group" data-aos="fade-up" data-aos-delay="200">
+                <div class="relative overflow-hidden">
+                    <img src="../assets/images/about/team2.jpg" alt="Michael Chen" class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-6">
+                        <div class="flex gap-4">
+                            <a href="#" class="w-10 h-10 rounded-full bg-accent text-primary flex items-center justify-center hover:bg-primary hover:text-accent transition-colors">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-accent text-primary flex items-center justify-center hover:bg-primary hover:text-accent transition-colors">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-accent text-primary flex items-center justify-center hover:bg-primary hover:text-accent transition-colors">
+                                <i class="fas fa-envelope"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-1">Dinusha</h3>
+                    <p class="text-accent mb-4">Chief Operations Officer</p>
+                    <p class="text-gray-600">Michael ensures flawless execution across all our properties with his meticulous attention to detail.</p>
+                </div>
             </div>
-            <div class="col-md-3" data-aos="zoom-in" data-aos-delay="400">
-                <div class="team-member card border-0">
-                    <img src="https://randomuser.me/api/portraits/women/24.jpg" class="card-img-top" alt="Team Member">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Emma Davis</h5>
-                        <p class="card-text text-muted">Operations Coordinator</p>
-                        <div class="social-icons">
-                            <a href="#" class="text-secondary"><i class="fab fa-facebook"></i></a>
-                            <a href="#" class="text-secondary"><i class="fab fa-twitter"></i></a>
+            
+            <!-- Team Member 3 -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden group" data-aos="fade-up" data-aos-delay="300">
+                <div class="relative overflow-hidden">
+                    <img src="../assets/images/about/team3.jpg" alt="Elena Rodriguez" class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-6">
+                        <div class="flex gap-4">
+                            <a href="#" class="w-10 h-10 rounded-full bg-accent text-primary flex items-center justify-center hover:bg-primary hover:text-accent transition-colors">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-accent text-primary flex items-center justify-center hover:bg-primary hover:text-accent transition-colors">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-accent text-primary flex items-center justify-center hover:bg-primary hover:text-accent transition-colors">
+                                <i class="fas fa-envelope"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3" data-aos="zoom-in" data-aos-delay="600">
-                <div class="team-member card border-0">
-                    <img src="https://randomuser.me/api/portraits/men/24.jpg" class="card-img-top" alt="Team Member">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">David Kim</h5>
-                        <p class="card-text text-muted">Quality Assurance Lead</p>
-                        <div class="social-icons">
-                            <a href="#" class="text-secondary"><i class="fab fa-linkedin"></i></a>
-                            <a href="#" class="text-secondary"><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-1">Madhushani</h3>
+                    <p class="text-accent mb-4">Chief Experience Officer</p>
+                    <p class="text-gray-600">Elena crafts unforgettable guest journeys by blending traditional luxury with innovative experiences.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- Testimonials Section -->
-<section class="py-5">
-    <div class="container">
-        <h2 class="text-center mb-5" data-aos="fade-up">What Our Guests Say</h2>
-        <div class="row">
-            <div class="col-md-4" data-aos="fade-up">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <p class="card-text">"The seamless booking experience made my trip planning effortless!"</p>
-                        <div class="d-flex align-items-center">
-                            <img src="https://randomuser.me/api/portraits/women/64.jpg" class="rounded-circle mr-3" width="50" alt="Guest">
-                            <div>
-                                <h6 class="mb-0">Laura M.</h6>
-                                <small class="text-muted">Recent Guest</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <p class="card-text">"The AI-powered recommendations helped me find the perfect boutique hotel."</p>
-                        <div class="d-flex align-items-center">
-                            <img src="https://randomuser.me/api/portraits/men/64.jpg" class="rounded-circle mr-3" width="50" alt="Guest">
-                            <div>
-                                <h6 class="mb-0">James R.</h6>
-                                <small class="text-muted">Business Traveler</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <p class="card-text">"Customer support resolved my last-minute change request in minutes!"</p>
-                        <div class="d-flex align-items-center">
-                            <img src="https://randomuser.me/api/portraits/women/84.jpg" class="rounded-circle mr-3" width="50" alt="Guest">
-                            <div>
-                                <h6 class="mb-0">Sophie T.</h6>
-                                <small class="text-muted">Vacation Planner</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-r from-primary to-dark text-secondary relative overflow-hidden">
+    <div class="absolute inset-0 opacity-20">
+        <img src="../assets/images/patterns/pattern1.jpg" alt="" class="w-full h-full object-cover">
+    </div>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
+            <h2 class="text-3xl md:text-5xl font-serif font-bold mb-6">Experience the EaSyStaY Difference</h2>
+            <p class="text-xl mb-8 text-secondary/90">Join us for an unforgettable stay where luxury meets personalized service.</p>
+            <a href="<?php echo $base_url; ?>/auth/login.php" class="inline-block bg-accent text-primary font-semibold px-8 py-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105">
+                Book Your Stay Now <i class="fas fa-arrow-right ml-2"></i>
+            </a>
         </div>
     </div>
 </section>
-<!-- Footer -->
-<?php include '../includes/footer.php'?>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
 <script>
-    AOS.init({
-        duration: 1000,
-        easing: 'ease-in-out-back',
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+                
+                // Close mobile menu if open
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            }
+        });
     });
 </script>
-</body>
-</html>
+
+<?php
+// Include the footer file
+include_once '../includes/footer.php';
+?>
