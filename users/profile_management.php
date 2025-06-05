@@ -57,9 +57,6 @@ $imagePath .= $imageFound ? '?v=' . time() : '';
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // ... [Keep existing form handling code] ...
-
-
     // Handle profile image upload
     if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
         $fileTmp = $_FILES['profile_image']['tmp_name'];
@@ -186,265 +183,316 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Management - Customer Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://cdn.rawgit.com/michalsnik/aos/2.3.1/dist/aos.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #1a1a1a;
-            --secondary: #ffffff;
-            --accent: #d4af37;
-            --light: #f5f5f5;
-            --dark: #121212;
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+     <link rel="stylesheet" href="../assets/css/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a1a1a',
+                        secondary: '#ffffff',
+                        accent: '#d4af37',
+                        light: '#f5f5f5',
+                        dark: '#121212',
+                        goldLight: '#f5e8c9',
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        script: ['Dancing Script', 'cursive'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1s ease-in-out',
+                        'slide-up': 'slideUp 0.8s ease-out',
+                        'pulse-slow': 'pulse 3s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'tilt': 'tilt 10s infinite linear',
+                        'border-pulse': 'borderPulse 2s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        tilt: {
+                            '0%, 100%': { transform: 'rotate(0deg)' },
+                            '25%': { transform: 'rotate(1deg)' },
+                            '75%': { transform: 'rotate(-1deg)' },
+                        },
+                        borderPulse: {
+                            '0%': { 'border-color': 'rgba(212, 175, 55, 0.5)' },
+                            '50%': { 'border-color': 'rgba(212, 175, 55, 1)' },
+                            '100%': { 'border-color': 'rgba(212, 175, 55, 0.5)' },
+                        }
+                    }
+                }
+            }
         }
-
-        body {
-            background-color: var(--light);
-            padding-top: 80px;
-        }
-
-        .top-nav {
-            background: var(--dark);
-            padding: 0.8rem 2rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .management-card {
-            background: var(--secondary);
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .profile-section {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .profile-image-container {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin: 0 auto 1.5rem;
-            position: relative;
-            border: 3px solid var(--accent);
-        }
-
-        .profile-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .upload-overlay {
-            position: absolute;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            width: 100%;
-            text-align: center;
-            color: white;
-            padding: 5px;
-            cursor: pointer;
-            display: none;
-        }
-
-        .profile-image-container:hover .upload-overlay {
-            display: block;
-        }
-
-        .password-toggle {
-            cursor: pointer;
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .btn-accent {
-            background-color: var(--accent);
-            color: var(--primary);
-            border: none;
-        }
-
-        .btn-accent:hover {
-            background-color: #b89329;
-            color: var(--primary);
-        }
-    </style>
+    </script>
 </head>
 
-<body>
-    <?php include '../includes/user_header.php'; ?>
-    <!-- Top Navigation -->
-    <!-- <nav class="top-nav navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand nav-brand" href="dashboard.php"><i class="fas fa-hotel"></i> Hotel System</a>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user"></i> <?= htmlspecialchars($_SESSION['FullName']) ?>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item active" href="./profile_management.php"><i class="fas fa-user-cog"></i> Profile Settings</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="../auth/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
+<body class="font-sans bg-light text-dark min-h-screen">
+
+<?php include '../includes/user_header.php'; ?>
+
+<!-- Main Content -->
+<div class="pt-24 px-4 md:px-8 lg:px-16 max-w-7xl mx-auto">
+    <div class="max-w-3xl mx-auto">
+        <!-- Alerts -->
+        <?php if ($error): ?>
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded shadow-md transform transition-all duration-300 hover:shadow-lg" data-aos="fade-up">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-circle mr-2 text-xl"></i>
+                    <p><?= $error ?></p>
+                </div>
             </div>
-        </div>
-    </nav> -->
+        <?php endif; ?>
 
-    <!-- Main Content -->
-    <div class="container">
-        <div class="profile-section">
-            <!-- Alerts -->
-            <?php if ($error): ?>
-                <div class="alert alert-danger mt-4" role="alert">
-                    <i class="fas fa-exclamation-circle"></i> <?= $error ?>
+        <?php if ($success): ?>
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded shadow-md transform transition-all duration-300 hover:shadow-lg" data-aos="fade-up">
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle mr-2 text-xl"></i>
+                    <p><?= $success ?></p>
                 </div>
-            <?php endif; ?>
+            </div>
+        <?php endif; ?>
 
-            <?php if ($success): ?>
-                <div class="alert alert-success mt-4" role="alert">
-                    <i class="fas fa-check-circle"></i> <?= $success ?>
-                </div>
-            <?php endif; ?>
-
+        <!-- Profile Card -->
+        <div class="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-2xl" data-aos="fade-up">
+            <!-- Card Header -->
+            <div class="bg-primary p-6 text-white relative overflow-hidden">
+                <div class="absolute -right-12 -top-12 w-32 h-32 bg-accent rounded-full opacity-20"></div>
+                <div class="absolute -left-12 -bottom-12 w-24 h-24 bg-accent rounded-full opacity-10"></div>
+                
+                <h2 class="text-3xl font-bold text-center relative z-10 font-serif flex items-center justify-center">
+                    <i class="fas fa-user-cog mr-3 text-accent"></i>
+                    <span class="animate-pulse-slow">Profile Settings</span>
+                </h2>
+            </div>
+            
             <!-- Profile Form -->
-            <div class="management-card mt-4" data-aos="fade-up">
-                <form method="POST" enctype="multipart/form-data">
-                    <div class="profile-image-container">
-                        <img src="<?= htmlspecialchars($imagePath) ?>" class="profile-image" alt="Profile Picture">
-                        <div class="upload-overlay">
-                            <small>Click to change</small>
+            <form method="POST" enctype="multipart/form-data" class="p-6">
+                <!-- Profile Image -->
+                <div class="flex justify-center mb-8" data-aos="fade-up" data-aos-delay="100">
+                    <div class="relative group">
+                        <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-accent animate-border-pulse shadow-lg transition-all duration-300 transform group-hover:scale-105">
+                            <img src="<?= htmlspecialchars($imagePath) ?>" class="w-full h-full object-cover" alt="Profile Picture">
                         </div>
-                        <input type="file" name="profile_image" id="profileUpload"
-                            accept="image/*" hidden onchange="previewImage(this)">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+                            <div class="text-white text-center">
+                                <i class="fas fa-camera text-2xl mb-1"></i>
+                                <p class="text-sm">Change Photo</p>
+                            </div>
+                        </div>
+                        <input type="file" name="profile_image" id="profileUpload" accept="image/*" class="hidden" onchange="previewImage(this)">
                     </div>
+                </div>
 
-                    <h3 class="mb-4 text-center">
-                        <i class="fas fa-user-cog"></i> Profile Settings
+                <!-- Personal Information Section -->
+                <div class="mb-8" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="text-xl font-bold text-primary mb-4 border-b border-gray-200 pb-2 flex items-center">
+                        <i class="fas fa-user text-accent mr-2"></i> Personal Information
                     </h3>
-
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Full Name *</label>
-                            <input type="text" class="form-control" name="fullname"
-                                value="<?= htmlspecialchars($userData['FullName']) ?>" required>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Full Name <span class="text-red-500">*</span></label>
+                            <input type="text" name="fullname" value="<?= htmlspecialchars($userData['FullName']) ?>" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 outline-none">
                         </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Email *</label>
-                            <input type="email" class="form-control" name="email"
-                                value="<?= htmlspecialchars($userData['Email']) ?>" required>
+                        
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
+                            <input type="email" name="email" value="<?= htmlspecialchars($userData['Email']) ?>" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 outline-none">
                         </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control" name="phone"
-                                value="<?= htmlspecialchars($userData['PhoneNumber']) ?>">
+                        
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Phone Number</label>
+                            <input type="tel" name="phone" value="<?= htmlspecialchars($userData['PhoneNumber']) ?>"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 outline-none">
                         </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Address</label>
-                            <input type="text" class="form-control" name="address"
-                                value="<?= htmlspecialchars($userData['Address']) ?>">
-                        </div>
-
-                        <div class="col-12 mt-4">
-                            <h5 class="border-bottom pb-2 mb-3">
-                                <i class="fas fa-lock"></i> Change Password
-                                <small class="text-muted">(leave blank to keep current password)</small>
-                            </h5>
-                        </div>
-
-                        <div class="col-md-4 position-relative">
-                            <label class="form-label">Current Password</label>
-                            <input type="password" class="form-control" name="current_password">
-                            <i class="fas fa-eye password-toggle" onclick="togglePassword(this)"></i>
-                        </div>
-
-                        <div class="col-md-4 position-relative">
-                            <label class="form-label">New Password</label>
-                            <input type="password" class="form-control" name="new_password">
-                            <i class="fas fa-eye password-toggle" onclick="togglePassword(this)"></i>
-                        </div>
-
-                        <div class="col-md-4 position-relative">
-                            <label class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" name="confirm_password">
-                            <i class="fas fa-eye password-toggle" onclick="togglePassword(this)"></i>
-                        </div>
-
-                        <div class="col-12 mt-4">
-                            <button type="submit" class="btn btn-accent btn-lg w-100">
-                                <i class="fas fa-save"></i> Update Profile
-                            </button>
+                        
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Address</label>
+                            <input type="text" name="address" value="<?= htmlspecialchars($userData['Address']) ?>"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 outline-none">
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
+                
+                <!-- Password Section -->
+                <div class="mb-8" data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="text-xl font-bold text-primary mb-4 border-b border-gray-200 pb-2 flex items-center">
+                        <i class="fas fa-lock text-accent mr-2"></i> Change Password
+                        <span class="ml-2 text-sm font-normal text-gray-500">(leave blank to keep current password)</span>
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="space-y-2 relative">
+                            <label class="block text-sm font-medium text-gray-700">Current Password</label>
+                            <div class="relative">
+                                <input type="password" name="current_password"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 outline-none pr-10">
+                                <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-accent focus:outline-none transition-colors duration-300" onclick="togglePassword(this)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 relative">
+                            <label class="block text-sm font-medium text-gray-700">New Password</label>
+                            <div class="relative">
+                                <input type="password" name="new_password"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 outline-none pr-10">
+                                <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-accent focus:outline-none transition-colors duration-300" onclick="togglePassword(this)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 relative">
+                            <label class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                            <div class="relative">
+                                <input type="password" name="confirm_password"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 outline-none pr-10">
+                                <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-accent focus:outline-none transition-colors duration-300" onclick="togglePassword(this)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Submit Button -->
+                <div class="mt-8" data-aos="fade-up" data-aos-delay="400">
+                    <button type="submit" class="w-full bg-accent text-primary py-3 px-6 rounded-lg font-bold text-lg shadow-md hover:bg-accent/90 hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 flex items-center justify-center">
+                        <i class="fas fa-save mr-2"></i> Update Profile
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Back to Dashboard Button -->
+        <div class="mt-6 text-center" data-aos="fade-up" data-aos-delay="500">
+            <a href="dashboard.php" class="inline-flex items-center justify-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/80 transition-all duration-300 transform hover:-translate-y-1 shadow-md hover:shadow-lg">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+            </a>
         </div>
     </div>
+</div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.rawgit.com/michalsnik/aos/2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({
-            duration: 1000,
-            once: true
-        });
+<!-- Back to Top Button -->
+<button id="back-to-top" class="fixed bottom-8 right-8 z-50 bg-accent text-primary w-12 h-12 rounded-full flex items-center justify-center shadow-lg transform transition-all duration-300 opacity-0 translate-y-10 hover:bg-accent/80 hover:scale-110">
+    <i class="fas fa-arrow-up"></i>
+</button>
 
-        // Profile image handling
-        document.querySelector('.profile-image-container').addEventListener('click', () => {
-            document.getElementById('profileUpload').click();
-        });
 
-        function previewImage(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    document.querySelector('.profile-image').src = e.target.result;
+<?php include '../includes/sub_footer.php'; ?>
+
+<!-- Scripts -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        once: false,
+        mirror: true
+    });
+    
+    // Profile image handling - Fix for profile browse option
+    document.addEventListener('DOMContentLoaded', function() {
+        const profileContainer = document.querySelector('.relative.group');
+        const profileUpload = document.getElementById('profileUpload');
+        
+        if (profileContainer && profileUpload) {
+            profileContainer.addEventListener('click', function() {
+                profileUpload.click();
+            });
+        }
+    });
+
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const profileImg = document.querySelector('.group img');
+                if (profileImg) {
+                    profileImg.src = e.target.result;
                 }
-                reader.readAsDataURL(input.files[0]);
             }
+            reader.readAsDataURL(input.files[0]);
         }
+    }
 
-        function togglePassword(icon) {
-            const input = icon.previousElementSibling;
-            input.type = input.type === 'password' ? 'text' : 'password';
-            icon.classList.toggle('fa-eye-slash');
+    function togglePassword(button) {
+        const input = button.parentElement.querySelector('input');
+        const icon = button.querySelector('i');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
         }
+    }
 
-        // Password validation
-        const newPassword = document.querySelector('input[name="new_password"]');
-        const confirmPassword = document.querySelector('input[name="confirm_password"]');
+    // Password validation
+    const newPassword = document.querySelector('input[name="new_password"]');
+    const confirmPassword = document.querySelector('input[name="confirm_password"]');
 
-        function validatePasswords() {
-            if (newPassword.value !== confirmPassword.value) {
-                confirmPassword.setCustomValidity('Passwords do not match');
+    function validatePasswords() {
+        if (newPassword.value !== confirmPassword.value) {
+            confirmPassword.setCustomValidity('Passwords do not match');
+        } else {
+            confirmPassword.setCustomValidity('');
+        }
+    }
+
+    newPassword.addEventListener('input', validatePasswords);
+    confirmPassword.addEventListener('input', validatePasswords);
+    
+    // Back to top button
+    document.addEventListener('DOMContentLoaded', function() {
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove('opacity-0', 'translate-y-10');
+                backToTopButton.classList.add('opacity-100', 'translate-y-0');
             } else {
-                confirmPassword.setCustomValidity('');
+                backToTopButton.classList.remove('opacity-100', 'translate-y-0');
+                backToTopButton.classList.add('opacity-0', 'translate-y-10');
             }
-        }
-
-        newPassword.addEventListener('input', validatePasswords);
-        confirmPassword.addEventListener('input', validatePasswords);
-    </script>
+        });
+        
+        backToTopButton.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
 </body>
 
 </html>

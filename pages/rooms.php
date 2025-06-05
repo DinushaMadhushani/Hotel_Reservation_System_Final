@@ -2,6 +2,23 @@
 // Include the header file
 include_once '../includes/header.php';
 
+// Include database connection
+require_once '../config/db.con.php';
+
+// Define room data
+$rooms = [
+    ['RoomID' => '101', 'RoomNumber' => '101', 'RoomType' => 'Standard', 'Description' => 'Cozy single room with basic amenities', 'BasePrice' => 100.00, 'AvailabilityStatus' => 'Available'],
+    ['RoomID' => '202', 'RoomNumber' => '202', 'RoomType' => 'Deluxe', 'Description' => 'Spacious room with king-size bed', 'BasePrice' => 150.00, 'AvailabilityStatus' => 'Available'],
+    ['RoomID' => '303', 'RoomNumber' => '303', 'RoomType' => 'Suite', 'Description' => 'Luxury suite with living area', 'BasePrice' => 250.00, 'AvailabilityStatus' => 'Available'],
+    ['RoomID' => '404', 'RoomNumber' => '404', 'RoomType' => 'Family', 'Description' => 'Two-bedroom suite for families', 'BasePrice' => 200.00, 'AvailabilityStatus' => 'Available']
+];
+
+// Define package data
+$packages = [
+    ['PackageID' => '1', 'PackageName' => 'Breakfast Package', 'Description' => 'Daily breakfast for 2 guests', 'Price' => 25.00],
+    ['PackageID' => '2', 'PackageName' => 'Spa Package', 'Description' => 'One-hour massage and sauna access', 'Price' => 80.00],
+    ['PackageID' => '3', 'PackageName' => 'Romance Package', 'Description' => 'Champagne and flower arrangement', 'Price' => 50.00]
+];
 ?>
 
 <!-- Hero Section -->
@@ -17,7 +34,7 @@ include_once '../includes/header.php';
             <a href="#packages" class="cta-button bg-accent text-primary font-semibold px-8 py-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105">
                 View Packages <i class="fas fa-arrow-right ml-2"></i>
             </a>
-            <a href="<?php echo $base_url; ?>/auth/login.php" class="cta-button bg-transparent text-secondary border-2 border-secondary font-semibold px-8 py-4 rounded-xl shadow-lg transition-all duration-300 hover:bg-secondary/10 hover:border-accent hover:text-accent">
+            <a href="../users/booking.php" class="cta-button bg-transparent text-secondary border-2 border-secondary font-semibold px-8 py-4 rounded-xl shadow-lg transition-all duration-300 hover:bg-secondary/10 hover:border-accent hover:text-accent">
                 Book Now <i class="fas fa-calendar-check ml-2"></i>
             </a>
         </div>
@@ -33,129 +50,248 @@ include_once '../includes/header.php';
 </section>
 
 <!-- Room Filter Section -->
-
+<section class="py-20 bg-light">
+    <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+            <span class="text-accent font-semibold tracking-wider uppercase">Accommodations</span>
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-primary mt-4 mb-6">Our Luxurious Rooms</h2>
+            <p class="text-xl text-gray-600">Experience the perfect blend of comfort and elegance in our thoughtfully designed rooms.</p>
+        </div>
+        
+        <div class="flex justify-center mb-10" data-aos="fade-up">
+            <div class="inline-flex bg-gray-200 rounded-lg p-1">
+                <button class="filter-btn px-4 py-2 rounded-lg bg-primary text-secondary active" data-filter="all">All Rooms</button>
+                <button class="filter-btn px-4 py-2 rounded-lg bg-gray-200 text-primary" data-filter="Standard">Standard</button>
+                <button class="filter-btn px-4 py-2 rounded-lg bg-gray-200 text-primary" data-filter="Deluxe">Deluxe</button>
+                <button class="filter-btn px-4 py-2 rounded-lg bg-gray-200 text-primary" data-filter="Suite">Suite</button>
+                <button class="filter-btn px-4 py-2 rounded-lg bg-gray-200 text-primary" data-filter="Family">Family</button>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Room 1: Standard -->
+            <div class="filter-item bg-white rounded-xl overflow-hidden shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:border-accent/30 group" data-type="Standard" data-aos="fade-up" data-aos-delay="100">
+                <div class="relative overflow-hidden">
+                    <img src="../assets/images/rooms/standard-room.jpg" alt="Standard Room" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute top-4 right-4 bg-accent text-primary px-4 py-2 rounded-full font-bold">
+                        $100<span class="text-sm">/night</span>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                        <h3 class="text-xl font-bold text-white">Standard Room</h3>
+                        <div class="flex items-center text-white/90">
+                            <i class="fas fa-user-friends mr-2"></i> 2 Guests
+                            <span class="mx-2">•</span>
+                            <i class="fas fa-bed mr-2"></i> Room 101
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">Free WiFi</span>
+                        <span class="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">TV</span>
+                        <span class="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">AC</span>
+                    </div>
+                    <p class="text-gray-600 mb-6">Cozy single room with basic amenities, perfect for solo travelers or couples.</p>
+                    
+                </div>
+            </div>
+            
+            <!-- Room 2: Deluxe -->
+            <div class="filter-item bg-white rounded-xl overflow-hidden shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:border-accent/30 group" data-type="Deluxe" data-aos="fade-up" data-aos-delay="150">
+                <div class="relative overflow-hidden">
+                    <img src="../assets/images/rooms/deluxe-room.jpg" alt="Deluxe Room" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute top-4 right-4 bg-accent text-primary px-4 py-2 rounded-full font-bold">
+                        $150<span class="text-sm">/night</span>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                        <h3 class="text-xl font-bold text-white">Deluxe Room</h3>
+                        <div class="flex items-center text-white/90">
+                            <i class="fas fa-user-friends mr-2"></i> 2 Guests
+                            <span class="mx-2">•</span>
+                            <i class="fas fa-bed mr-2"></i> Room 202
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">Free WiFi</span>
+                        <span class="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">Minibar</span>
+                        <span class="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">King Bed</span>
+                    </div>
+                    <p class="text-gray-600 mb-6">Spacious room with king-size bed, perfect for couples seeking extra comfort.</p>
+                   
+                </div>
+            </div>
+            
+            <!-- Room 3: Suite -->
+            <div class="filter-item bg-white rounded-xl overflow-hidden shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:border-accent/30 group" data-type="Suite" data-aos="fade-up" data-aos-delay="200">
+                <div class="relative overflow-hidden">
+                    <img src="../assets/images/rooms/executive_suite.jpg" alt="Suite" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute top-4 right-4 bg-accent text-primary px-4 py-2 rounded-full font-bold">
+                        $250<span class="text-sm">/night</span>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                        <h3 class="text-xl font-bold text-white">Luxury Suite</h3>
+                        <div class="flex items-center text-white/90">
+                            <i class="fas fa-user-friends mr-2"></i> 2-3 Guests
+                            <span class="mx-2">•</span>
+                            <i class="fas fa-bed mr-2"></i> Room 303
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">Free WiFi</span>
+                        <span class="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">Living Area</span>
+                        <span class="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">Premium View</span>
+                    </div>
+                    <p class="text-gray-600 mb-6">Luxury suite with living area, perfect for those seeking extra space and premium amenities.</p>
+                    
+                </div>
+            </div>
+            
+            <!-- Room 4: Family -->
+            <div class="filter-item bg-white rounded-xl overflow-hidden shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:border-accent/30 group" data-type="Family" data-aos="fade-up" data-aos-delay="250">
+                <div class="relative overflow-hidden">
+                    <img src="../assets/images/rooms/family-room.jpg" alt="Family Room" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute top-4 right-4 bg-accent text-primary px-4 py-2 rounded-full font-bold">
+                        $200<span class="text-sm">/night</span>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                        <h3 class="text-xl font-bold text-white">Family Suite</h3>
+                        <div class="flex items-center text-white/90">
+                            <i class="fas fa-user-friends mr-2"></i> 4-5 Guests
+                            <span class="mx-2">•</span>
+                            <i class="fas fa-bed mr-2"></i> Room 404
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">Free WiFi</span>
+                        <span class="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">Two Bedrooms</span>
+                        <span class="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">Kitchenette</span>
+                    </div>
+                    <p class="text-gray-600 mb-6">Two-bedroom suite for families, perfect for those traveling with children or in small groups.</p>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- Packages Section -->
 <section id="packages" class="py-16 bg-primary text-secondary">
     <div class="container mx-auto px-4">
         <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
-            <span class="text-accent font-semibold tracking-wider uppercase">Luxury Accommodations</span>
-            <h2 class="text-3xl md:text-4xl font-serif font-bold text-secondary mt-4 mb-6">Our Premium Packages</h2>
-            <p class="text-xl text-secondary/80">Choose from our selection of carefully curated packages designed to provide an unforgettable experience.</p>
+            <span class="text-accent font-semibold tracking-wider uppercase">Special Offers</span>
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-secondary mt-4 mb-6">Exclusive Packages</h2>
+            <p class="text-xl text-secondary/80">Enhance your stay with our carefully curated packages designed for maximum comfort and value.</p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Package 1 -->
+            <!-- Package 1: Breakfast Package -->
             <div class="bg-dark rounded-xl overflow-hidden shadow-lg border border-accent/20" data-aos="fade-up" data-aos-delay="100">
                 <div class="relative">
-                    <img src="../assets/images/rooms/deluxe-room.jpg" alt="Deluxe Room" class="w-full h-64 object-cover">
+                    <img src="../assets/images/packages/breakfast.jpg" alt="Breakfast Package" class="w-full h-64 object-cover">
                     <div class="absolute top-4 right-4 bg-accent text-primary px-4 py-2 rounded-full font-bold">
-                        $299<span class="text-sm">/night</span>
+                        $25<span class="text-sm">/package</span>
                     </div>
                 </div>
                 <div class="p-6">
-                    <h3 class="text-2xl font-bold text-secondary mb-2">Deluxe Package</h3>
-                    <p class="text-secondary/80 mb-4">Perfect for couples seeking a luxurious getaway with premium amenities and services.</p>
+                    <h3 class="text-2xl font-bold text-secondary mb-2">Breakfast Package</h3>
+                    <p class="text-secondary/80 mb-4">Daily breakfast for 2 guests</p>
                     
                     <div class="mb-6">
-                        <h4 class="font-semibold mb-2 text-accent">Select Room Type:</h4>
+                        <h4 class="font-semibold mb-2 text-accent">Available Room Types:</h4>
                         <div class="flex flex-wrap gap-2 mb-4">
-                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors active">Deluxe King</button>
-                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors">Deluxe Twin</button>
-                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors">Deluxe Suite</button>
+                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors active">Standard</button>
+                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors">Deluxe</button>
+                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors">Suite</button>
+                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors">Family</button>
                         </div>
                     </div>
                     
                     <div class="mb-6">
                         <h4 class="font-semibold mb-2 text-accent">Package Includes:</h4>
                         <ul class="space-y-2">
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Daily breakfast for two</li>
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Access to fitness center</li>
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Welcome drink on arrival</li>
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Free Wi-Fi</li>
+                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Full breakfast buffet</li>
+                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Fresh juices and coffee</li>
+                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Continental and local options</li>
+                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Early breakfast available on request</li>
                         </ul>
                     </div>
                     
-                    <div class="flex justify-between">
-                        <a href="#" class="text-accent font-semibold hover:underline">View Details</a>
-                        <a href="<?php echo $base_url; ?>/auth/login.php" class="bg-accent text-primary px-4 py-2 rounded-lg hover:bg-accent/80 transition-colors">Book Now</a>
-                    </div>
                 </div>
             </div>
             
-            <!-- Package 2 -->
+            <!-- Package 2: Spa Package -->
             <div class="bg-dark rounded-xl overflow-hidden shadow-lg border border-accent/20" data-aos="fade-up" data-aos-delay="200">
                 <div class="relative">
-                    <img src="../assets/images/rooms/executive-suite.jpg" alt="Executive Suite" class="w-full h-64 object-cover">
+                    <img src="../assets/images/packages/spa.jpg" alt="Spa Package" class="w-full h-64 object-cover">
                     <div class="absolute top-4 right-4 bg-accent text-primary px-4 py-2 rounded-full font-bold">
-                        $499<span class="text-sm">/night</span>
+                        $80<span class="text-sm">/package</span>
                     </div>
                 </div>
                 <div class="p-6">
-                    <h3 class="text-2xl font-bold text-secondary mb-2">Executive Package</h3>
-                    <p class="text-secondary/80 mb-4">Elevated luxury with exclusive perks for the discerning business traveler or leisure seeker.</p>
+                    <h3 class="text-2xl font-bold text-secondary mb-2">Spa Package</h3>
+                    <p class="text-secondary/80 mb-4">One-hour massage and sauna access</p>
                     
                     <div class="mb-6">
-                        <h4 class="font-semibold mb-2 text-accent">Select Room Type:</h4>
+                        <h4 class="font-semibold mb-2 text-accent">Available Room Types:</h4>
                         <div class="flex flex-wrap gap-2 mb-4">
-                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors active">Executive Suite</button>
-                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors">Business Suite</button>
-                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors">Corner Suite</button>
+                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors">Standard</button>
+                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors active">Deluxe</button>
+                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors">Suite</button>
+                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors">Family</button>
                         </div>
                     </div>
                     
                     <div class="mb-6">
                         <h4 class="font-semibold mb-2 text-accent">Package Includes:</h4>
                         <ul class="space-y-2">
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Daily breakfast and dinner</li>
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Access to Executive Lounge</li>
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Complimentary minibar</li>
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Airport transfer (one-way)</li>
+                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> One-hour full body massage</li>
+                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Sauna and steam room access</li>
+                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Aromatherapy options</li>
+                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Complimentary herbal tea</li>
                         </ul>
                     </div>
                     
-                    <div class="flex justify-between">
-                        <a href="#" class="text-accent font-semibold hover:underline">View Details</a>
-                        <a href="<?php echo $base_url; ?>/auth/login.php" class="bg-accent text-primary px-4 py-2 rounded-lg hover:bg-accent/80 transition-colors">Book Now</a>
-                    </div>
                 </div>
             </div>
             
-            <!-- Package 3 -->
+            <!-- Package 3: Romance Package -->
             <div class="bg-dark rounded-xl overflow-hidden shadow-lg border border-accent/20" data-aos="fade-up" data-aos-delay="300">
                 <div class="relative">
-                    <img src="../assets/images/rooms/presidential-suite.jpg" alt="Presidential Suite" class="w-full h-64 object-cover">
+                    <img src="../assets/images/packages/romance.jpg" alt="Romance Package" class="w-full h-64 object-cover">
                     <div class="absolute top-4 right-4 bg-accent text-primary px-4 py-2 rounded-full font-bold">
-                        $999<span class="text-sm">/night</span>
+                        $50<span class="text-sm">/package</span>
                     </div>
                 </div>
                 <div class="p-6">
-                    <h3 class="text-2xl font-bold text-secondary mb-2">Presidential Package</h3>
-                    <p class="text-secondary/80 mb-4">The ultimate luxury experience with personalized service and exclusive amenities.</p>
+                    <h3 class="text-2xl font-bold text-secondary mb-2">Romance Package</h3>
+                    <p class="text-secondary/80 mb-4">Champagne and flower arrangement</p>
                     
                     <div class="mb-6">
-                        <h4 class="font-semibold mb-2 text-accent">Select Room Type:</h4>
+                        <h4 class="font-semibold mb-2 text-accent">Available Room Types:</h4>
                         <div class="flex flex-wrap gap-2 mb-4">
-                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors active">Presidential Suite</button>
-                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors">Royal Suite</button>
-                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors">Penthouse</button>
+                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors">Standard</button>
+                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors">Deluxe</button>
+                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors active">Suite</button>
+                            <button class="room-type-btn px-4 py-2 bg-primary/50 rounded-lg text-secondary hover:bg-accent hover:text-primary transition-colors">Family</button>
                         </div>
                     </div>
                     
                     <div class="mb-6">
                         <h4 class="font-semibold mb-2 text-accent">Package Includes:</h4>
                         <ul class="space-y-2">
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> All-inclusive dining</li>
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Personal butler service</li>
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Luxury spa treatments</li>
-                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Private airport transfers</li>
+                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Bottle of premium champagne</li>
+                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Fresh flower arrangement</li>
+                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Chocolate-covered strawberries</li>
+                            <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i> Late checkout (subject to availability)</li>
                         </ul>
                     </div>
                     
-                    <div class="flex justify-between">
-                        <a href="#" class="text-accent font-semibold hover:underline">View Details</a>
-                        <a href="<?php echo $base_url; ?>/auth/login.php" class="bg-accent text-primary px-4 py-2 rounded-lg hover:bg-accent/80 transition-colors">Book Now</a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -248,34 +384,37 @@ include_once '../includes/header.php';
 </section>
 
 <!-- Room Comparison Modal -->
-<div id="comparison-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center">
-    <div class="bg-white rounded-xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-500 scale-95 opacity-0" id="modal-content">
+<div id="compareModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-2xl font-bold text-primary">Room Comparison</h3>
-            <button id="close-modal" class="text-gray-500 hover:text-primary text-2xl transition-colors">
-                <i class="fas fa-times"></i>
+            <button id="closeCompareModal" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times text-xl"></i>
             </button>
         </div>
         
-        <div id="comparison-content" class="overflow-x-auto">
+        <div class="overflow-x-auto">
             <table class="w-full border-collapse">
                 <thead>
                     <tr>
-                        <th class="border p-3 bg-gray-100 text-left">Feature</th>
-                        <th class="border p-3 bg-gray-100 text-left room-col-1">Room 1</th>
-                        <th class="border p-3 bg-gray-100 text-left room-col-2 hidden">Room 2</th>
+                        <th class="py-3 px-4 text-left bg-gray-100 border-b">Feature</th>
+                        <th class="py-3 px-4 text-left bg-gray-100 border-b" id="room1Header">Room 1</th>
+                        <th class="py-3 px-4 text-left bg-gray-100 border-b" id="room2Header">Room 2</th>
                     </tr>
                 </thead>
-                <tbody id="comparison-table-body">
-                    <!-- Will be populated by JavaScript -->
+                <tbody id="compareTableBody">
+                    <!-- Table rows will be populated by JavaScript -->
                 </tbody>
             </table>
         </div>
         
         <div class="mt-6 text-center">
-            <button id="reset-comparison" class="bg-primary text-secondary px-6 py-2 rounded-lg hover:bg-primary/80 transition-colors transform hover:scale-105">
-                Reset Comparison
+            <button id="resetCompare" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors mr-2">
+                Reset
             </button>
+            <a href="../users/booking.php" class="inline-block px-4 py-2 bg-primary text-secondary rounded-lg hover:bg-primary/80 transition-colors">
+                Book Now
+            </a>
         </div>
     </div>
 </div>
@@ -289,7 +428,7 @@ include_once '../includes/header.php';
         <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
             <h2 class="text-3xl md:text-5xl font-serif font-bold mb-6">Ready to Experience the Luxury?</h2>
             <p class="text-xl mb-8 text-secondary/90">Book your stay now and create unforgettable memories at EaSyStaY.</p>
-            <a href="<?php echo $base_url; ?>/auth/login.php" class="inline-block bg-accent text-primary font-semibold px-8 py-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-accent/30 hover:shadow-xl">
+            <a href="../users/booking.php" class="inline-block bg-accent text-primary font-semibold px-8 py-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-accent/30 hover:shadow-xl">
                 Book Your Stay <i class="fas fa-arrow-right ml-2"></i>
             </a>
         </div>
@@ -355,28 +494,83 @@ include_once '../includes/header.php';
         
         // Room comparison functionality
         const compareBtns = document.querySelectorAll('.compare-btn');
-        const comparisonModal = document.getElementById('comparison-modal');
-        const modalContent = document.getElementById('modal-content');
-        const closeModalBtn = document.getElementById('close-modal');
-        const resetComparisonBtn = document.getElementById('reset-comparison');
-        const comparisonTableBody = document.getElementById('comparison-table-body');
-        const roomCol1 = document.querySelector('.room-col-1');
-        const roomCol2 = document.querySelector('.room-col-2');
+        const compareModal = document.getElementById('compareModal');
+        const closeCompareModal = document.getElementById('closeCompareModal');
+        const resetCompare = document.getElementById('resetCompare');
+        const compareTableBody = document.getElementById('compareTableBody');
+        const room1Header = document.getElementById('room1Header');
+        const room2Header = document.getElementById('room2Header');
         
         let selectedRooms = [];
         
         // Static room data
-        const roomData = <?php echo json_encode($rooms); ?>;
+        const roomData = {
+            101: {
+                name: "Standard Room",
+                price: "$100",
+                size: "25 m²",
+                capacity: "2 Guests",
+                bed: "1 Queen Bed",
+                bathroom: "Shower",
+                wifi: "Yes",
+                tv: "32-inch LCD",
+                ac: "Yes",
+                fridge: "Mini Fridge",
+                balcony: "No",
+                roomService: "Limited Hours"
+            },
+            202: {
+                name: "Deluxe Room",
+                price: "$150",
+                size: "35 m²",
+                capacity: "2 Guests",
+                bed: "1 King Bed",
+                bathroom: "Shower & Bathtub",
+                wifi: "Yes - High Speed",
+                tv: "42-inch Smart TV",
+                ac: "Yes",
+                fridge: "Mini Bar",
+                balcony: "Yes",
+                roomService: "24 Hours"
+            },
+            303: {
+                name: "Luxury Suite",
+                price: "$250",
+                size: "50 m²",
+                capacity: "2-3 Guests",
+                bed: "1 King Bed + Sofa",
+                bathroom: "Luxury Bathroom",
+                wifi: "Yes - Premium",
+                tv: "55-inch Smart TV",
+                ac: "Yes",
+                fridge: "Full Mini Bar",
+                balcony: "Yes - Large",
+                roomService: "24 Hours Priority"
+            },
+            404: {
+                name: "Family Suite",
+                price: "$200",
+                size: "60 m²",
+                capacity: "4-5 Guests",
+                bed: "2 Queen Beds",
+                bathroom: "2 Bathrooms",
+                wifi: "Yes - Premium",
+                tv: "50-inch Smart TV",
+                ac: "Yes",
+                fridge: "Full Bar + Kitchenette",
+                balcony: "Yes - Family Size",
+                roomService: "24 Hours"
+            }
+        };
         
         compareBtns.forEach(btn => {
             btn.addEventListener('click', function() {
-                const roomId = parseInt(this.getAttribute('data-room-id'));
-                const room = roomData.find(r => r.RoomID == roomId);
+                const roomId = this.getAttribute('data-room-id');
                 
                 if (selectedRooms.length < 2) {
                     // Check if room is already selected
-                    if (!selectedRooms.some(r => r.RoomID == roomId)) {
-                        selectedRooms.push(room);
+                    if (!selectedRooms.includes(roomId)) {
+                        selectedRooms.push(roomId);
                         this.classList.add('bg-primary', 'text-secondary');
                         this.classList.remove('border-primary');
                         
@@ -385,33 +579,21 @@ include_once '../includes/header.php';
                         
                         // Show modal if 2 rooms are selected
                         if (selectedRooms.length === 2) {
-                            comparisonModal.classList.remove('hidden');
-                            setTimeout(() => {
-                                modalContent.classList.remove('scale-95', 'opacity-0');
-                                modalContent.classList.add('scale-100', 'opacity-100');
-                            }, 50);
+                            compareModal.classList.remove('hidden');
                         }
                     }
                 }
             });
         });
         
-        closeModalBtn.addEventListener('click', function() {
-            modalContent.classList.remove('scale-100', 'opacity-100');
-            modalContent.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                comparisonModal.classList.add('hidden');
-            }, 300);
+        closeCompareModal.addEventListener('click', function() {
+            compareModal.classList.add('hidden');
         });
         
-        resetComparisonBtn.addEventListener('click', function() {
+        resetCompare.addEventListener('click', function() {
             selectedRooms = [];
             updateComparisonTable();
-            modalContent.classList.remove('scale-100', 'opacity-100');
-            modalContent.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                comparisonModal.classList.add('hidden');
-            }, 300);
+            compareModal.classList.add('hidden');
             
             // Reset compare buttons
             compareBtns.forEach(btn => {
@@ -422,73 +604,77 @@ include_once '../includes/header.php';
         
         function updateComparisonTable() {
             // Clear table
-            comparisonTableBody.innerHTML = '';
+            compareTableBody.innerHTML = '';
             
             // Update column headers
             if (selectedRooms.length > 0) {
-                roomCol1.textContent = selectedRooms[0].RoomType + ' (Room ' + selectedRooms[0].RoomNumber + ')';
+                room1Header.textContent = roomData[selectedRooms[0]].name;
             }
             
             if (selectedRooms.length > 1) {
-                roomCol2.textContent = selectedRooms[1].RoomType + ' (Room ' + selectedRooms[1].RoomNumber + ')';
-                roomCol2.classList.remove('hidden');
+                room2Header.textContent = roomData[selectedRooms[1]].name;
+                room2Header.style.display = '';
             } else {
-                roomCol2.classList.add('hidden');
+                room2Header.style.display = 'none';
             }
             
             // Add comparison rows
-            addComparisonRow('Room Type', selectedRooms.map(r => r.RoomType));
-            addComparisonRow('Price per Night', selectedRooms.map(r => '$' + parseFloat(r.BasePrice).toFixed(2)));
-            addComparisonRow('Availability', selectedRooms.map(r => r.AvailabilityStatus));
-            addComparisonRow('Description', selectedRooms.map(r => r.Description));
-        }
-        
-        function addComparisonRow(feature, values) {
-            const row = document.createElement('tr');
+            const features = [
+                { key: 'price', label: 'Price per Night' },
+                { key: 'size', label: 'Room Size' },
+                { key: 'capacity', label: 'Capacity' },
+                { key: 'bed', label: 'Bed Type' },
+                { key: 'bathroom', label: 'Bathroom' },
+                { key: 'wifi', label: 'WiFi' },
+                { key: 'tv', label: 'TV' },
+                { key: 'ac', label: 'Air Conditioning' },
+                { key: 'fridge', label: 'Refrigerator' },
+                { key: 'balcony', label: 'Balcony' },
+                { key: 'roomService', label: 'Room Service' }
+            ];
             
-            const featureCell = document.createElement('td');
-            featureCell.className = 'border p-3 font-semibold';
-            featureCell.textContent = feature;
-            row.appendChild(featureCell);
-            
-            for (let i = 0; i < 2; i++) {
-                const valueCell = document.createElement('td');
-                valueCell.className = 'border p-3';
+            features.forEach(feature => {
+                const row = document.createElement('tr');
                 
-                if (values[i] !== undefined) {
-                    valueCell.textContent = values[i];
+                // Feature label
+                const labelCell = document.createElement('td');
+                labelCell.className = 'py-3 px-4 text-left border-b font-medium bg-gray-50';
+                labelCell.textContent = feature.label;
+                row.appendChild(labelCell);
+                
+                // Room 1 value
+                const room1Cell = document.createElement('td');
+                room1Cell.className = 'py-3 px-4 text-left border-b';
+                if (selectedRooms.length > 0) {
+                    room1Cell.textContent = roomData[selectedRooms[0]][feature.key];
+                }
+                row.appendChild(room1Cell);
+                
+                // Room 2 value
+                const room2Cell = document.createElement('td');
+                room2Cell.className = 'py-3 px-4 text-left border-b';
+                if (selectedRooms.length > 1) {
+                    room2Cell.textContent = roomData[selectedRooms[1]][feature.key];
+                    room2Cell.style.display = '';
                     
-                    // Add special styling for availability status
-                    if (feature === 'Availability') {
-                        if (values[i] === 'Available') {
-                            valueCell.classList.add('text-green-600');
-                        } else if (values[i] === 'Occupied') {
-                            valueCell.classList.add('text-red-600');
-                        } else {
-                            valueCell.classList.add('text-yellow-600');
-                        }
+                    // Highlight differences
+                    if (roomData[selectedRooms[0]][feature.key] !== roomData[selectedRooms[1]][feature.key]) {
+                        room1Cell.classList.add('bg-accent/10');
+                        room2Cell.classList.add('bg-accent/10');
                     }
+                } else {
+                    room2Cell.style.display = 'none';
                 }
+                row.appendChild(room2Cell);
                 
-                row.appendChild(valueCell);
-                
-                // Hide second column if only one room selected
-                if (i === 1 && selectedRooms.length < 2) {
-                    valueCell.classList.add('hidden');
-                }
-            }
-            
-            comparisonTableBody.appendChild(row);
+                compareTableBody.appendChild(row);
+            });
         }
         
         // Close modal when clicking outside
-        comparisonModal.addEventListener('click', function(e) {
-            if (e.target === comparisonModal) {
-                modalContent.classList.remove('scale-100', 'opacity-100');
-                modalContent.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => {
-                    comparisonModal.classList.add('hidden');
-                }, 300);
+        compareModal.addEventListener('click', function(e) {
+            if (e.target === compareModal) {
+                compareModal.classList.add('hidden');
             }
         });
         

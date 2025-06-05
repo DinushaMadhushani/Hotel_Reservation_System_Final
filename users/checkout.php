@@ -94,58 +94,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['check_in']) && isset($_
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Check Availability - Hotel System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome@6.0.0/css/all.min.css">
-    <style>
-        .room-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            margin-bottom: 1.5rem;
-            padding: 1.5rem;
-        }
-
-        .room-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        }
-
-        .price-display {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #27ae60;
-        }
-
-        .night-count {
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 
+<?php include '../includes/user_header.php'; ?>
+
 <body class="bg-light">
-    <div class="container py-5">
-        <h2 class="mb-4"><i class="fas fa-search me-2"></i>Check Room Availability</h2>
+    <div class="container mx-auto px-4 py-12 max-w-7xl">
+        <h2 class="text-3xl font-bold mb-8 text-primary flex items-center" data-aos="fade-right">
+            <i class="fas fa-search mr-3 text-accent"></i>Check Room Availability
+        </h2>
 
         <!-- Search Form -->
-        <div class="card mb-4">
-            <div class="card-body">
+        <div class="bg-white rounded-lg shadow-custom mb-8" data-aos="fade-up" data-aos-delay="100">
+            <div class="p-6">
                 <form method="GET" action="checkout.php">
-                    <div class="row g-3 align-items-end">
-                        <div class="col-md-3">
-                            <label for="check_in" class="form-label">Check-in Date</label>
-                            <input type="date" class="form-control" id="check_in" name="check_in"
-                                value="<?= htmlspecialchars($checkIn) ?>" required>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="space-y-2">
+                            <label for="check_in" class="block text-sm font-medium text-primary">Check-in Date</label>
+                            <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition duration-300"
+                                id="check_in" name="check_in" value="<?= htmlspecialchars($checkIn) ?>" required>
                         </div>
-                        <div class="col-md-3">
-                            <label for="check_out" class="form-label">Check-out Date</label>
-                            <input type="date" class="form-control" id="check_out" name="check_out"
-                                value="<?= htmlspecialchars($checkOut) ?>" required>
+                        <div class="space-y-2">
+                            <label for="check_out" class="block text-sm font-medium text-primary">Check-out Date</label>
+                            <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition duration-300"
+                                id="check_out" name="check_out" value="<?= htmlspecialchars($checkOut) ?>" required>
                         </div>
-                        <div class="col-md-3">
-                            <label for="room_type" class="form-label">Room Type</label>
-                            <select class="form-select" id="room_type" name="room_type">
+                        <div class="space-y-2">
+                            <label for="room_type" class="block text-sm font-medium text-primary">Room Type</label>
+                            <select class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition duration-300"
+                                id="room_type" name="room_type">
                                 <option value="">All Types</option>
                                 <?php foreach ($roomTypes as $type): ?>
                                     <option value="<?= htmlspecialchars($type['RoomType']) ?>"
@@ -155,9 +135,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['check_in']) && isset($_
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="col-md-3">
-                            <button type="submit" class="btn btn-primary w-100">
-                                <i class="fas fa-search me-2"></i>Search Rooms
+                        <div class="flex items-end">
+                            <button type="submit" class="w-full bg-accent hover:bg-accent-dark text-primary font-bold py-2 px-4 rounded-md transition duration-300 transform hover:scale-105 hover:shadow-accent flex items-center justify-center">
+                                <i class="fas fa-search mr-2"></i>Search Rooms
                             </button>
                         </div>
                     </div>
@@ -167,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['check_in']) && isset($_
 
         <!-- Error Messages -->
         <?php if (!empty($error)): ?>
-            <div class="alert alert-danger">
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-8 rounded-md animate-fade-in" data-aos="fade-up" data-aos-delay="150">
                 <?php foreach ($error as $msg): ?>
                     <p class="mb-0"><?= $msg ?></p>
                 <?php endforeach; ?>
@@ -176,50 +156,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['check_in']) && isset($_
 
         <!-- Available Rooms -->
         <?php if (!empty($availableRooms)): ?>
-            <div class="row">
-                <div class="col-12 mb-4">
-                    <h4><?= count($availableRooms) ?> Rooms Available</h4>
-                    <p class="text-muted">
+            <div class="space-y-6">
+                <div class="mb-6" data-aos="fade-up" data-aos-delay="200">
+                    <h4 class="text-2xl font-bold text-primary"><?= count($availableRooms) ?> Rooms Available</h4>
+                    <p class="text-gray-600">
                         <?= date('M j, Y', strtotime($checkIn)) ?> - <?= date('M j, Y', strtotime($checkOut)) ?>
                         (<?= $nights = (new DateTime($checkIn))->diff(new DateTime($checkOut))->days ?> nights)
                     </p>
                 </div>
 
-                <?php foreach ($availableRooms as $room):
-                    $totalPrice = $room['BasePrice'] * $nights;
-                ?>
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="room-card h-100">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <h4 class="mb-1"><?= htmlspecialchars($room['RoomType']) ?></h4>
-                                    <p class="text-muted mb-0">Room #<?= htmlspecialchars($room['RoomNumber']) ?></p>
-                                </div>
-                                <div class="price-display">
-                                    $<?= number_format($totalPrice, 2) ?>
-                                    <div class="night-count">$<?= number_format($room['BasePrice'], 2) ?>/night</div>
-                                </div>
-                            </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <?php foreach ($availableRooms as $index => $room):
+                        $totalPrice = $room['BasePrice'] * $nights;
+                    ?>
+                        <div class="h-full" data-aos="fade-up" data-aos-delay="<?= 250 + ($index * 50) ?>">
+                            <div class="bg-white rounded-lg shadow-custom h-full transform transition duration-500 hover:scale-105 hover:shadow-accent relative overflow-hidden group">
+                                <!-- Decorative elements -->
+                                <div class="absolute -right-12 -top-12 w-24 h-24 bg-accent rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+                                <div class="absolute -left-12 -bottom-12 w-24 h-24 bg-accent rounded-full opacity-10 group-hover:opacity-30 transition-opacity duration-500"></div>
+                                
+                                <div class="p-6 relative z-10">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div>
+                                            <h4 class="text-xl font-bold text-primary mb-1 group-hover:text-accent transition-colors duration-300">
+                                                <?= htmlspecialchars($room['RoomType']) ?>
+                                            </h4>
+                                            <p class="text-gray-600 mb-0">Room #<?= htmlspecialchars($room['RoomNumber']) ?></p>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-xl font-bold text-accent">
+                                                $<?= number_format($totalPrice, 2) ?>
+                                            </div>
+                                            <div class="text-sm text-gray-600">
+                                                $<?= number_format($room['BasePrice'], 2) ?>/night
+                                            </div>
+                                        </div>
+                                    </div>
 
-                            <?php if (!empty($room['Description'])): ?>
-                                <p class="text-muted mb-3"><?= htmlspecialchars($room['Description']) ?></p>
-                            <?php endif; ?>
+                                    <?php if (!empty($room['Description'])): ?>
+                                        <p class="text-gray-600 mb-6"><?= htmlspecialchars($room['Description']) ?></p>
+                                    <?php endif; ?>
 
-                            <div class="d-grid">
-                                <a href="./booking.php?room_id=<?= $room['RoomID'] ?>&check_in=<?= $checkIn ?>&check_out=<?= $checkOut ?>"
-                                    class="btn btn-success">
-                                    <i class="fas fa-bookmark me-2"></i>Book Now
-                                </a>
+                                    <div class="mt-auto">
+                                        <a href="./booking.php?room_id=<?= $room['RoomID'] ?>&check_in=<?= $checkIn ?>&check_out=<?= $checkOut ?>"
+                                            class="block w-full bg-gradient-to-r from-accent to-accent-light text-primary font-bold py-3 px-4 rounded-md transition duration-300 transform hover:from-accent-light hover:to-accent text-center">
+                                            <i class="fas fa-bookmark mr-2"></i>Book Now
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </div>
             </div>
         <?php endif; ?>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <?php include '../includes/sub_footer.php'; ?>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out',
+            once: true
+        });
+        
         // Date validation
         const today = new Date().toISOString().split('T')[0];
         const checkInEl = document.getElementById('check_in');

@@ -143,15 +143,6 @@ include_once 'includes/header.php';
                         <span class="bg-accent/10 text-accent px-3 py-1 rounded-full text-sm">Mini Bar</span>
                         <span class="bg-accent/10 text-accent px-3 py-1 rounded-full text-sm">24/7 Service</span>
                     </div>
-                    
-                    <div class="flex justify-between items-center">
-                        <a href="<?php echo $base_url; ?>/pages/rooms.php" class="flex items-center text-accent font-semibold hover:text-dark transition-colors duration-300">
-                            View Details <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                        <button class="bg-accent text-primary px-4 py-2 rounded-lg font-medium hover:bg-dark transition-colors">
-                            Book Now
-                        </button>
-                    </div>
                 </div>
             </div>
             
@@ -172,15 +163,6 @@ include_once 'includes/header.php';
                         <span class="bg-accent/10 text-accent px-3 py-1 rounded-full text-sm">Private Terrace</span>
                         <span class="bg-accent/10 text-accent px-3 py-1 rounded-full text-sm">Jacuzzi Tub</span>
                     </div>
-                    
-                    <div class="flex justify-between items-center">
-                        <a href="<?php echo $base_url; ?>/pages/rooms.php" class="flex items-center text-accent font-semibold hover:text-dark transition-colors duration-300">
-                            View Details <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                        <button class="bg-accent text-primary px-4 py-2 rounded-lg font-medium hover:bg-dark transition-colors">
-                            Book Now
-                        </button>
-                    </div>
                 </div>
             </div>
             
@@ -200,15 +182,6 @@ include_once 'includes/header.php';
                         <span class="bg-accent/10 text-accent px-3 py-1 rounded-full text-sm">Private Chef</span>
                         <span class="bg-accent/10 text-accent px-3 py-1 rounded-full text-sm">Home Theater</span>
                         <span class="bg-accent/10 text-accent px-3 py-1 rounded-full text-sm">Panoramic View</span>
-                    </div>
-                    
-                    <div class="flex justify-between items-center">
-                        <a href="<?php echo $base_url; ?>/pages/rooms.php" class="flex items-center text-accent font-semibold hover:text-dark transition-colors duration-300">
-                            View Details <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                        <button class="bg-accent text-primary px-4 py-2 rounded-lg font-medium hover:bg-dark transition-colors">
-                            Book Now
-                        </button>
                     </div>
                 </div>
             </div>
@@ -391,11 +364,11 @@ include_once 'includes/header.php';
     const heroSection = document.querySelector('.hero-bg');
     const backgroundImages = [
         './assets/images/hero/img1.jpg',
+        './assets/images/hero/img2.jpg',
+        './assets/images/hero/img3.jpg',
         './assets/images/hero/img4.jpg',
         './assets/images/hero/img5.jpg',
-        './assets/images/hero/img6.jpg',
-        './assets/images/hero/image.jpg',
-        './assets/images/hero/img7.jpg'
+        './assets/images/hero/img6.jpg'
     ];
     
     let currentSlide = 0;

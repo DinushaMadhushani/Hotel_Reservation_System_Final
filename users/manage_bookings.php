@@ -111,147 +111,136 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Bookings - Hotel System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome@6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #ecf0f1;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-        }
-
-        .booking-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-            margin-bottom: 1.5rem;
-            padding: 1.5rem;
-        }
-
-        .booking-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-
-        .status-badge {
-            font-size: 0.9rem;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            display: inline-block;
-        }
-
-        .status-confirmed {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .price-display {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--success);
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
+
+<?php include '../includes/user_header.php'; ?>
+
 <body class="bg-light">
-    <?php include '../includes/user_header.php'; ?>
-    <div class="container py-5">
-        <h2 class="mb-4"><i class="fas fa-calendar-alt me-2"></i>Current Reservations</h2>
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <h2 class="text-2xl font-bold mb-6 flex items-center text-primary" data-aos="fade-right">
+            <i class="fas fa-calendar-alt mr-3 text-accent"></i> Current Reservations
+        </h2>
         
         <?php if ($error): ?>
-            <div class="alert alert-danger"><?= $error ?></div>
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded animate-fade-in" data-aos="fade-up">
+                <?= htmlspecialchars($error) ?>
+            </div>
         <?php endif; ?>
         
         <?php if ($success): ?>
-            <div class="alert alert-success"><?= $success ?></div>
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded animate-fade-in" data-aos="fade-up">
+                <?= htmlspecialchars($success) ?>
+            </div>
         <?php endif; ?>
 
         <?php if (empty($bookings)): ?>
-            <div class="alert alert-info">You have no active reservations</div>
+            <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded" data-aos="fade-up">
+                You have no active reservations
+            </div>
         <?php else: ?>
-            <div class="row g-4">
-                <?php foreach ($bookings as $booking): ?>
-                    <div class="col-lg-6">
-                        <div class="booking-card">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <h4 class="mb-2">Room <?= htmlspecialchars($booking['RoomNumber']) ?></h4>
-                                    <span class="status-badge status-<?= strtolower($booking['BookingStatus']) ?>">
-                                        <?= htmlspecialchars($booking['BookingStatus']) ?>
-                                    </span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <?php foreach ($bookings as $index => $booking): ?>
+                    <div data-aos="fade-up" data-aos-delay="<?= 100 + ($index * 50) ?>">
+                        <div class="bg-white rounded-lg shadow-custom overflow-hidden transition duration-300 transform hover:scale-105 hover:shadow-accent group border border-gray-200 hover:border-accent">
+                            <div class="p-6 relative overflow-hidden">
+                                <!-- Decorative elements -->
+                                <div class="absolute -right-12 -top-12 w-32 h-32 bg-accent rounded-full opacity-5 group-hover:opacity-10 transition-opacity duration-300"></div>
+                                <div class="absolute -left-12 -bottom-12 w-24 h-24 bg-primary rounded-full opacity-5 group-hover:opacity-10 transition-opacity duration-300"></div>
+                                
+                                <div class="flex justify-between items-start mb-4 relative z-10">
+                                    <div>
+                                        <h4 class="text-xl font-bold mb-2 text-primary group-hover:text-accent transition duration-300">
+                                            Room <?= htmlspecialchars($booking['RoomNumber']) ?>
+                                        </h4>
+                                        <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold
+                                            <?php 
+                                            switch(strtolower($booking['BookingStatus'])) {
+                                                case 'confirmed':
+                                                    echo 'bg-green-100 text-green-800';
+                                                    break;
+                                                case 'pending':
+                                                    echo 'bg-yellow-100 text-yellow-800';
+                                                    break;
+                                                default:
+                                                    echo 'bg-gray-100 text-gray-800';
+                                            }
+                                            ?>"
+                                        >
+                                            <?= htmlspecialchars($booking['BookingStatus']) ?>
+                                        </span>
+                                    </div>
+                                    <div class="text-xl font-bold text-accent animate-float">
+                                        $<?= number_format($booking['TotalPrice'], 2) ?>
+                                    </div>
                                 </div>
-                                <div class="price-display">
-                                    $<?= number_format($booking['TotalPrice'], 2) ?>
-                                </div>
-                            </div>
-                            
-                            <div class="row mb-3">
-                                <div class="col-md-6 mb-2">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-calendar-check me-2"></i>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div class="flex items-center">
+                                        <div class="bg-primary-light bg-opacity-10 p-2 rounded-full mr-3">
+                                            <i class="fas fa-calendar-check text-accent"></i>
+                                        </div>
                                         <div>
-                                            <div class="text-muted small">Check-in</div>
-                                            <div class="fw-bold"><?= date('M j, Y', strtotime($booking['CheckInDate'])) ?></div>
+                                            <div class="text-gray-500 text-sm">Check-in</div>
+                                            <div class="font-bold"><?= date('M j, Y', strtotime($booking['CheckInDate'])) ?></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <div class="bg-primary-light bg-opacity-10 p-2 rounded-full mr-3">
+                                            <i class="fas fa-calendar-times text-accent"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-gray-500 text-sm">Check-out</div>
+                                            <div class="font-bold"><?= date('M j, Y', strtotime($booking['CheckOutDate'])) ?></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-2">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-calendar-times me-2"></i>
-                                        <div>
-                                            <div class="text-muted small">Check-out</div>
-                                            <div class="fw-bold"><?= date('M j, Y', strtotime($booking['CheckOutDate'])) ?></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-users me-2"></i>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div class="flex items-center">
+                                        <div class="bg-primary-light bg-opacity-10 p-2 rounded-full mr-3">
+                                            <i class="fas fa-users text-accent"></i>
+                                        </div>
                                         <div>
-                                            <div class="text-muted small">Guests</div>
-                                            <div class="fw-bold"><?= $booking['NumberOfGuests'] ?></div>
+                                            <div class="text-gray-500 text-sm">Guests</div>
+                                            <div class="font-bold"><?= $booking['NumberOfGuests'] ?></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <div class="bg-primary-light bg-opacity-10 p-2 rounded-full mr-3">
+                                            <i class="fas fa-bed text-accent"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-gray-500 text-sm">Room Type</div>
+                                            <div class="font-bold"><?= htmlspecialchars($booking['RoomType']) ?></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-bed me-2"></i>
-                                        <div>
-                                            <div class="text-muted small">Room Type</div>
-                                            <div class="fw-bold"><?= htmlspecialchars($booking['RoomType']) ?></div>
+
+                                <?php if (!empty($booking['Packages'])): ?>
+                                    <div class="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                                        <div class="flex items-center mb-2">
+                                            <div class="bg-primary-light bg-opacity-10 p-2 rounded-full mr-3">
+                                                <i class="fas fa-gift text-accent"></i>
+                                            </div>
+                                            <div class="font-bold text-primary">Included Packages</div>
                                         </div>
+                                        <div class="text-gray-600 pl-11"><?= htmlspecialchars($booking['Packages']) ?></div>
                                     </div>
-                                </div>
+                                <?php endif; ?>
+
+                                <?php if ($booking['BookingStatus'] === 'Confirmed' || $booking['BookingStatus'] === 'Pending'): ?>
+                                    <form method="POST" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                                        <input type="hidden" name="booking_id" value="<?= $booking['BookingID'] ?>">
+                                        <button type="submit" name="cancel_booking" 
+                                                class="w-full mt-2 border-2 border-red-500 text-red-600 hover:bg-red-500 hover:text-white font-bold py-2 px-4 rounded-md transition duration-300 transform hover:scale-105 flex items-center justify-center">
+                                            <i class="fas fa-times-circle mr-2"></i>Cancel Reservation
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
                             </div>
-
-                            <?php if (!empty($booking['Packages'])): ?>
-                                <div class="mb-3">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="fas fa-gift me-2"></i>
-                                        <div class="fw-bold">Included Packages</div>
-                                    </div>
-                                    <div class="text-muted"><?= htmlspecialchars($booking['Packages']) ?></div>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php if ($booking['BookingStatus'] === 'Confirmed' || $booking['BookingStatus'] === 'Pending'): ?>
-                                <form method="POST" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
-                                    <input type="hidden" name="booking_id" value="<?= $booking['BookingID'] ?>">
-                                    <button type="submit" name="cancel_booking" class="btn btn-outline-danger w-100">
-                                        <i class="fas fa-times-circle me-2"></i>Cancel Reservation
-                                    </button>
-                                </form>
-                            <?php endif; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -259,6 +248,16 @@ $conn->close();
         <?php endif; ?>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <?php include '../includes/sub_footer.php'; ?>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out',
+            once: true
+        });
+    </script>
 </body>
 </html>

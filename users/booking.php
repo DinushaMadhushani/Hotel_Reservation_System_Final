@@ -139,82 +139,83 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Complete Booking - Hotel System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome@6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #ecf0f1;
-            --accent: #3498db;
-            --success: #27ae60;
-        }
-
-        .booking-summary {
-            background: var(--secondary);
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .package-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .package-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .price-highlight {
-            font-size: 1.5rem;
-            color: var(--success);
-            font-weight: bold;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 
+<?php include '../includes/user_header.php'; ?>
+
 <body class="bg-light">
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="booking-summary">
-                    <h2 class="mb-4"><i class="fas fa-receipt"></i> Complete Your Booking</h2>
+    <div class="container mx-auto px-4 py-12 max-w-5xl">
+        <div class="flex justify-center">
+            <div class="w-full">
+                <div class="bg-white rounded-lg shadow-custom overflow-hidden" data-aos="fade-up">
+                    <!-- Decorative header -->
+                    <div class="bg-gradient-to-r from-primary to-primary-light p-6 text-white relative overflow-hidden">
+                        <div class="absolute -right-12 -top-12 w-32 h-32 bg-accent rounded-full opacity-20"></div>
+                        <div class="absolute -left-12 -bottom-12 w-24 h-24 bg-accent rounded-full opacity-10"></div>
+                        <h2 class="text-2xl font-bold relative z-10 flex items-center">
+                            <i class="fas fa-receipt mr-3"></i> Complete Your Booking
+                        </h2>
+                    </div>
 
-                    <?php if ($error): ?>
-                        <div class="alert alert-danger"><?= $error ?></div>
-                    <?php endif; ?>
+                    <div class="p-6">
+                        <?php if ($error): ?>
+                            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded animate-fade-in" data-aos="fade-up">
+                                <?= $error ?>
+                            </div>
+                        <?php endif; ?>
 
-                    <?php if ($success): ?>
-                        <div class="alert alert-success"><?= $success ?></div>
-                    <?php else: ?>
-                        <!-- Booking Details -->
-                        <div class="mb-4">
-                            <h4>Room Details</h4>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p class="mb-1"><strong>Room Number:</strong> <?= $roomDetails['RoomNumber'] ?></p>
-                                    <p class="mb-1"><strong>Type:</strong> <?= $roomDetails['RoomType'] ?></p>
-                                </div>
-                                <div class="col-md-6">
-                                    <p class="mb-1"><strong>Check-in:</strong> <?= date('M j, Y', strtotime($checkIn)) ?></p>
-                                    <p class="mb-1"><strong>Check-out:</strong> <?= date('M j, Y', strtotime($checkOut)) ?></p>
-                                    <p class="mb-1"><strong>Nights:</strong> <?= $nights ?></p>
+                        <?php if ($success): ?>
+                            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded animate-fade-in" data-aos="fade-up">
+                                <?= $success ?>
+                                <div class="mt-4">
+                                    <a href="./manage_bookings.php" class="inline-block bg-accent hover:bg-accent-dark text-primary font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105">
+                                        <i class="fas fa-list-ul mr-2"></i>View My Bookings
+                                    </a>
                                 </div>
                             </div>
-                        </div>
+                        <?php else: ?>
+                            <!-- Booking Details -->
+                            <div class="mb-8" data-aos="fade-up" data-aos-delay="100">
+                                <h4 class="text-xl font-bold text-primary mb-4 border-b border-gray-200 pb-2">Room Details</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="mb-2 flex items-center">
+                                            <span class="font-semibold w-32">Room Number:</span> 
+                                            <span class="text-primary-light"><?= $roomDetails['RoomNumber'] ?></span>
+                                        </p>
+                                        <p class="mb-2 flex items-center">
+                                            <span class="font-semibold w-32">Type:</span> 
+                                            <span class="text-primary-light"><?= $roomDetails['RoomType'] ?></span>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="mb-2 flex items-center">
+                                            <span class="font-semibold w-32">Check-in:</span> 
+                                            <span class="text-primary-light"><?= date('M j, Y', strtotime($checkIn)) ?></span>
+                                        </p>
+                                        <p class="mb-2 flex items-center">
+                                            <span class="font-semibold w-32">Check-out:</span> 
+                                            <span class="text-primary-light"><?= date('M j, Y', strtotime($checkOut)) ?></span>
+                                        </p>
+                                        <p class="mb-2 flex items-center">
+                                            <span class="font-semibold w-32">Nights:</span> 
+                                            <span class="text-primary-light"><?= $nights ?></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- Booking Form -->
-                        <form method="POST">
-                            <div class="mb-4">
-                                <h4>Guest Information</h4>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Number of Guests</label>
-                                        <select class="form-select" name="guests" required>
+                            <!-- Booking Form -->
+                            <form method="POST">
+                                <div class="mb-8" data-aos="fade-up" data-aos-delay="150">
+                                    <h4 class="text-xl font-bold text-primary mb-4 border-b border-gray-200 pb-2">Guest Information</h4>
+                                    <div>
+                                        <label class="block text-sm font-medium text-primary mb-2">Number of Guests</label>
+                                        <select class="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition duration-300"
+                                            name="guests" required>
                                             <?php for ($i = 1; $i <= 4; $i++): ?>
                                                 <option value="<?= $i ?>" <?= isset($_POST['guests']) && $_POST['guests'] == $i ? 'selected' : '' ?>>
                                                     <?= $i ?> Guest<?= $i > 1 ? 's' : '' ?>
@@ -223,71 +224,82 @@ $conn->close();
                                         </select>
                                     </div>
                                 </div>
-                            </div>
 
-                            <?php if (!empty($packages)): ?>
-                                <div class="mb-4">
-                                    <h4>Additional Packages</h4>
-                                    <div class="row g-3">
-                                        <?php foreach ($packages as $package): ?>
-                                            <div class="col-md-6">
-                                                <div class="package-card">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input package-checkbox"
-                                                            type="checkbox"
-                                                            name="packages[]"
-                                                            value="<?= $package['PackageID'] ?>"
-                                                            id="package<?= $package['PackageID'] ?>"
-                                                            data-price="<?= $package['Price'] ?>">
-                                                        <label class="form-check-label w-100" for="package<?= $package['PackageID'] ?>">
-                                                            <div class="d-flex justify-content-between">
-                                                                <div>
-                                                                    <strong><?= $package['PackageName'] ?></strong>
-                                                                    <p class="mb-0 text-muted"><?= $package['Description'] ?></p>
+                                <?php if (!empty($packages)): ?>
+                                    <div class="mb-8" data-aos="fade-up" data-aos-delay="200">
+                                        <h4 class="text-xl font-bold text-primary mb-4 border-b border-gray-200 pb-2">Additional Packages</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <?php foreach ($packages as $index => $package): ?>
+                                                <div data-aos="fade-up" data-aos-delay="<?= 250 + ($index * 50) ?>">
+                                                    <div class="border border-gray-200 rounded-lg p-4 transition duration-300 transform hover:scale-105 hover:shadow-accent hover:border-accent group">
+                                                        <label class="flex items-start space-x-3 cursor-pointer w-full">
+                                                            <input class="form-checkbox h-5 w-5 text-accent rounded border-gray-300 focus:ring-accent mt-1 package-checkbox"
+                                                                type="checkbox"
+                                                                name="packages[]"
+                                                                value="<?= $package['PackageID'] ?>"
+                                                                id="package<?= $package['PackageID'] ?>"
+                                                                data-price="<?= $package['Price'] ?>">
+                                                            <div class="flex-1">
+                                                                <div class="flex justify-between">
+                                                                    <span class="font-bold text-primary group-hover:text-accent transition duration-300">
+                                                                        <?= $package['PackageName'] ?>
+                                                                    </span>
+                                                                    <span class="text-accent font-bold">
+                                                                        +$<?= number_format($package['Price'], 2) ?>
+                                                                    </span>
                                                                 </div>
-                                                                <span class="text-success">+$<?= number_format($package['Price'], 2) ?></span>
+                                                                <p class="text-gray-600 text-sm mt-1"><?= $package['Description'] ?></p>
                                                             </div>
                                                         </label>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        <?php endforeach; ?>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+
+                                <div class="mb-8 bg-gray-50 p-6 rounded-lg" data-aos="fade-up" data-aos-delay="300">
+                                    <h4 class="text-xl font-bold text-primary mb-4 border-b border-gray-200 pb-2">Payment Summary</h4>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <p class="mb-2">Base Price (<?= $nights ?> nights):</p>
+                                            <p class="mb-2">Additional Packages:</p>
+                                            <div class="border-t border-gray-200 my-2 pt-2"></div>
+                                            <p class="mb-2 font-bold">Total Price:</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="mb-2">$<?= number_format($basePrice, 2) ?></p>
+                                            <p class="mb-2" id="package-total">$0.00</p>
+                                            <div class="border-t border-gray-200 my-2 pt-2"></div>
+                                            <p class="mb-2 text-2xl font-bold text-accent" id="total-price">$<?= number_format($totalPrice, 2) ?></p>
+                                        </div>
                                     </div>
                                 </div>
-                            <?php endif; ?>
 
-                            <div class="mb-4">
-                                <h4>Payment Summary</h4>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p class="mb-2">Base Price (<?= $nights ?> nights):</p>
-                                        <p class="mb-2">Additional Packages:</p>
-                                        <hr>
-                                        <p class="mb-2"><strong>Total Price:</strong></p>
-                                    </div>
-                                    <div class="col-md-6 text-end">
-                                        <p class="mb-2">$<?= number_format($basePrice, 2) ?></p>
-                                        <p class="mb-2" id="package-total">$0.00</p>
-                                        <hr>
-                                        <p class="mb-2 price-highlight" id="total-price">$<?= number_format($totalPrice, 2) ?></p>
-                                    </div>
+                                <div data-aos="fade-up" data-aos-delay="350">
+                                    <button type="submit" class="w-full bg-gradient-to-r from-accent to-accent-light text-primary font-bold py-3 px-4 rounded-md transition duration-300 transform hover:scale-105 hover:from-accent-light hover:to-accent flex items-center justify-center">
+                                        <i class="fas fa-credit-card mr-2"></i> Confirm Booking
+                                    </button>
                                 </div>
-                            </div>
-
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-success btn-lg">
-                                    <i class="fas fa-credit-card"></i> Confirm Booking
-                                </button>
-                            </div>
-                        </form>
-                    <?php endif; ?>
+                            </form>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <?php include '../includes/sub_footer.php'; ?>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out',
+            once: true
+        });
+        
         // Real-time price calculation
         document.querySelectorAll('.package-checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', updatePrices);

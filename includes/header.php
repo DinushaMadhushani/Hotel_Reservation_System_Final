@@ -105,6 +105,44 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <a href="<?php echo $base_url; ?>/pages/rooms.php" class="nav-link relative text-secondary font-medium px-4 py-2 hover:text-accent transition-colors duration-300 <?php echo $current_page === 'rooms.php' ? 'text-accent' : ''; ?>">Rooms & Suites</a>
                     <a href="<?php echo $base_url; ?>/pages/gallery.php" class="nav-link relative text-secondary font-medium px-4 py-2 hover:text-accent transition-colors duration-300 <?php echo $current_page === 'gallery.php' ? 'text-accent' : ''; ?>">Gallery</a>
                     <a href="<?php echo $base_url; ?>/pages/about_us.php" class="nav-link relative text-secondary font-medium px-4 py-2 hover:text-accent transition-colors duration-300 <?php echo $current_page === 'about_us.php' ? 'text-accent' : ''; ?>">About Us</a>
+                    
+                    <!-- User Profile Navigation -->
+                    <?php if(isset($_SESSION['UserID']) && isset($_SESSION['UserType'])): ?>
+                        <div class="relative group">
+                            <button class="flex items-center text-secondary font-medium px-4 py-2 hover:text-accent transition-colors duration-300">
+                                <i class="fas fa-user-circle mr-2"></i>
+                                <?php echo htmlspecialchars($_SESSION['FullName']); ?>
+                                <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                            </button>
+                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
+                                <?php if($_SESSION['UserType'] === 'Admin'): ?>
+                                    <a href="<?php echo $base_url; ?>/admins/dashboard.php" class="block px-4 py-2 text-primary hover:bg-accent hover:text-white">
+                                        <i class="fas fa-tachometer-alt mr-2"></i>Admin Dashboard
+                                    </a>
+                                <?php elseif($_SESSION['UserType'] === 'Staff'): ?>
+                                    <a href="<?php echo $base_url; ?>/staff/dashboard.php" class="block px-4 py-2 text-primary hover:bg-accent hover:text-white">
+                                        <i class="fas fa-tachometer-alt mr-2"></i>Staff Dashboard
+                                    </a>
+                                <?php elseif($_SESSION['UserType'] === 'Customer'): ?>
+                                    <a href="<?php echo $base_url; ?>/users/dashboard.php" class="block px-4 py-2 text-primary hover:bg-accent hover:text-white">
+                                        <i class="fas fa-tachometer-alt mr-2"></i>My Dashboard
+                                    </a>
+                                    <a href="<?php echo $base_url; ?>/users/profile_management.php" class="block px-4 py-2 text-primary hover:bg-accent hover:text-white">
+                                        <i class="fas fa-user-cog mr-2"></i>Profile Settings
+                                    </a>
+                                <?php endif; ?>
+                                <div class="border-t border-gray-200 my-1"></div>
+                                <a href="<?php echo $base_url; ?>/auth/logout.php" class="block px-4 py-2 text-red-600 hover:bg-red-600 hover:text-white">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                </a>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <a href="<?php echo $base_url; ?>/auth/login.php" class="nav-link relative text-secondary font-medium px-4 py-2 hover:text-accent transition-colors duration-300">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Login
+                        </a>
+                    <?php endif; ?>
+                    
                     <a href="<?php echo $base_url; ?>/users/booking.php" class="cta-button bg-accent text-primary font-semibold px-6 py-2 rounded-xl shadow-lg hover:bg-dark hover:text-secondary transition-all duration-300 transform hover:-translate-y-1 ml-4">Book Now</a>
                 </div>
             </div>
@@ -115,6 +153,34 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <a href="<?php echo $base_url; ?>/pages/rooms.php" class="block px-4 py-3 text-secondary hover:text-accent hover:bg-primary/80 transition-all <?php echo $current_page === 'rooms.php' ? 'text-accent' : ''; ?>"><i class="fas fa-bed mr-3"></i>Rooms & Suites</a>
                 <a href="<?php echo $base_url; ?>/pages/gallery.php" class="block px-4 py-3 text-secondary hover:text-accent hover:bg-primary/80 transition-all <?php echo $current_page === 'gallery.php' ? 'text-accent' : ''; ?>"><i class="fas fa-images mr-3"></i>Gallery</a>
                 <a href="<?php echo $base_url; ?>/pages/about_us.php" class="block px-4 py-3 text-secondary hover:text-accent hover:bg-primary/80 transition-all <?php echo $current_page === 'about_us.php' ? 'text-accent' : ''; ?>"><i class="fas fa-info-circle mr-3"></i>About Us</a>
+                
+                <!-- Mobile User Profile Navigation -->
+                <?php if(isset($_SESSION['UserID']) && isset($_SESSION['UserType'])): ?>
+                    <?php if($_SESSION['UserType'] === 'Admin'): ?>
+                        <a href="<?php echo $base_url; ?>/admins/dashboard.php" class="block px-4 py-3 text-secondary hover:text-accent hover:bg-primary/80 transition-all">
+                            <i class="fas fa-tachometer-alt mr-3"></i>Admin Dashboard
+                        </a>
+                    <?php elseif($_SESSION['UserType'] === 'Staff'): ?>
+                        <a href="<?php echo $base_url; ?>/staff/dashboard.php" class="block px-4 py-3 text-secondary hover:text-accent hover:bg-primary/80 transition-all">
+                            <i class="fas fa-tachometer-alt mr-3"></i>Staff Dashboard
+                        </a>
+                    <?php elseif($_SESSION['UserType'] === 'Customer'): ?>
+                        <a href="<?php echo $base_url; ?>/users/dashboard.php" class="block px-4 py-3 text-secondary hover:text-accent hover:bg-primary/80 transition-all">
+                            <i class="fas fa-tachometer-alt mr-3"></i>My Dashboard
+                        </a>
+                        <a href="<?php echo $base_url; ?>/users/profile_management.php" class="block px-4 py-3 text-secondary hover:text-accent hover:bg-primary/80 transition-all">
+                            <i class="fas fa-user-cog mr-3"></i>Profile Settings
+                        </a>
+                    <?php endif; ?>
+                    <a href="<?php echo $base_url; ?>/auth/logout.php" class="block px-4 py-3 text-red-500 hover:text-red-400 hover:bg-primary/80 transition-all">
+                        <i class="fas fa-sign-out-alt mr-3"></i>Logout
+                    </a>
+                <?php else: ?>
+                    <a href="<?php echo $base_url; ?>/auth/login.php" class="block px-4 py-3 text-secondary hover:text-accent hover:bg-primary/80 transition-all">
+                        <i class="fas fa-sign-in-alt mr-3"></i>Login
+                    </a>
+                <?php endif; ?>
+                
                 <a href="<?php echo $base_url; ?>/users/booking.php" class="block bg-accent text-primary font-semibold px-4 py-3 rounded-lg mx-4 mt-3 text-center">
                     <i class="fas fa-calendar-check mr-2"></i>Book Now
                 </a>
