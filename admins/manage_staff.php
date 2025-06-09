@@ -85,10 +85,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (isset($_GET['action']) && $_GET['action'] === 'delete') {
     $staffId = intval($_GET['id']);
     try {
+        // First check if staff has any related records in other tables
+        $tables = ['Bookings', 'ServiceRequests', 'StaffSchedule', 'AssignedTasks'];
+        $hasRelatedRecords = false;
+        $relatedTables = [];
+        
+        foreach ($tables as $table) {
+            $fieldName = ($table === 'AssignedTasks') ? 'StaffID' : 'UserID';
+            $checkStmt = $conn->prepare("SELECT COUNT(*) as count FROM $table WHERE $fieldName = ?");
+            $checkStmt->bind_param("i", $staffId);
+            $checkStmt->execute();
+            $result = $checkStmt->get_result()->fetch_assoc();
+            
+            if ($result['count'] > 0) {
+                $hasRelatedRecords = true;
+                $relatedTables[] = $table;
+            }
+        }
+        
+        if ($hasRelatedRecords) {
+            throw new Exception("Cannot delete staff member because they have related records in: " . implode(", ", $relatedTables) . ". Please reassign or delete these records first.");
+        }
+        
+        // If no related records, proceed with deletion
         $stmt = $conn->prepare("DELETE FROM Users WHERE UserID = ? AND UserType = 'Staff'");
         $stmt->bind_param("i", $staffId);
+        
         if ($stmt->execute()) {
-            $success = "Staff deleted successfully!";
+            if ($stmt->affected_rows > 0) {
+                $success = "Staff deleted successfully!";
+            } else {
+                throw new Exception("Staff member not found or already deleted.");
+            }
         } else {
             throw new Exception("Error deleting staff: " . $stmt->error);
         }

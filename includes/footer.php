@@ -1,154 +1,84 @@
- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-
-<style>
-.footer {
-    background: var(--primary);
-    color: var(--secondary);
-    padding: 3rem 0;
-    border-top: 2px solid var(--accent);
-    font-family: 'Inter', sans-serif;
-}
-
-.footer h5 {
-    color: var(--secondary);
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    position: relative;
-    padding-bottom: 0.5rem;
-}
-
-.footer h5::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 40px;
-    height: 2px;
-    background: var(--accent);
-}
-
-.footer a {
-    color: var(--light);
-    text-decoration: none;
-    transition: color 0.3s ease;
-    font-size: 0.95rem;
-}
-
-.footer a:hover {
-    color: var(--accent);
-}
-
-.social-links {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
-
-.social-links a {
-    width: 38px;
-    height: 38px;
-    border: 1px solid var(--accent);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.social-links a:hover {
-    background: var(--accent);
-    color: var(--primary);
-}
-
-.contact-info li {
-    margin-bottom: 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-}
-
-.footer-bottom {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255,255,255,0.1);
-}
-
-@media (max-width: 768px) {
-    .footer-col {
-        margin-bottom: 2rem;
-    }
-}
-</style>
-
-<footer class="footer">
-    <div class="container">
-        <div class="row">
+<!-- Footer Section -->
+<footer class="bg-primary text-secondary border-t-2 border-accent py-16">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- Company Info -->
-            <div class="col-lg-4 col-md-6 footer-col">
-                <h5>EaSyStaY</h5>
-                <p class="text-light" style="opacity: 0.9;">
+            <div class="mb-8 md:mb-0">
+                <h5 class="text-xl font-serif font-bold mb-6 pb-2 relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-10 after:h-0.5 after:bg-accent">
+                    EaSyStaY
+                </h5>
+                <p class="text-secondary/90 mb-6">
                     Crafting exceptional hospitality experiences with golden standard service since 2023.
                 </p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-            
-                    
+                <div class="flex space-x-4">
+                    <a href="#" class="w-10 h-10 border border-accent rounded-full flex items-center justify-center transition-all hover:bg-accent hover:text-primary">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 border border-accent rounded-full flex items-center justify-center transition-all hover:bg-accent hover:text-primary">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 border border-accent rounded-full flex items-center justify-center transition-all hover:bg-accent hover:text-primary">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 border border-accent rounded-full flex items-center justify-center transition-all hover:bg-accent hover:text-primary">
+                        <i class="fab fa-twitter"></i>
+                    </a>
                 </div>
             </div>
 
             <!-- Contact Info -->
-            <div class="col-lg-4 col-md-6 footer-col">
-                <h5>Contact</h5>
-                <ul class="list-unstyled contact-info">
-                    <li>
+            <div class="mb-8 md:mb-0">
+                <h5 class="text-xl font-serif font-bold mb-6 pb-2 relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-10 after:h-0.5 after:bg-accent">
+                    Contact
+                </h5>
+                <ul class="space-y-4">
+                    <li class="flex items-center space-x-3">
                         <i class="fas fa-map-marker-alt text-accent"></i>
-                        29 Park Street, New York City
+                        <span>29 Park Street, New York City</span>
                     </li>
-                    <li>
+                    <li class="flex items-center space-x-3">
                         <i class="fas fa-phone text-accent"></i>
-                        <a href="tel:+12125550187">(212) 555-0187</a>
+                        <a href="tel:+12125550187" class="text-secondary/90 hover:text-accent transition-colors">(212) 555-0187</a>
                     </li>
-                    <li>
+                    <li class="flex items-center space-x-3">
                         <i class="fas fa-envelope text-accent"></i>
-                        <a href="mailto:info@easystay.com">info@easystay.com</a>
+                        <a href="mailto:info@easystay.com" class="text-secondary/90 hover:text-accent transition-colors">info@easystay.com</a>
                     </li>
                 </ul>
             </div>
 
             <!-- Quick Links -->
-            <div class="col-lg-4 col-md-12 footer-col">
-                <h5>Explore</h5>
-                <div class="row">
-                    <div class="col-6">
-                        <a href="#" class="d-block mb-2">Home</a>
-                        <a href="#" class="d-block mb-2">Rooms</a>
-                        <a href="#" class="d-block mb-2">Gallery</a>
+            <div>
+                <h5 class="text-xl font-serif font-bold mb-6 pb-2 relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-10 after:h-0.5 after:bg-accent">
+                    Explore
+                </h5>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <a href="<?php echo $base_url; ?>/index.php" class="block mb-3 text-secondary/90 hover:text-accent transition-colors">Home</a>
+                        <a href="<?php echo $base_url; ?>/pages/rooms.php" class="block mb-3 text-secondary/90 hover:text-accent transition-colors">Rooms</a>
+                        <a href="<?php echo $base_url; ?>/pages/gallery.php" class="block mb-3 text-secondary/90 hover:text-accent transition-colors">Gallery</a>
                     </div>
-                    <div class="col-6">
-                        <a href="#" class="d-block mb-2">About Us</a>
-                        <a href="#" class="d-block mb-2">Crew</a>
-                        <a href="#" class="d-block mb-2">Contact</a>
+                    <div>
+                        <a href="<?php echo $base_url; ?>/pages/about_us.php" class="block mb-3 text-secondary/90 hover:text-accent transition-colors">About Us</a>
+                        <a href="<?php echo $base_url; ?>/auth/login.php" class="block mb-3 text-secondary/90 hover:text-accent transition-colors">Login</a>
+                        <a href="<?php echo $base_url; ?>/auth/register.php" class="block mb-3 text-secondary/90 hover:text-accent transition-colors">Register</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="footer-bottom">
-            <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                    <small class="text-light" style="opacity: 0.8;">© 2023 EaSyStaY. All rights reserved</small>
+        <!-- Footer Bottom -->
+        <div class="mt-12 pt-8 border-t border-secondary/10">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-secondary/80 text-sm">© 2023 EaSyStaY. All rights reserved</p>
                 </div>
-                <div class="col-md-6 text-center text-md-end">
-                    <div class="d-flex gap-3 justify-content-center justify-content-md-end">
-                        <img src="../assets/images/SVG/Visa.svg" alt="Visa" style="height: 24px; filter: grayscale(1) brightness(2);">
-                        <img src="../assets/images/SVG/Mastercard.svg" alt="Mastercard" style="height: 24px; filter: grayscale(1) brightness(2);">
-                        <img src="../assets/images/SVG/Paypal.svg"     alt="PayPal" style="height: 24px; filter: grayscale(1) brightness(2);">
-                    </div>
+                <div class="flex space-x-4">
+                    <img src="../assets/images/SVG/Visa.svg" alt="Visa" class="h-6 grayscale brightness-200">
+                    <img src="../assets/images/SVG/Mastercard.svg" alt="Mastercard" class="h-6 grayscale brightness-200">
+                    <img src="../assets/images/SVG/Paypal.svg" alt="PayPal" class="h-6 grayscale brightness-200">
                 </div>
             </div>
         </div>
     </div>
-</footer>   
+</footer>

@@ -61,15 +61,55 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete') {
         $conn->autocommit(FALSE);
         
         $taskId = intval($_GET['id']);
-        $requestId = $conn->query("SELECT RequestID FROM AssignedTasks WHERE TaskID = $taskId")->fetch_row()[0];
         
-        $conn->query("DELETE FROM AssignedTasks WHERE TaskID = $taskId");
-        $conn->query("DELETE FROM ServiceRequests WHERE RequestID = $requestId");
+        // Check if task exists
+        $checkStmt = $conn->prepare("SELECT RequestID FROM AssignedTasks WHERE TaskID = ?");
+        $checkStmt->bind_param("i", $taskId);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result();
+        
+        if ($result->num_rows === 0) {
+            throw new Exception("Task not found or already deleted.");
+        }
+        
+        $requestId = $result->fetch_row()[0];
+        
+        // First check if there are any dependencies on the ServiceRequest
+        $checkDependenciesStmt = $conn->prepare("SELECT COUNT(*) as count FROM AssignedTasks WHERE RequestID = ? AND TaskID != ?");
+        $checkDependenciesStmt->bind_param("ii", $requestId, $taskId);
+        $checkDependenciesStmt->execute();
+        $dependencyResult = $checkDependenciesStmt->get_result()->fetch_assoc();
+        
+        if ($dependencyResult['count'] > 0) {
+            throw new Exception("Cannot delete this task because there are other tasks assigned to the same service request.");
+        }
+        
+        // Use a different approach - set foreign key checks to 0 temporarily
+        $conn->query("SET FOREIGN_KEY_CHECKS=0");
+        
+        // Delete the assigned task first
+        $deleteTaskStmt = $conn->prepare("DELETE FROM AssignedTasks WHERE TaskID = ?");
+        $deleteTaskStmt->bind_param("i", $taskId);
+        if (!$deleteTaskStmt->execute()) {
+            throw new Exception("Error deleting task: " . $deleteTaskStmt->error);
+        }
+        
+        // Then delete the service request
+        $deleteRequestStmt = $conn->prepare("DELETE FROM ServiceRequests WHERE RequestID = ?");
+        $deleteRequestStmt->bind_param("i", $requestId);
+        if (!$deleteRequestStmt->execute()) {
+            throw new Exception("Error deleting service request: " . $deleteRequestStmt->error);
+        }
+        
+        // Re-enable foreign key checks
+        $conn->query("SET FOREIGN_KEY_CHECKS=1");
         
         $conn->commit();
         $success = "Task deleted successfully!";
     } catch (Exception $e) {
         $conn->rollback();
+        // Re-enable foreign key checks in case of error
+        $conn->query("SET FOREIGN_KEY_CHECKS=1");
         $error = $e->getMessage();
     }
 }
@@ -277,9 +317,9 @@ $conn->close();
                                        class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="manage_task.php?action=delete&id=<?= $task['TaskID'] ?>" 
+                                    <a href="manage_tasks.php?action=delete&id=<?= $task['TaskID'] ?>" 
                                        class="btn btn-sm btn-danger"
-                                       onclick="return confirm('Delete this task?')">
+                                       onclick="return confirm('Are you sure you want to delete this task? This action cannot be undone.')">
                                         <i class="fas fa-trash-alt"></i>
                                     </a>
                                 </td>

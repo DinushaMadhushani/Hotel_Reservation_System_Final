@@ -24,16 +24,43 @@ $userData = [
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fullName = trim($_POST['fullname']);
     $email = trim($_POST['email']);
-    $password = $_POST['password'];
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
     $userType = $_POST['usertype'];
     $phone = trim($_POST['phone']);
     $address = trim($_POST['address']);
 
     try {
+        $conn->autocommit(FALSE); // Start transaction
+        
+        // Validate required fields
         if (empty($fullName) || empty($email) || empty($userType)) {
             throw new Exception("All fields marked with * are required");
         }
-
+        
+        // Validate email format
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new Exception("Please enter a valid email address");
+        }
+        
+        // Check for password if adding a new user
+        if ($action === 'add' && empty($password)) {
+            throw new Exception("Password is required for new users");
+        }
+        
+        // Check for duplicate email
+        $checkEmailStmt = $conn->prepare("SELECT UserID FROM Users WHERE Email = ? AND UserID != ?");
+        $checkEmailStmt->bind_param("si", $email, $editUserId);
+        $checkEmailStmt->execute();
+        $emailResult = $checkEmailStmt->get_result();
+        
+        if ($emailResult->num_rows > 0) {
+            throw new Exception("Email address is already in use by another user");
+        }
+        
+        // Hash password for security (in a real application)
+        // For this example, we'll keep it as is, but in production you should use password_hash()
+        // $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        
         if ($action === 'add') {
             $stmt = $conn->prepare("INSERT INTO Users (FullName, Email, PasswordHash, UserType, PhoneNumber, Address) 
                                    VALUES (?, ?, ?, ?, ?, ?)");
@@ -61,27 +88,108 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        if ($stmt->execute()) {
-            $success = "User " . ($action === 'add' ? 'added' : 'updated') . " successfully!";
-            $action = 'add';
-            $editUserId = 0;
-        } else {
+        if (!$stmt->execute()) {
             throw new Exception("Database error: " . $stmt->error);
         }
+        
+        $conn->commit();
+        $success = "User " . ($action === 'add' ? 'added' : 'updated') . " successfully!";
+        $action = 'add';
+        $editUserId = 0;
+        $userData = [
+            'FullName' => '',
+            'Email' => '',
+            'UserType' => 'Customer',
+            'PhoneNumber' => '',
+            'Address' => ''
+        ];
     } catch (Exception $e) {
+        $conn->rollback();
         $error = $e->getMessage();
+        // Preserve form data on error
+        $userData = [
+            'FullName' => $fullName,
+            'Email' => $email,
+            'UserType' => $userType,
+            'PhoneNumber' => $phone,
+            'Address' => $address
+        ];
+    } finally {
+        $conn->autocommit(TRUE); // Reset autocommit mode
     }
 }
 
 // Handle delete action
 if (isset($_GET['action']) && $_GET['action'] === 'delete') {
     $userId = intval($_GET['id']);
-    $stmt = $conn->prepare("DELETE FROM Users WHERE UserID = ?");
-    $stmt->bind_param("i", $userId);
-    if ($stmt->execute()) {
+    try {
+        $conn->autocommit(FALSE); // Start transaction
+        
+        // First check if user has any related records in other tables
+        $tables = [
+            'Bookings' => 'bookings',
+            'ServiceRequests' => 'service requests',
+            'StaffSchedule' => 'staff schedules',
+            'AssignedTasks' => 'assigned tasks'
+        ];
+        
+        $relatedRecords = [];
+        
+        // Check Bookings
+        $checkStmt = $conn->prepare("SELECT COUNT(*) as count FROM Bookings WHERE UserID = ?");
+        $checkStmt->bind_param("i", $userId);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result()->fetch_assoc();
+        if ($result['count'] > 0) {
+            $relatedRecords[] = $result['count'] . ' booking' . ($result['count'] > 1 ? 's' : '');
+        }
+        
+        // Check ServiceRequests
+        $checkStmt = $conn->prepare("SELECT COUNT(*) as count FROM ServiceRequests WHERE UserID = ?");
+        $checkStmt->bind_param("i", $userId);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result()->fetch_assoc();
+        if ($result['count'] > 0) {
+            $relatedRecords[] = $result['count'] . ' service request' . ($result['count'] > 1 ? 's' : '');
+        }
+        
+        // Check StaffSchedule
+        $checkStmt = $conn->prepare("SELECT COUNT(*) as count FROM StaffSchedule WHERE UserID = ?");
+        $checkStmt->bind_param("i", $userId);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result()->fetch_assoc();
+        if ($result['count'] > 0) {
+            $relatedRecords[] = $result['count'] . ' staff schedule' . ($result['count'] > 1 ? 's' : '');
+        }
+        
+        // Check AssignedTasks
+        $checkStmt = $conn->prepare("SELECT COUNT(*) as count FROM AssignedTasks WHERE StaffID = ?");
+        $checkStmt->bind_param("i", $userId);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result()->fetch_assoc();
+        if ($result['count'] > 0) {
+            $relatedRecords[] = $result['count'] . ' assigned task' . ($result['count'] > 1 ? 's' : '');
+        }
+        
+        // If there are related records, prevent deletion
+        if (!empty($relatedRecords)) {
+            throw new Exception("Cannot delete this user because they have related records: " . implode(", ", $relatedRecords) . ". Please remove these records first or reassign them to another user.");
+        }
+        
+        // If no related records, proceed with deletion
+        $stmt = $conn->prepare("DELETE FROM Users WHERE UserID = ?");
+        $stmt->bind_param("i", $userId);
+        if (!$stmt->execute()) {
+            throw new Exception("Error deleting user: " . $stmt->error);
+        }
+        
+        $conn->commit();
         $success = "User deleted successfully!";
-    } else {
-        $error = "Error deleting user: " . $stmt->error;
+    } catch (Exception $e) {
+        $conn->rollback();
+        $error = $e->getMessage();
+    } finally {
+        $conn->autocommit(TRUE); // Reset autocommit mode
     }
 }
 

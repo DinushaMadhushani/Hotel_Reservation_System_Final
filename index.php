@@ -1,413 +1,432 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EaSyStaY - Your Ultimate Stay Experience</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<?php
+// Include the header file
+include_once 'includes/header.php';
+?>
 
-   
-    <style>
-        :root {
-            --primary: #1a1a1a;
-            --secondary: #ffffff;
-            --accent: #d4af37;
-            --light: #f5f5f5;
-            --dark: #121212;
+<style>
+    .hero-bg {
+        background-size: cover;
+        background-position: center;
+        background-blend-mode: overlay;
+        background-color: rgba(0, 0, 0, 0.5);
+        transition: background-image 1s ease-in-out;
+    }
+    
+    .room-card {
+        perspective: 1000px;
+    }
+    
+    .room-card-inner {
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+    }
+    
+    .room-card:hover .room-card-inner {
+        transform: rotateY(10deg);
+    }
+    
+    .room-img {
+        transition: transform 0.5s ease;
+    }
+    
+    .room-card:hover .room-img {
+        transform: scale(1.05);
+    }
+    
+    .feature-card {
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+        transition: 0.5s;
+    }
+    
+    .feature-card:hover::before {
+        left: 100%;
+    }
+    
+    .feature-icon {
+        transition: all 0.5s ease;
+    }
+    
+    .feature-card:hover .feature-icon {
+        transform: rotateY(180deg);
+        color:rgb(255, 255, 255);
+    }
+    
+    .testimonial-card {
+        transition: all 0.4s ease;
+    }
+    
+    .testimonial-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .parallax {
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    
+    .overlay-gradient {
+        background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(18, 18, 18, 0.95) 100%);
+    }
+    
+    .amenity-icon {
+        transition: all 0.3s ease;
+    }
+    
+    .amenity-item:hover .amenity-icon {
+        transform: scale(1.2);
+        color: #d4af37;
+    }
+    
+    @media (max-width: 768px) {
+        .hero-bg {
+            background-attachment: scroll;
         }
-        body {
-            font-family: 'Poppins', sans-serif;
-            line-height: 1.7;
-            padding-top: 80px;
-            color: var(--primary);
-            background-color: var(--light);
+        .parallax {
+            background-attachment: scroll;
         }
-        /* Enhanced Navigation */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-        .navbar-brand {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
-            color: var(--secondary) !important;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-        .navbar-nav a {
-            color: var(--secondary) !important;
-            font-weight: 600;
-            position: relative;
-            transition: all 0.3s ease;
-            padding: 1rem 1.5rem;
-        }
-        .navbar-nav a:hover {
-            color: var(--accent) !important;
-        }
-        .navbar-nav a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background: var(--accent);
-            bottom: 0;
-            left: 50%;
-            transition: all 0.3s ease;
-        }
-        .navbar-nav a:hover::after {
-            width: 80%;
-            left: 10%;
-        }
-        .login-btn {
-            background: var(--accent);
-            border-radius: 12px;
-            padding: 10px 25px;
-            margin-left: 15px;
-            transition: transform 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        .login-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        }
-        /* Hero Section */
-        .hero-section {
-            position: relative;
-            height: 100vh;
-            background-size: cover;
-            background-position: center;
-            overflow: hidden;
-            transition: background-image 0.5s ease;
-            background-blend-mode: overlay;
-        }
-        .hero-content {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: var(--secondary);
-            text-align: center;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        .hero-content h1 {
-            font-family:sans,serif;
-            font-size: 3rem;
-            margin-bottom: 25px;
-            font-weight: 600;
-        }
-        .hero-content p {
-            font-size: 1.5rem;
-            margin-bottom: 40px;
-        }
-        .search-bar {
-            position: absolute;
-            top: 300px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(255,255,255,0.9);
-            padding: 20px 30px;
-            border-radius: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            display: flex;
-            gap: 15px;
-        }
-        .search-bar input[type="date"],
-        .search-bar select {
-            padding: 12px;
-            border: 1px solid var(--accent);
-            border-radius: 15px;
-            background-color: var(--secondary);
-            color: var(--primary);
-            font-size: 1rem;
-        }
-        .search-bar button {
-            padding: 12px 25px;
-            background-color: var(--accent);
-            color: var(--secondary);
-            border-radius: 15px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        .search-bar button:hover {
-            background-color: var(--dark);
-        }
-        .image-slider {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
-        }
-        .image-slider img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        .image-slider img.active {
-            transform: scale(1.2);
-            box-shadow: 0 0 10px rgba(255,255,255,0.5);
-        }
+    }
+</style>
 
-        .exbtn a{
-            text-decoration: none;
-            color: var(--secondary);
-        }
-
-        .exbtn{
-            padding: 12px 25px;
-            background-color: var(--accent);
-            color: var(--secondary);
-            border-radius: 15px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .exbtn:hover{
-            background-color: var(--dark);
-        }
-        /* Rooms Section */
-        .room-card {
-            transition: transform 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        .room-card:hover {
-            transform: translateY(-10px);
-        }
-        .room-card img {
-            border-radius: 15px 15px 0 0;
-        }
-        .roomex{
-            padding: 12px 25px;
-            background-color: var(--accent);
-            color: var(--secondary);
-            border-radius: 13px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .roomex a{
-            text-decoration: none;
-            color: var(--secondary);
-        }
-        .amenities {
-            list-style: none;
-            padding: 0;
-            margin: 15px 0;
-        }
-        .amenities li {
-            display: inline-block;
-            margin-right: 15px;
-            font-size: 0.9rem;
-        }
-        /* New Sections */
-        .why-choose-us {
-            background-color: var(--light);
-            padding: 50px 0;
-        }
-        .feature-box {
-            text-align: center;
-            padding: 30px;
-            border-radius: 15px;
-            transition: all 0.3s ease;
-        }
-        .feature-box:hover {
-            background-color: var(--accent);
-            color: var(--secondary);
-        }
-        .feature-icon {
-            font-size: 3rem;
-            color: var(--accent);
-            margin-bottom: 15px;
-        }
-        .testimonials {
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            color: var(--secondary);
-            padding: 50px 0;
-        }
-        .testimonial-text {
-            font-style: italic;
-            margin-bottom: 20px;
-        }
-        .social-icons a {
-            color: var(--secondary);
-            margin: 0 10px;
-            font-size: 1.5rem;
-        }
-    </style>
-</head>
-<body data-spy="scroll" data-target="#navbarNav">
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container">
-        <a class="navbar-brand" href="#">EaSyStaY</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#hero">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./pages/rooms.php">Rooms</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#features">Why Choose Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#testimonials">Testimonials</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./pages/about_us.php">About Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn login-btn" href="./auth/login.php">Login/Sign Up</a>
-                </li>
-            </ul>
+<!-- Hero Section -->
+<section id="hero" class="hero-bg h-screen flex items-center justify-center relative overflow-hidden" style="background-image: url('./assets/images/hero/P (1).jpg');">
+    <div class="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80"></div>
+    <div class="container mx-auto px-4 z-10 text-center" data-aos="fade-up" data-aos-delay="100">
+        <div class="mb-8">
+            <h1 class="text-4xl md:text-6xl font-serif font-bold text-secondary mt-4 mb-6 leading-tight">Experience Unparalleled <span class="text-accent">Luxury</span></h1>
+            <p class="text-xl md:text-2xl text-secondary/90 max-w-3xl mx-auto">Where timeless elegance meets contemporary comfort in the heart of the city</p>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row justify-center gap-4" data-aos="fade-up" data-aos-delay="300">
+            <a href="<?php echo $base_url; ?>/pages/rooms.php" class="cta-button bg-accent text-primary font-semibold px-8 py-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105">
+                Explore Our Suites <i class="fas fa-arrow-right ml-2"></i>
+            </a>
         </div>
     </div>
-</nav>
-<!-- Hero Section -->
-<section class="hero-section" style="background-image: url('../assets/images/hero/P (1).jpg');">
-    <div class="hero-content">
-        <h1>Unforgettable Stays, Unmatched Experiences</h1>
-        <p>Where luxury meets comfort in every corner</p>
-        <button class="btn btn-light exbtn"><a href="./pages/rooms.php">Explore Now</a></button>
-    </div>
-
-    <div class="image-slider">
-        <img src="./assets/images/hero/img1.jpg" alt="Slide 1" class="active">
-        <img src="./assets/images/hero/img4.jpg" alt="Slide 2">
-        <img src="./assets/images/hero/img5.jpg" alt="Slide 3">
-        <img src="./assets/images/hero/img6.jpg" alt="Slide 4">
-        <img src="./assets/images/hero/image.jpg" alt="Slide 5">
-        <img src="./assets/images/hero/img7.jpg" alt="Slide 6">
-    </div>
 </section>
+
 <!-- Rooms Section -->
-<section id="rooms" class="py-5">
-    <div class="container">
-        <h2 class="text-center mb-5"> Rooms</h2>
-        <div class="row g-4">
-            <?php
-            $rooms = [
-                ["image" => "./assets/images/rooms/first.jpeg", "title" => "Deluxe Suite", "description" => "Spacious room with a king-size bed, highly comfatable service, private balcony, and city views.", "price" => 250, "amenities" => ["Free Wi-Fi and internetcode", "Mini Bar", "24/7 Room Service"]],
-                ["image" => "./assets/images/rooms/second.jpg", "title" => "Executive Suite", "description" => "Luxurious suite with a separate living area, premium mattress, and spa-like bathroom.", "price" => 400, "amenities" => ["Personal Concierge", "Private Terrace", "Jacuzzi Tub"]],
-                ["image" => "./assets/images/rooms/third.jpg", "title" => "Standard Room", "description" => "Comfortable room with a queen-size bed, modern amenities, and elegant decor.", "price" => 150, "amenities" => ["Flat-screen TV", "Air Conditioning", "Daily Housekeeping"]]
-            ];
-            foreach ($rooms as $room):
-            ?>
-            <div class="col-md-6 col-lg-4">
-                <div class="card room-card shadow-sm rounded">
-                    <img src="<?php echo $room['image']; ?>" class="card-img-top rounded-top" alt="<?php echo $room['title']; ?>">
-                    <div class="card-body">
-                        <h3 class="card-title"><?php echo $room['title']; ?></h3>
-                        <p class="card-text"><?php echo $room['description']; ?></p>
-                        <ul class="amenities">
-                            <?php foreach ($room['amenities'] as $amenity): ?>
-                                <li><?php echo $amenity; ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                        <p class="card-text fw-bold">$<?php echo $room['price']; ?>/night</p>
-                        <button class="btn btn-primary roomex"> <a href="./pages/rooms.php">Explore More ➡️ </a></button>
+<section id="rooms" class="py-16 bg-light">
+    <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-primary mt-4 mb-6">Exquisite Rooms & Suites</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Room 1 -->
+            <div class="room-card bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl" data-aos="fade-up" data-aos-delay="100">
+                <div class="overflow-hidden">
+                    <img src="./assets/images/rooms/first.jpeg" alt="Deluxe Suite" class="w-full h-64 object-cover room-img">
+                </div>
+                <div class="p-6 room-card-inner">
+                    <div class="flex justify-between items-start">
+                        <h3 class="text-2xl font-bold mb-2">Deluxe Suite</h3>
+                        <span class="text-accent font-bold">$250<small class="text-gray-500 font-normal">/night</small></span>
+                    </div>
+                    <p class="text-gray-600 mb-4">Spacious suite with king-size bed, private balcony, and panoramic city views.</p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="bg-accent/10 text-accent px-3 py-1 rounded-full text-sm">Free Wi-Fi</span>
+                        <span class="bg-accent/10 text-accent px-3 py-1 rounded-full text-sm">Mini Bar</span>
+                        <span class="bg-accent/10 text-accent px-3 py-1 rounded-full text-sm">24/7 Service</span>
                     </div>
                 </div>
             </div>
-            <?php endforeach; ?>
+            
+            <!-- Room 2 -->
+            <div class="room-card bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl" data-aos="fade-up" data-aos-delay="200">
+                <div class="overflow-hidden">
+                    <img src="./assets/images/rooms/second.jpg" alt="Executive Suite" class="w-full h-64 object-cover room-img">
+                </div>
+                <div class="p-6 room-card-inner">
+                    <div class="flex justify-between items-start">
+                        <h3 class="text-2xl font-bold mb-2">Executive Suite</h3>
+                        <span class="text-accent font-bold">$400<small class="text-gray-500 font-normal">/night</small></span>
+                    </div>
+                    <p class="text-gray-600 mb-4">Luxurious suite with separate living area, premium mattress, and spa bathroom.</p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="bg-accent/10 text-accent px-3 py-1 rounded-full text-sm">Personal Concierge</span>
+                        <span class="bg-accent/10 text-accent px-3 py-1 rounded-full text-sm">Private Terrace</span>
+                        <span class="bg-accent/10 text-accent px-3 py-1 rounded-full text-sm">Jacuzzi Tub</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Room 3 -->
+            <div class="room-card bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl" data-aos="fade-up" data-aos-delay="300">
+                <div class="overflow-hidden">
+                    <img src="./assets/images/rooms/third.jpg" alt="Presidential Suite" class="w-full h-64 object-cover room-img">
+                </div>
+                <div class="p-6 room-card-inner">
+                    <div class="flex justify-between items-start">
+                        <h3 class="text-2xl font-bold mb-2">Presidential Suite</h3>
+                        <span class="text-accent font-bold">$650<small class="text-gray-500 font-normal">/night</small></span>
+                    </div>
+                    <p class="text-gray-600 mb-4">Ultimate luxury with private dining, butler service, and panoramic city views.</p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="bg-accent/10 text-accent px-3 py-1 rounded-full text-sm">Private Chef</span>
+                        <span class="bg-accent/10 text-accent px-3 py-1 rounded-full text-sm">Home Theater</span>
+                        <span class="bg-accent/10 text-accent px-3 py-1 rounded-full text-sm">Panoramic View</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-12" data-aos="fade-up">
+            <a href="<?php echo $base_url; ?>/pages/rooms.php" class="inline-block bg-primary text-secondary font-semibold px-8 py-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:bg-dark">
+                View All Accommodations <i class="fas fa-arrow-right ml-2"></i>
+            </a>
         </div>
     </div>
 </section>
-<!-- Why Choose Us Section -->
-<section id="features" class="why-choose-us">
-    <div class="container">
-        <h2 class="text-center mb-5">Why Choose EaSyStaY?</h2>
-        <div class="row g-4">
-            <div class="col-md-4 feature-box">
-                <div class="feature-icon">
-                    <i class="fas fa-bed"></i>
+
+<!-- Amenities Section -->
+<section id="features" class="py-16 bg-gradient-to-b from-light to-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+            <span class="text-accent font-semibold tracking-wider uppercase">Luxury Amenities</span>
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-primary mt-4 mb-6">Indulge in Premium Experiences</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Feature 1 -->
+            <div class="feature-card bg-white p-8 rounded-xl shadow-lg text-center transition-all duration-300 hover:shadow-xl group" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-accent/10 text-accent text-3xl rounded-full feature-icon group-hover:bg-accent group-hover:text-white">
+                    <i class="fas fa-spa"></i>
                 </div>
-                <h4>Luxurious Rooms</h4>
-                <p>Experience premium accommodations with modern amenities</p>
+                <h3 class="text-xl font-bold mb-3">Luxury Spa</h3>
+                <p class="text-gray-600">Rejuvenate your senses with our premium spa treatments and relaxation therapies.</p>
             </div>
-            <div class="col-md-4 feature-box">
-                <div class="feature-icon">
+            
+            <!-- Feature 2 -->
+            <div class="feature-card bg-white p-8 rounded-xl shadow-lg text-center transition-all duration-300 hover:shadow-xl group" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-accent/10 text-accent text-3xl rounded-full feature-icon group-hover:bg-accent group-hover:text-white">
                     <i class="fas fa-utensils"></i>
                 </div>
-                <h4>Delicious Dining</h4>
-                <p>Enjoy gourmet meals from our award-winning chefs</p>
+                <h3 class="text-xl font-bold mb-3">Gourmet Dining</h3>
+                <p class="text-gray-600">Experience culinary excellence at our award-winning restaurants and bars.</p>
             </div>
-            <div class="col-md-4 feature-box">
-                <div class="feature-icon">
-                    <i class="fas fa-smile"></i>
+            
+            <!-- Feature 3 -->
+            <div class="feature-card bg-white p-8 rounded-xl shadow-lg text-center transition-all duration-300 hover:shadow-xl group" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-accent/10 text-accent text-3xl rounded-full feature-icon group-hover:bg-accent group-hover:text-white">
+                    <i class="fas fa-swimming-pool"></i>
                 </div>
-                <h4>24/7 Service</h4>
-                <p>Uninterrupted concierge and guest services</p>
+                <h3 class="text-xl font-bold mb-3">Infinity Pool</h3>
+                <p class="text-gray-600">Enjoy breathtaking views from our rooftop infinity pool and sun deck.</p>
             </div>
-        </div>
-    </div>
-</section>
-<!-- Testimonials Section -->
-<section id="testimonials" class="testimonials">
-    <div class="container">
-        <h2 class="text-center text-white mb-5">What Our Guests Say</h2>
-        <div class="row">
-            <div class="col-md-6 offset-md-3">
-                <div class="testimonial-text">
-                    "The best hotel experience I've ever had! The staff was amazing and the rooms were beyond expectations."
-                    <br><small>- John Doe, USA</small>
+            
+            <!-- Feature 4 -->
+            <div class="feature-card bg-white p-8 rounded-xl shadow-lg text-center transition-all duration-300 hover:shadow-xl group" data-aos="fade-up" data-aos-delay="400">
+                <div class="w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-accent/10 text-accent text-3xl rounded-full feature-icon group-hover:bg-accent group-hover:text-white">
+                    <i class="fas fa-dumbbell"></i>
                 </div>
-                <div class="testimonial-text mt-4">
-                    "The perfect blend of luxury and affordability. I'll definitely be back!"
-                    <br><small>- Sarah Johnson, UK</small>
-                </div>
+                <h3 class="text-xl font-bold mb-3">Fitness Center</h3>
+                <p class="text-gray-600">State-of-the-art fitness facilities with personal training sessions available.</p>
             </div>
         </div>
     </div>
 </section>
 
-<?php include './includes/footer.php';?>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://kit.fontawesome.com/your-font-awesome-key.js" crossorigin="anonymous"></script>
+<!-- Testimonials Section -->
+<section id="testimonials" class="py-16 bg-gradient-to-r from-primary to-dark text-secondary">
+    <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-secondary mt-4 mb-6">What Our Guests Say</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Testimonial 1 -->
+            <div class="testimonial-card bg-white/10 p-8 rounded-xl backdrop-blur-sm" data-aos="fade-up" data-aos-delay="100">
+                <div class="flex items-center mb-4">
+                    <div class="w-16 h-16 rounded-full overflow-hidden mr-4 border-2 border-accent">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Doe" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg">Robert Johnson</h4>
+                        <div class="flex text-accent">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="italic mb-4">"The attention to detail at EaSyStaY is extraordinary. From the luxurious bedding to the impeccable service, every aspect of our stay was perfect. The rooftop pool with city views was the highlight of our trip!"</p>
+                <p class="text-sm text-secondary/80">- Business Traveler, USA</p>
+            </div>
+            
+            <!-- Testimonial 2 -->
+            <div class="testimonial-card bg-white/10 p-8 rounded-xl backdrop-blur-sm" data-aos="fade-up" data-aos-delay="200">
+                <div class="flex items-center mb-4">
+                    <div class="w-16 h-16 rounded-full overflow-hidden mr-4 border-2 border-accent">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Johnson" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg">Sophia Williams</h4>
+                        <div class="flex text-accent">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="italic mb-4">"Our anniversary celebration was made truly special by the EaSyStaY team. They surprised us with champagne and rose petals in our suite. The dining experience was exceptional, with a chef who accommodated our dietary preferences perfectly."</p>
+                <p class="text-sm text-secondary/80">- Honeymooners, UK</p>
+            </div>
+            
+            <!-- Testimonial 3 -->
+            <div class="testimonial-card bg-white/10 p-8 rounded-xl backdrop-blur-sm" data-aos="fade-up" data-aos-delay="300">
+                <div class="flex items-center mb-4">
+                    <div class="w-16 h-16 rounded-full overflow-hidden mr-4 border-2 border-accent">
+                        <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="Michael Chen" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg">Michael Chen</h4>
+                        <div class="flex text-accent">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="italic mb-4">"As a frequent traveler, I've stayed in many luxury hotels, but EaSyStaY stands out for its perfect blend of modern luxury and genuine hospitality. The executive lounge and spa facilities are world-class. I wouldn't stay anywhere else in the city."</p>
+                <p class="text-sm text-secondary/80">- Frequent Guest, Singapore</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Section -->
+<section class="py-16 bg-light">
+    <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+            <span class="text-accent font-semibold tracking-wider uppercase">Visual Journey</span>
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-primary mt-4 mb-6">Discover EaSyStaY Through Our Gallery</h2>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div class="rounded-xl overflow-hidden tilt-animation" data-aos="zoom-in" data-aos-delay="100">
+                <img src="./assets/images/gallery page/img1.jpg" alt="Hotel Lobby" class="w-full h-56 object-cover transition-transform duration-500 hover:scale-110">
+            </div>
+            <div class="rounded-xl overflow-hidden tilt-animation" data-aos="zoom-in" data-aos-delay="150">
+                <img src="./assets/images/gallery page/img2.jpg" alt="Spa" class="w-full h-56 object-cover transition-transform duration-500 hover:scale-110">
+            </div>
+            <div class="rounded-xl overflow-hidden tilt-animation" data-aos="zoom-in" data-aos-delay="200">
+                <img src="./assets/images/gallery page/img3.jpg" alt="Restaurant" class="w-full h-56 object-cover transition-transform duration-500 hover:scale-110">
+            </div>
+            <div class="rounded-xl overflow-hidden tilt-animation" data-aos="zoom-in" data-aos-delay="250">
+                <img src="./assets/images/gallery page/img4.jpg" alt="Pool" class="w-full h-56 object-cover transition-transform duration-500 hover:scale-110">
+            </div>
+            <div class="rounded-xl overflow-hidden tilt-animation" data-aos="zoom-in" data-aos-delay="300">
+                <img src="./assets/images/gallery page/img5.jpg" alt="Suite" class="w-full h-56 object-cover transition-transform duration-500 hover:scale-110">
+            </div>
+            <div class="rounded-xl overflow-hidden tilt-animation" data-aos="zoom-in" data-aos-delay="350">
+                <img src="./assets/images/gallery page/img6.jpg" alt="Bar" class="w-full h-56 object-cover transition-transform duration-500 hover:scale-110">
+            </div>
+            <div class="rounded-xl overflow-hidden tilt-animation" data-aos="zoom-in" data-aos-delay="400">
+                <img src="./assets/images/gallery page/img7.jpg" alt="Gym" class="w-full h-56 object-cover transition-transform duration-500 hover:scale-110">
+            </div>
+            <div class="rounded-xl overflow-hidden tilt-animation" data-aos="zoom-in" data-aos-delay="450">
+                <img src="./assets/images/gallery page/img8.jpg" alt="Event Space" class="w-full h-56 object-cover transition-transform duration-500 hover:scale-110">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Floating Book Now Button (Mobile) -->
+<a href="<?php echo $base_url; ?>/auth/login.php" class="fixed bottom-6 right-6 lg:hidden bg-accent text-primary w-16 h-16 rounded-full flex items-center justify-center shadow-lg z-50 transform transition-all hover:scale-110 hover:shadow-xl">
+    <i class="fas fa-calendar-check text-xl"></i>
+</a>
+
 <script>
-    // Image Slider Logic
-    const slides = document.querySelectorAll('.image-slider img');
-    const heroSection = document.querySelector('.hero-section');
-    let currentSlide = 0;
+    // Hero image slider
+    const heroSection = document.querySelector('.hero-bg');
     const backgroundImages = [
         './assets/images/hero/img1.jpg',
+        './assets/images/hero/img2.jpg',
+        './assets/images/hero/img3.jpg',
         './assets/images/hero/img4.jpg',
         './assets/images/hero/img5.jpg',
-        './assets/images/hero/img6.jpg',
-        './assets/images/hero/image.jpg',
-        './assets/images/hero/img7.jpg'
+        './assets/images/hero/img6.jpg'
     ];
-    function showSlide(index) {
-        slides.forEach((slide, i) => {
-            slide.classList.toggle('active', i === index);
-        });
-        currentSlide = index;
-        heroSection.style.backgroundImage = `url('${backgroundImages[index]}')`;
-    }
-    // Auto-slide functionality with 5-second interval
-    setInterval(() => {
-        const nextSlide = (currentSlide + 1) % slides.length;
-        showSlide(nextSlide);
-    }, 5000);
-    // Manual navigation
-    slides.forEach((slide, index) => {
-        slide.addEventListener('click', () => {
-            showSlide(index);
-        });
     
+    let currentSlide = 0;
+    
+    function changeBackground() {
+        currentSlide = (currentSlide + 1) % backgroundImages.length;
+        heroSection.style.backgroundImage = `url('${backgroundImages[currentSlide]}')`;  
+    }
+    
+    // Auto-slide functionality with 5-second interval
+    setInterval(changeBackground, 5000);
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+                
+                // Close mobile menu if open
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            }
+        });
+    });
+
+    // Back to top button functionality
+    const backToTopButton = document.getElementById('back-to-top');
+    
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            backToTopButton.classList.remove('opacity-0', 'translate-y-10');
+            backToTopButton.classList.add('opacity-100', 'translate-y-0');
+        } else {
+            backToTopButton.classList.remove('opacity-100', 'translate-y-0');
+            backToTopButton.classList.add('opacity-0', 'translate-y-10');
+        }
+    });
+    
+    backToTopButton.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     });
 </script>
-</body>
-</html>
+
+<?php
+// Include the footer file
+include_once 'includes/footer.php';
+?>
